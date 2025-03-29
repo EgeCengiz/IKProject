@@ -15,7 +15,7 @@ function personinfo() {
                         <div class="card-header">
                             <div class="row align-items-center">
                                 <div class="col">
-                                    <h4 class="card-title">Contacts Details</h4>
+                                    <h4 class="card-title m-3">Personel Listesi </h4>
                                 </div>
                             </div>
                         </div>

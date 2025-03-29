@@ -135,11 +135,9 @@ function menu() {
                                                 <a href="/person" className="tp-link">Özlük Belgeleri</a>
                                             </li>
                                             <li>
-                                                <a href="ecommerce.html" className="tp-link">İzin Talepleri</a>
+                                                <a href="/personPermission" className="tp-link">İzin Talepleri</a>
                                             </li>
-                                            <li>
-                                                <a href="ecommerce.html" className="tp-link">Doğum Günü Takip</a>
-                                            </li>
+                                         
                                             <li>
                                                 <a href="ecommerce.html" className="tp-link">Mesai Takip</a>
                                             </li>
@@ -155,7 +153,7 @@ function menu() {
                                     <div className="collapse show" id="sidebarDashboards1" >
                                         <ul className="nav-second-level">
                                             <li>
-                                                <a href="index.html" className="tp-link">Zimmet Takip</a>
+                                                <a href="/zimmet" className="tp-link">Zimmet Takip</a>
                                             </li>
                                             <li>
                                                 <a href="ecommerce.html" className="tp-link">Harcama Prim Avans</a>

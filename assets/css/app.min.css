@@ -479,7 +479,7 @@ tr {
 }
 
 label {
-    display: inline-block
+    display: flex !important;
 }
 
 button {
@@ -2343,7 +2343,7 @@ progress {
 
 .table-responsive {
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch
+    -webkit-overflow-scrolling: touch 
 }
 
 @media (max-width:575.98px) {
@@ -2414,6 +2414,8 @@ progress {
 .form-control {
     display: block;
     width: 100%;
+    margin-left: 5px;
+    margin-right: 5px;
     padding: .47rem .665rem;
     font-size: .875rem;
     font-weight: 400;

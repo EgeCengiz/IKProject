@@ -5,7 +5,7 @@ import Notes from '../item/notes';
 import Calender from '../item/calender';
 import PersonPermission from '../item/personPermission';
 import Personinfo from '../item/personinfo';
-
+import BirthdayPage from './birthdayPage';
 function home() {
     return (
         <div>
@@ -14,7 +14,11 @@ function home() {
                 <div class="content">
                     <div class="container-xxl"> 
                         <PersonPermission/>
-                         <Notes/>
+                        <div class="row">
+                            <div class="col-md-8"><Notes/></div>
+                            <div class="col-md-4"><BirthdayPage/></div>
+                        </div>
+                         
                          <Calender />
                        
                       

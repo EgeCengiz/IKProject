@@ -116,7 +116,13 @@ function CalendarComponent() {
   };
 
   return (
-    <div className="container mt-4">
+    <div className='card'>
+      <div className='card-title mt-3 ms-3'>
+       
+      <h5 style={{ color: "#4a5a6b" }}>Takvim</h5>
+      </div>
+      <div className='card-body'>
+         <div className="container mt-4">
       {/* Stil ayarlarını global olarak ekliyoruz */}
       <style type="text/css">
         {`
@@ -131,11 +137,7 @@ function CalendarComponent() {
         `}
       </style>
 
-      {/* Takvim Başlığı */}
-      <div>
-        <h5 style={{ color: "#4a5a6b" }}>Takvim</h5>
-        <br />
-      </div>
+     
 
       {/* Takvim */}
       <div className="row">
@@ -160,7 +162,7 @@ function CalendarComponent() {
       {/* Etkinlik Ekleme Formu */}
       <div className="row">
         <div className="col-12">
-          <div className="card shadow-sm p-2">
+          <div className=" shadow-sm p-2">
             <Form onSubmit={handleAddEvent} className="d-flex flex-wrap align-items-center">
               <div className="col-md-3 mb-2 px-1">
                 <Form.Control
@@ -263,6 +265,9 @@ function CalendarComponent() {
         </Modal.Footer>
       </Modal>
     </div>
+      </div>
+    </div>
+   
   );
 };
 
