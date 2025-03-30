@@ -6,6 +6,7 @@ import PersonPage from './Page/personPage';
 import PersonDetails from './Page/personDetails';
 import PersonPermissionPage from './Page/personPermissionPage';
 import ZimmetPage from './Page/zimmetPage';
+import PersonRegisterPage from './Page/personRegisterPage';
 function App() {
 
   return (
@@ -17,6 +18,7 @@ function App() {
            <Route path="/personDetails" element={<PersonDetails/>}/>
            <Route path="/personPermission" element={<PersonPermissionPage/>}/>
            <Route path="/zimmet" element={<ZimmetPage/>}/>
+           <Route path="/personregister" element={<PersonRegisterPage/>}/>
         </Routes>
       </Router>
     

@@ -140,32 +140,14 @@ function menu() {
                                          
                                             <li>
                                                 <a href="ecommerce.html" className="tp-link">Mesai Takip</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a href="#sidebarDashboards1" data-bs-toggle="collapse" aria-expanded="true">
-                                        <IoIosBusiness/>
-                                        <span> Şirket Takip </span>
-                                        <span className="menu-arrow"></span>
-                                    </a>
-                                    <div className="collapse show" id="sidebarDashboards1" >
-                                        <ul className="nav-second-level">
-                                            <li>
+                                            </li> 
+                                             <li>
                                                 <a href="/zimmet" className="tp-link">Zimmet Takip</a>
                                             </li>
-                                            <li>
-                                                <a href="ecommerce.html" className="tp-link">Harcama Prim Avans</a>
-                                            </li>
-                                            <li>
-                                                <a href="ecommerce.html" className="tp-link">Yemek Kartı</a>
-                                            </li>
-                                           
                                         </ul>
                                     </div>
                                 </li>
-
+                        
 
                                 <li className="menu-title">İK Yönetim</li>
 
@@ -187,7 +169,7 @@ function menu() {
                                                 <a href="auth-recoverpw.html" className="tp-link">Şirket İçi Etkinlik</a>
                                             </li>
                                             <li>
-                                                <a href="ecommerce.html" className="tp-link">Personel Ekle</a>
+                                                <a href="/personregister" className="tp-link">Personel Ekle</a>
                                             </li>
                                             <li>
                                                 <a href="error-503.html" className="tp-link">Takvim</a>

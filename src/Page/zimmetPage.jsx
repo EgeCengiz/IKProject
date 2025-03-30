@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Zimmet from '../item/zimmet';
 import Menu from '../item/menu';
-
+import { TbListDetails } from "react-icons/tb";
 function ZimmetPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     // Örnek personel listesi
@@ -71,28 +71,34 @@ function ZimmetPage() {
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
-                                                                        <th scope="row">1</th>
+                                                                        <th scope="row">
+                                                                        <img src="assets/images/users/user-10.jpg" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
+                                                                        </th>
                                                                         <td>Warren Jackson</td>
-                                                                        <td>Jackson</td>
-                                                                        <td>336-508-2157</td>
-                                                                        <td>Jackson</td>
-                                                                        <td>336-508-2157</td>
+                                                                        <td>17 Numaralı Bilgisayar</td>
+                                                                        <td>Orta</td>
+                                                                        <td>30.03.2025</td>
+                                                                        <td><TbListDetails  color='blue'  /></td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th scope="row">2</th>
+                                                                        <th scope="row">
+                                                                        <img src="assets/images/users/user-9.jpg" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
+                                                                        </th>
                                                                         <td>Amy</td>
-                                                                        <td>Cunha</td>
-                                                                        <td>646-473-2057</td>
-                                                                        <td>Jackson</td>
-                                                                        <td>336-508-2157</td>
+                                                                        <td>Sunucu</td>
+                                                                        <td>Yüksek</td>
+                                                                        <td>30.03.2025</td>
+                                                                        <td><TbListDetails  color='blue'  /></td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th scope="row">3</th>
+                                                                        <th scope="row">
+                                                                        <img src="assets/images/users/user-8.jpg" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
+                                                                        </th>
                                                                         <td>Steven</td>
-                                                                        <td>Loch</td>
-                                                                        <td>281-308-0793</td>
-                                                                        <td>Jackson</td>
-                                                                        <td>336-508-2157</td>
+                                                                        <td>14 Numaralı Bilgisayar</td>
+                                                                        <td>Orta</td>
+                                                                        <td>30.03.2025</td>
+                                                                        <td> <TbListDetails  color='blue'  /></td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
