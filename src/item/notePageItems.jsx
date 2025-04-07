@@ -1,18 +1,19 @@
 import React from 'react'
 import { TiPinOutline } from "react-icons/ti";
 import { FaRegTrashCan } from "react-icons/fa6";
-function notes() {
-    return (
-        <div>  <h5 style={{color:"#4a5a6b"}}>Notlar</h5>
-              <div className='card' >
+function notePageItems() {
+  return (
+    <div>
+<h5 style={{color:"#4a5a6b"}}>Notlar</h5>
+        <div className='card' >
                 <div className='card-body'>
                      <br></br>
                         <div>
-                          
-                         <br></br>
+                            
+                       
                         </div>
                         <div className='row'>
-                            <div class="col-sm-6 col-lg-6">
+                            <div class="col-md-4 ">
                                 <div className="mb-3" style={{padding:10,borderRadius:10, border: '3px solid #EFF1F4'}} >
                                     <div class=" d-flex justify-content-between">Hazırlanan Not
                                         <TiPinOutline />
@@ -32,7 +33,7 @@ function notes() {
                                 </div>
                             </div>
 
-                            <div className="mb-3" class="col-sm-6 col-lg-6">
+                            <div className="mb-3"  class="col-md-4 ">
                             <div style={{padding:10,borderRadius:10, border: '3px solid #EFF1F4'}} >
                                     <div class=" d-flex justify-content-between">Hazırlanan Not
                                         <TiPinOutline />
@@ -57,7 +58,7 @@ function notes() {
 
 
 
-                            <div className="mb-3" class="col-sm-6 col-lg-6">
+                            <div className="mb-3"  class="col-md-4 ">
                             <div style={{padding:10,borderRadius:10, border: '3px solid #EFF1F4'}} >
                                     <div class=" d-flex justify-content-between">Hazırlanan Not
                                         <TiPinOutline />
@@ -79,7 +80,7 @@ function notes() {
                                 </div>
                             </div>
 
-                            <div className="mb-3" class="col-sm-6 col-lg-6">
+                            <div className="mb-3" class="col-md-4 ">
                             <div style={{padding:10,borderRadius:10, border: '3px solid #EFF1F4'}} >
                                     <div class=" d-flex justify-content-between">Hazırlanan Not
                                         <TiPinOutline />
@@ -106,8 +107,9 @@ function notes() {
                     
                 </div>
               </div>
-        </div>
-    )
+
+    </div>
+  )
 }
 
-export default notes
+export default notePageItems

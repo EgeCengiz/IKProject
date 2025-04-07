@@ -10,15 +10,10 @@ function personinfo() {
 
 
             <div class="row">
-                <div class="col-12">
+                <div class="col-12">  
+                    <h5 class=" m-3"  style={{color:"#4a5a6b"}}>Personel Listesi </h5>
                     <div class="card">
-                        <div class="card-header">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h4 class="card-title m-3">Personel Listesi </h4>
-                                </div>
-                            </div>
-                        </div>
+                       
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table">
@@ -35,66 +30,66 @@ function personinfo() {
 
                                     <tbody>
                                         <tr>
-                                            <td><img src="assets/images/users/user-10.jpg" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />Donald Gardner<small class="badge bg-soft-pink ms-1">New</small></td>
+                                            <td><img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />Miraç<small class="badge bg-soft-pink ms-1">New</small></td>
                                             <td>xyx@gmail.com</td>
                                             <td>+123456789</td>
                                             <td>68</td>
-                                            <td>Starbucks coffee</td>
+                                            <td>Ege Cengiz Ortakcı</td>
 
                                             <td>
                                             <TbListDetails  color='blue'  onClick={() => navigate("/personDetails")} />
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><img src="assets/images/users/user-9.jpg" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />Matt Rosales</td>
+                                            <td><img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />Mustafa</td>
                                             <td>xyx@gmail.com</td>
                                             <td>+123456789</td>
                                             <td>112</td>
-                                            <td>Mac Donald</td>
+                                            <td>Okan Karaçor</td>
 
                                             <td>
                                             <TbListDetails  color='blue'/>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><img src="assets/images/users/user-8.jpg" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />Michael Hill<small class="badge bg-soft-blue ms-1">New</small></td>
+                                            <td><img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />Ege Cengiz<small class="badge bg-soft-blue ms-1">New</small></td>
                                             <td>xyx@gmail.com</td>
                                             <td>+123456789</td>
                                             <td>64</td>
-                                            <td>Life Good</td>
+                                            <td>Ziya</td>
 
                                             <td>
                                             <TbListDetails  color='blue'/>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><img src="assets/images/users/user-7.jpg" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />Nancy Flanary</td>
+                                            <td><img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />Emine</td>
                                             <td>xyx@gmail.com</td>
                                             <td>+123456789</td>
                                             <td>124</td>
-                                            <td>Flipcart</td>
+                                            <td>Recep</td>
 
                                             <td>
                                             <TbListDetails  color='blue'/>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><img src="assets/images/users/user-6.jpg" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />Dorothy Key</td>
+                                            <td><img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />Safa</td>
                                             <td>xyx@gmail.com</td>
                                             <td>+123456789</td>
                                             <td>33</td>
-                                            <td>Adidas</td>
+                                            <td>Ülkü</td>
 
                                             <td>
                                             <TbListDetails  color='blue'/>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><img src="assets/images/users/user-5.jpg" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />Joseph Cross</td>
+                                            <td><img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />Hasan</td>
                                             <td>xyx@gmail.com</td>
                                             <td>+123456789</td>
                                             <td>84</td>
-                                            <td>Reebok</td>
+                                            <td>Hasan</td>
 
                                             <td>
                                             <TbListDetails  color='blue'/>

@@ -4,14 +4,14 @@ import { TbListDetails } from "react-icons/tb";
 function personRegisterPage() {
     return (
         <div>
-            <Menu />
+          
             <div className="content-page">
                 <div className="content">
                     <div className="container-xxl">
                         <br></br>
 
                         <div class="row">
-                            <div class="col-md-5 ">
+                            <div class="col-md-4 ">
                                 <div className='card p-5'>
 
                                     <div class="mb-0 border-0 p-md-5 p-lg-0 p-4">
@@ -44,7 +44,7 @@ function personRegisterPage() {
                                                 <div class="form-group mb-0 row">
                                                     <div class="col-12">
                                                         <div class="d-grid">
-                                                            <button class="btn btn-primary" type="submit"> Register</button>
+                                                            <button class="btn btn-primary" type="submit"> Personel Ekle</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -56,15 +56,14 @@ function personRegisterPage() {
                                     </div>
                                 </div>
                             </div>
-                            <div className='col-md-7'>
+                            <div className='col-md-8'>
+                                <h4 class="fs-18 fw-semibold m-0"  style={{color:"#4a5a6b"}}>Personel Tablosu</h4>
+                                <br></br>
                                 <div className='card '>
                                     <div className='card-body'>
 
                                         <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
-                                            <div class="flex-grow-1">
-                                                <h4 class="fs-18 fw-semibold m-0">Personel Tablosu</h4>
-                                            </div>
-
+                                           
                                             <div class="text-end">
                                                 <ol class="breadcrumb m-0 py-0">
                                                     <li class="breadcrumb-item"><a href="javascript: void(0);">Tables</a></li>
@@ -95,9 +94,9 @@ function personRegisterPage() {
                                                                 <tbody>
                                                                     <tr>
                                                                         <th scope="row">
-                                                                            <img src="assets/images/users/user-10.jpg" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
+                                                                            <img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
                                                                         </th>
-                                                                        <td>Warren Jackson</td>
+                                                                        <td>Ubeyde</td>
                                                                         <td>17 Numaralı Bilgisayar</td>
                                                                         
                                                                         <td>30.03.2025</td>
@@ -105,9 +104,9 @@ function personRegisterPage() {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">
-                                                                            <img src="assets/images/users/user-9.jpg" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
+                                                                            <img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
                                                                         </th>
-                                                                        <td>Amy</td>
+                                                                        <td>Rıza</td>
                                                                         <td>Sunucu</td>
                                                                        
                                                                         <td>30.03.2025</td>
@@ -115,9 +114,9 @@ function personRegisterPage() {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">
-                                                                            <img src="assets/images/users/user-8.jpg" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
+                                                                            <img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
                                                                         </th>
-                                                                        <td>Steven</td>
+                                                                        <td>Ziya</td>
                                                                         <td>14 Numaralı Bilgisayar</td>
                                                                         
                                                                         <td>30.03.2025</td>

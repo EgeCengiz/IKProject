@@ -14801,8 +14801,9 @@ body {
 }
 
 .nav-second-level li .tp-link.active {
-    background-color: #537aef1a;
+    background-color: #0040ff1a;
     transition: color .2s ease;
+    color: blueviolet;
     border-radius: .475rem
 }
 

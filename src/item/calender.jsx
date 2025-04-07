@@ -116,11 +116,11 @@ function CalendarComponent() {
   };
 
   return (
-    <div className='card'>
-      <div className='card-title mt-3 ms-3'>
-       
-      <h5 style={{ color: "#4a5a6b" }}>Takvim</h5>
-      </div>
+    <div className=' p-3'>  
+     <h5 style={{ color: "#4a5a6b" }}>Takvim</h5>
+   
+  <div className='card'>
+      
       <div className='card-body'>
          <div className="container mt-4">
       {/* Stil ayarlarını global olarak ekliyoruz */}
@@ -267,6 +267,8 @@ function CalendarComponent() {
     </div>
       </div>
     </div>
+    </div>
+  
    
   );
 };

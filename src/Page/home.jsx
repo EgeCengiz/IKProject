@@ -9,7 +9,7 @@ import BirthdayPage from './birthdayPage';
 function home() {
     return (
         <div>
-            <Menu></Menu>
+           
             <div class="content-page">
                 <div class="content">
                     <div class="container-xxl"> 

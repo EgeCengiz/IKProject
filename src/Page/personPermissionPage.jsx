@@ -5,7 +5,7 @@ import PermissonList from '../item/permissonList';
 function personPermissionPage() {
     return (
         <div>
-            <Menu />
+           
 
             <div class="content-page">
 

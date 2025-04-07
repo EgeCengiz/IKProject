@@ -4,7 +4,7 @@ import Menu from '../item/menu'
 function personDetails() {
   return (
     <div>
-        <Menu/>
+        
            <div class="content-page">
                 <div class="content">
 
@@ -35,12 +35,12 @@ function personDetails() {
 
                                         <div class="align-items-center">
                                             <div class="d-flex align-items-center">
-                                                <img src="assets/images/users/user-11.jpg" class="rounded-circle avatar-xxl img-thumbnail float-start" alt="image profile"/>
+                                                <img src="src/images/profile.png" class="rounded-circle avatar-xxl img-thumbnail float-start" alt="image profile"/>
             
                                                 <div class="overflow-hidden ms-4">
-                                                    <h4 class="m-0 text-dark fs-20">Phoenix Baker</h4>
-                                                    <p class="my-1 text-muted fs-16">Passionate Software Engineer Crafting Innovative Solutions</p>
-                                                    <span class="fs-15"><i class="mdi mdi-message me-2 align-middle"></i>Speaks: <span>English <span class="badge bg-primary-subtle text-primary px-2 py-1 fs-13 fw-normal">native</span> , Bitish, Turkish </span></span>
+                                                    <h4 class="m-0 text-dark fs-20">Ege Cengiz Ortakcı</h4>
+                                                    <p class="my-1 text-muted fs-16">Backend Dev</p>
+                                                    <span class="fs-15"><i class="mdi mdi-message me-2 align-middle"></i>Speaks: <span>English,Turkish </span></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -49,19 +49,14 @@ function personDetails() {
                                             <li class="nav-item" role="presentation">
                                                 <a class="nav-link active p-2" id="profile_about_tab" data-bs-toggle="tab" href="#profile_about" role="tab">
                                                     <span class="d-block d-sm-none"><i class="mdi mdi-information"></i></span>
-                                                    <span class="d-none d-sm-block">About</span>
+                                                    <span class="d-none d-sm-block">Hakkında</span>
                                                 </a>
                                             </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link p-2" id="profile_experience_tab" data-bs-toggle="tab" href="#profile_experience" role="tab">
-                                                    <span class="d-block d-sm-none"><i class="mdi mdi-sitemap-outline"></i></span>
-                                                    <span class="d-none d-sm-block">Work experience</span>
-                                                </a>
-                                            </li>
+                                           
                                             <li class="nav-item">
                                                 <a class="nav-link p-2" id="portfolio_education_tab" data-bs-toggle="tab" href="#profile_education" role="tab">
                                                     <span class="d-block d-sm-none"><i class="mdi mdi-school"></i></span>
-                                                    <span class="d-none d-sm-block">Education</span>
+                                                    <span class="d-none d-sm-block">Eğitim Bilgileri</span>
                                                 </a>
                                             </li>
                                         
@@ -72,38 +67,22 @@ function personDetails() {
                                                 <div class="row">
                                                     <div class="col-md-6 col-sm-6 col-md-6 mb-4">
                                                         <div class="">
-                                                            <h5 class="fs-16 text-dark fw-semibold mb-3 text-capitalize">About me</h5>
-                                                            <p>Geetings, fellow software enthusiasts! I'm thrilled to see your intereset in exploring my profile. I'm Christian Mayo, 
-                                                                a 24-year-old software engineer from the United Kingdom. My educational path led me to earn a Bachelor's Degeer in Computer Science, 
-                                                                specializing in Software Engineering. With this qualification, I'm equipped to dive into the world of coding and develooment,ready 
-                                                                to tackle exciting projects and contribute to cutting-edge technological advancement...
+                                                            <h5 class="fs-16 text-dark fw-semibold mb-3 text-capitalize">Hakkında</h5>
+                                                            <p>Burayı personel kendiöz geçmişi ile dolduracak cv deki gibi olabilir
                                                             </p>
                                                         </div>
 
-                                                        <div class="skills-details mt-3">
-                                                            <h6 class="text-uppercase fs-13">Skills</h6>
-
-                                                            <div class="d-flex flex-wrap gap-2"> 
-                                                                <span class="badge bg-light px-3 text-dark py-2 fw-semibold">User Interface</span>
-                                                                <span class="badge bg-light px-3 text-dark py-2 fw-semibold">User Experience</span>
-                                                                <span class="badge bg-light px-3 text-dark py-2 fw-semibold">Interaction Design </span>
-                                                                <span class="badge bg-light px-3 text-dark py-2 fw-semibold">3D Design</span>
-                                                                <span class="badge bg-light px-3 text-dark py-2 fw-semibold">Information Architecture</span>
-                                                                <span class="badge bg-light px-3 text-dark py-2 fw-semibold">User Research</span>
-                                                                <span class="badge bg-light px-3 text-dark py-2 fw-semibold">Wireframing</span>
-                                                            </div>
-
-                                                        </div>
+                   
                                                     </div>
 
                                                     <div class="col-md-6 col-sm-6 col-md-6 mb-4">
-                                                        <h5 class="fs-16 text-dark fw-semibold mb-3 text-capitalize">Contact Details</h5>
+                                                        <h5 class="fs-16 text-dark fw-semibold mb-3 text-capitalize">İletişim Bilgileri</h5>
                                                         
                                                         <div class="row">
                                                             <div class="col-md-4 col-sm-4 col-lg-4">
                                                                 <div class="profile-email">
                                                                     <h6 class="text-uppercase fs-13">Email Addess</h6>
-                                                                    <a href="#" class="text-primary fs-14 text-decoration-underline">zoyothemes@gmail.com</a>
+                                                                    <a href="#" class="text-primary fs-14 text-decoration-underline">ege@gmail.com</a>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-4 col-sm-4 col-lg-4">
@@ -128,44 +107,31 @@ function personDetails() {
                                                             <div class="col-md-4 col-sm-4 col-lg-4">
                                                                 <div class="profile-email">
                                                                     <h6 class="text-uppercase fs-13">Location</h6>
-                                                                    <a href="#" class="fs-14">Melbourne, Australia</a>
+                                                                    <a href="#" class="fs-14">Ankara/Keçiören</a>
                                                                 </div>
                                                             </div>
                                                         </div>                                                    
 
-                                                        <div class="skills-details mt-3">
-                                                            <h6 class="text-uppercase fs-13">Fluent In</h6>
-
-                                                            <div class="d-flex flex-wrap gap-2"> 
-                                                                <span class="badge bg-light px-3 py-2 text-dark fw-semibold">English</span>
-                                                                <span class="badge bg-light px-3 py-2 text-dark fw-semibold">Madrian</span>
-                                                                <span class="badge bg-light px-3 py-2 text-dark fw-semibold">Spanish</span>
-                                                                <span class="badge bg-light px-3 py-2 text-dark fw-semibold">French</span>
-                                                            </div>
-
-                                                        </div>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="col-md-6 col-sm-6 col-md-6 mb-0">
                                                         <div class="">
-                                                            <h5 class="fs-16 text-dark fw-semibold mb-3 text-capitalize">Projects</h5>
+                                                            <h5 class="fs-16 text-dark fw-semibold mb-3 text-capitalize">PROJELER</h5>
                                                         </div>
 
                                                         <div class="row">
                                                             <div class="col-6">
                                                                 <div class="card border">
                                                                     <div class="card-body">
-                                                                        <h4 class="m-0 fw-semibold text-dark fs-16">Website Developing</h4>
+                                                                        <h4 class="m-0 fw-semibold text-dark fs-16">AZ Projesi</h4>
                                                                         <div class="row mt-2 d-flex align-items-center">
                                                                             <div class="col">
-                                                                                <h5 class="fs-20 mt-1 fw-bold">$12,000</h5> 
-                                                                                <p class="mb-0 text-muted">Total Budget</p>
+                                                                                <h5 class="fs-20 mt-1 ">Backend Dev</h5> 
+                                                                                <p class="mb-0 text-muted">Bitti</p>
                                                                             </div>
-                                                                            <div class="col-auto">
-                                                                                <a href="#" class="btn btn-sm btn-outline-dark px-3">More Details</a>
-                                                                            </div>
+                                                                          
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -173,16 +139,14 @@ function personDetails() {
 
                                                             <div class="col-6">
                                                                 <div class="card border">
-                                                                    <div class="card-body">
-                                                                        <h4 class="m-0 fw-semibold text-dark fs-16">Algorithm Developing</h4>
+                                                                <div class="card-body">
+                                                                        <h4 class="m-0 fw-semibold text-dark fs-16">Sahil Net Projesi</h4>
                                                                         <div class="row mt-2 d-flex align-items-center">
                                                                             <div class="col">
-                                                                                <h5 class="fs-20 mt-1 fw-bold">$35,800</h5> 
-                                                                                <p class="mb-0 text-muted">Total Budget</p>
+                                                                                <h5 class="fs-20 mt-1 ">Backend Dev</h5> 
+                                                                                <p class="mb-0 text-muted">Devam ediyor</p>
                                                                             </div>
-                                                                            <div class="col-auto">
-                                                                                <a href="#" class="btn btn-sm btn-outline-dark px-3">More Details</a>
-                                                                            </div>
+                                                                          
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -190,16 +154,14 @@ function personDetails() {
 
                                                             <div class="col-6">
                                                                 <div class="card border mb-0">
-                                                                    <div class="card-body ">
-                                                                        <h4 class="m-0 fw-semibold text-dark fs-16">Digital Marketing</h4>
+                                                                <div class="card-body">
+                                                                        <h4 class="m-0 fw-semibold text-dark fs-16">AZ Projesi</h4>
                                                                         <div class="row mt-2 d-flex align-items-center">
                                                                             <div class="col">
-                                                                                <h5 class="fs-20 mt-1 fw-bold">$8,000</h5> 
-                                                                                <p class="mb-0 text-muted">Total Budget</p>
+                                                                                <h5 class="fs-20 mt-1">Backend Dev</h5> 
+                                                                                <p class="mb-0 text-muted">Bitti</p>
                                                                             </div>
-                                                                            <div class="col-auto">
-                                                                                <a href="#" class="btn btn-sm btn-outline-dark px-3">More Details</a>
-                                                                            </div>
+                                                                          
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -207,16 +169,14 @@ function personDetails() {
 
                                                             <div class="col-6">
                                                                 <div class="card border mb-0">
-                                                                    <div class="card-body">
-                                                                        <h4 class="m-0 fw-semibold text-dark fs-16">Mobile Developing</h4>
+                                                                <div class="card-body">
+                                                                        <h4 class="m-0 fw-semibold text-dark fs-16">AZ Projesi</h4>
                                                                         <div class="row mt-2 d-flex align-items-center">
                                                                             <div class="col">
-                                                                                <h5 class="fs-20 mt-1 fw-bold">$16,000</h5>
-                                                                                <p class="mb-0 text-muted">Total Budget</p>
+                                                                                <h5 class="fs-20 mt-1 ">Backend Dev</h5> 
+                                                                                <p class="mb-0 text-muted">Bitti</p>
                                                                             </div>
-                                                                            <div class="col-auto align-content-end">
-                                                                                <a href="#" class="btn btn-sm btn-outline-dark px-3">More Details</a>
-                                                                            </div>
+                                                                          
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -226,17 +186,17 @@ function personDetails() {
 
                                                     <div class="col-md-6 col-sm-6 col-md-6 mb-0">
                                                         <div class="">
-                                                            <h5 class="fs-16 text-dark fw-semibold mb-3 text-capitalize">Expertise</h5>
+                                                            <h5 class="fs-16 text-dark fw-semibold mb-3 text-capitalize">Bilgiler</h5>
                                                         </div>
 
                                                         <div class="row align-items-center g-0">
                                                             <div class="col-sm-3">
-                                                                <p class="text-truncate mt-1 mb-0"><i class="mdi mdi-circle-medium text-primary me-2"></i> Photoshop </p>
+                                                                <p class="text-truncate mt-1 mb-0"><i class="mdi mdi-circle-medium text-primary me-2"></i> Spring Boot </p>
                                                             </div>
                                         
                                                             <div class="col-sm-9">
                                                                 <div class="progress mt-1" style={{height:8}}>
-                                                                    <div class="progress-bar progress-bar bg-primary rounded" role="progressbar" style={{width:"72%"}}  aria-valuenow="52" aria-valuemin="0" aria-valuemax="52">
+                                                                    <div class="progress-bar progress-bar bg-primary rounded" role="progressbar" style={{width:"92%"}}  aria-valuenow="52" aria-valuemin="0" aria-valuemax="52">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -244,11 +204,11 @@ function personDetails() {
 
                                                         <div class="row align-items-center g-0 mt-3">
                                                             <div class="col-sm-3">
-                                                                <p class="text-truncate mt-1 mb-0"><i class="mdi mdi-circle-medium text-primary me-2"></i> illustrator </p>
+                                                                <p class="text-truncate mt-1 mb-0"><i class="mdi mdi-circle-medium text-primary me-2"></i> React </p>
                                                             </div>
                                                             <div class="col-sm-9">
                                                                 <div class="progress mt-1" style={{height:8}}>
-                                                                    <div class="progress-bar progress-bar bg-primary rounded" role="progressbar" style={{width: "45%"}} aria-valuenow="45" aria-valuemin="0" aria-valuemax="45">
+                                                                    <div class="progress-bar progress-bar bg-primary rounded" role="progressbar" style={{width: "85%"}} aria-valuenow="45" aria-valuemin="0" aria-valuemax="45">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -260,7 +220,7 @@ function personDetails() {
                                                             </div>
                                                             <div class="col-sm-9">
                                                                 <div class="progress mt-1" style={{height:8}}>
-                                                                    <div class="progress-bar progress-bar bg-primary rounded" role="progressbar" style={{width: "68%"}} aria-valuenow="48" aria-valuemin="0" aria-valuemax="48">
+                                                                    <div class="progress-bar progress-bar bg-primary rounded" role="progressbar" style={{width: "100%"}} aria-valuenow="48" aria-valuemin="0" aria-valuemax="48">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -272,7 +232,7 @@ function personDetails() {
                                                             </div>
                                                             <div class="col-sm-9">
                                                                 <div class="progress mt-1" style={{height:8}}>
-                                                                    <div class="progress-bar progress-bar bg-primary rounded" role="progressbar" style={{width: "78%"}} aria-valuenow="78" aria-valuemin="0" aria-valuemax="78">
+                                                                    <div class="progress-bar progress-bar bg-primary rounded" role="progressbar" style={{width: "100%"}} aria-valuenow="78" aria-valuemin="0" aria-valuemax="78">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -280,11 +240,11 @@ function personDetails() {
 
                                                         <div class="row align-items-center g-0 mt-3">
                                                             <div class="col-sm-3">
-                                                                <p class="text-truncate mt-1 mb-0"><i class="mdi mdi-circle-medium text-primary me-2"></i> Javascript </p>
+                                                                <p class="text-truncate mt-1 mb-0"><i class="mdi mdi-circle-medium text-primary me-2"></i> Docker </p>
                                                             </div>
                                                             <div class="col-sm-9">
                                                                 <div class="progress mt-1" style={{height:8}}>
-                                                                    <div class="progress-bar progress-bar bg-primary rounded" role="progressbar" style={{width: "63%"}} aria-valuenow="63" aria-valuemin="0" aria-valuemax="63">
+                                                                    <div class="progress-bar progress-bar bg-primary rounded" role="progressbar" style={{width: "55%"}} aria-valuenow="63" aria-valuemin="0" aria-valuemax="63">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -292,11 +252,11 @@ function personDetails() {
 
                                                         <div class="row align-items-center g-0 mt-3">
                                                             <div class="col-sm-3">
-                                                                <p class="text-truncate mt-1 mb-0"><i class="mdi mdi-circle-medium text-primary me-2"></i> Php </p>
+                                                                <p class="text-truncate mt-1 mb-0"><i class="mdi mdi-circle-medium text-primary me-2"></i> GİT </p>
                                                             </div>
                                                             <div class="col-sm-9">
                                                                 <div class="progress mt-1" style={{height:8}}>
-                                                                    <div class="progress-bar progress-bar bg-primary rounded" role="progressbar" style={{width: "48%"}} aria-valuenow="48" aria-valuemin="0" aria-valuemax="48">
+                                                                    <div class="progress-bar progress-bar bg-primary rounded" role="progressbar" style={{width: "75%"}} aria-valuenow="48" aria-valuemin="0" aria-valuemax="48">
                                                                     </div>
                                                                 </div>
                                                             </div>

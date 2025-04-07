@@ -4,7 +4,7 @@ import { FaHome, FaRegFilePdf } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { IoMdPerson, IoMdSettings, IoIosBusiness } from "react-icons/io";
 import { NavLink } from 'react-router-dom';
-function menu() {
+function personMenu() {
     const [activeLink, setActiveLink] = useState(''); // Aktif linki tutacak state
 
     const handleLinkClick = (link) => {
@@ -60,7 +60,7 @@ function menu() {
 
                                 <li className="dropdown notification-list topbar-dropdown">
                                     <a className="nav-link dropdown-toggle nav-user me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                                        <img src="src/images/profile.png" alt="user-image" className="rounded-circle" />
+                                        <img src="../src/images/profile.png" alt="user-image" className="rounded-circle" />
                                         <span className="pro-user-name ms-1">
                                             Okan Karaçor
                                         </span>
@@ -100,7 +100,7 @@ function menu() {
                         <div id="sidebar-menu">
 
                             <div className="d-flex justify-content-center m-3">
-                                <img src="src/images/smart_logo.png" alt="" height="45" />
+                                <img src="../src/images/smart_logo.png" alt="" height="45" />
                             </div>
 
                             <ul id="side-menu">
@@ -116,8 +116,8 @@ function menu() {
 
                                         <ul className="nav-second-level">
                                             <li>
-                                                <NavLink to="/" className="tp-link" activeClassName="active">
-                                                    Anasayfa
+                                                <NavLink to="/bos" className="tp-link" activeClassName="active">
+                                                    Profil
                                                 </NavLink>
                                             </li>
 
@@ -130,7 +130,7 @@ function menu() {
                                 <li>
                                     <a href="#sidebarDashboards" data-bs-toggle="collapse" aria-expanded="true">
                                         <IoMdPerson />
-                                        <span> Personel Bilgileri </span>
+                                        <span> Personel İşlemleri </span>
                                         <span className="menu-arrow"></span>
                                     </a>
                                     <div className="collapse show" id="sidebarDashboards">
@@ -139,92 +139,35 @@ function menu() {
 
                                         <ul className="nav-second-level">
                                             <li>
-                                                <NavLink to="/person" className="tp-link" activeClassName="active">
-                                                    Özlük Belgeleri
+                                                <NavLink to="/bos" className="tp-link" activeClassName="active">
+                                                    İzin İşlemleri
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/personPermission" className="tp-link" activeClassName="active">
-                                                    İzin Talepleri
-                                                </NavLink>
-                                            </li>
-                                            <li>
-                                                <NavLink to="/shift" className="tp-link" activeClassName="active">
-                                                    Mesai Takip
-                                                </NavLink>
-                                            </li>
-                                            <li>
-                                                <NavLink to="/zimmet" className="tp-link" activeClassName="active">
-                                                    Zimmet Takip
-                                                </NavLink>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-
-
-                                <li className="menu-title">İK Yönetim</li>
-
-                                <li>
-                                    <a href="#sidebarAuth" data-bs-toggle="collapse" aria-expanded="true">
-                                        <IoMdSettings />
-                                        <span> Yönetim </span>
-                                        <span className="menu-arrow"></span>
-                                    </a>
-                                    <div className="collapse show" id="sidebarAuth">
-
-                                        <ul className="nav-second-level">
-                                            <li>
-                                                <NavLink to="/notes" className="tp-link" activeClassName="active">
-                                                    Notlar
-                                                </NavLink>
-                                            </li>
-                                            <li>
-                                                <NavLink to="/notice" className="tp-link" activeClassName="active">
+                                                <NavLink to="/bos" className="tp-link" activeClassName="active">
                                                     Duyurular
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/companyDay" className="tp-link" activeClassName="active">
-                                                    Şirket Etkinlikleri
+                                                <NavLink to="/bos" className="tp-link" activeClassName="active">
+                                                    Notlar
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/personregister" className="tp-link" activeClassName="active">
-                                                    Personel Ekle
+                                                <NavLink to="/bos" className="tp-link" activeClassName="active">
+                                                   Şirket Etkinlikleri
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/calender" className="tp-link" activeClassName="active">
-                                                    Takvim
+                                                <NavLink to="/bos" className="tp-link" activeClassName="active">
+                                                    Paylaşılan Dosyalar
                                                 </NavLink>
                                             </li>
                                         </ul>
-
-
-
-
                                     </div>
                                 </li>
-                                <li className="menu-title">Ekler</li>
-                                <li>
-                                    <a href="#sidebarError" data-bs-toggle="collapse" aria-expanded="true">
-                                        <FaRegFilePdf />
-                                        <span> Dosyalar </span>
-                                        <span className="menu-arrow"></span>
-                                    </a>
-                                    <div className="collapse show" id="sidebarError">
-                                        <ul className="nav-second-level">
 
-                                            <li>
-                                                <NavLink to="/commonshare" className="tp-link" activeClassName="active">
-                                                    Ortak Dosya Paylaşımı
-                                                </NavLink>
-                                            </li>
 
-                                        </ul>
-                                    </div>
-                                </li>
 
 
 
@@ -245,4 +188,4 @@ function menu() {
     )
 }
 
-export default menu
+export default personMenu

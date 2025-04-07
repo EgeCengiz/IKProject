@@ -5,8 +5,7 @@ import Menu from '../item/menu'
 function personPage() {
     return (
         <div>
-            <Menu></Menu>
-
+            
             <div class="content-page">
 
                 <div class="content">
