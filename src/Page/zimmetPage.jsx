@@ -13,31 +13,31 @@ function ZimmetPage() {
 
     return (
         <div className="zimmet-page">
-           
+
             <div className="content-page">
                 <div className="content">
                     <div className="container-xxl">
                         <br></br>
                         <div className='row'>
                             <div className='col-md-4'> <h6 style={{ color: "#4a5a6b" }}>Zimmet Takip</h6>
-                            <br></br>
+                                <br></br>
                                 <div className='card'>
                                     <div className='card-body p-3 '>
-                                       
+
                                         <Zimmet personnelList={personnelList} />
                                     </div>
 
                                 </div>
                             </div>
                             <div className='col-md-8'>
- <h4 class="fs-18 fw-semibold m-0" style={{ color: "#4a5a6b" }}>Zimmet Tablosu</h4>
- <br></br>
+                                <h4 class="fs-18 fw-semibold m-0" style={{ color: "#4a5a6b" }}>Zimmet Tablosu</h4>
+                                <br></br>
                                 <div className='card'>
                                     <div className='card-body'>
 
                                         <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
                                             <div class="flex-grow-1">
-                                               
+
                                             </div>
 
                                             <div class="text-end">
@@ -52,7 +52,7 @@ function ZimmetPage() {
 
                                             <div class="col-xl-12">
                                                 <div class="p-2">
-                                                 
+
 
                                                     <div >
                                                         <div class="table-responsive">
@@ -70,33 +70,33 @@ function ZimmetPage() {
                                                                 <tbody>
                                                                     <tr>
                                                                         <th scope="row">
-                                                                        <img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
+                                                                            <img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
                                                                         </th>
                                                                         <td>Warren Jackson</td>
                                                                         <td>17 Numaralı Bilgisayar</td>
                                                                         <td>Orta</td>
                                                                         <td>30.03.2025</td>
-                                                                        <td><TbListDetails  color='blue'  /></td>
+                                                                        <td><TbListDetails color='blue' /></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">
-                                                                        <img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
+                                                                            <img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
                                                                         </th>
                                                                         <td>Amy</td>
                                                                         <td>Sunucu</td>
                                                                         <td>Yüksek</td>
                                                                         <td>30.03.2025</td>
-                                                                        <td><TbListDetails  color='blue'  /></td>
+                                                                        <td><TbListDetails color='blue' /></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">
-                                                                        <img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
+                                                                            <img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
                                                                         </th>
                                                                         <td>Steven</td>
                                                                         <td>14 Numaralı Bilgisayar</td>
                                                                         <td>Orta</td>
                                                                         <td>30.03.2025</td>
-                                                                        <td> <TbListDetails  color='blue'  /></td>
+                                                                        <td> <TbListDetails color='blue' /></td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>

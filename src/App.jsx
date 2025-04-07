@@ -15,6 +15,7 @@ import CommonSharePage from './Page/commonSharePage';
 import CompanyDayPage from './Page/companyDayPage';
 import Menu from './item/menu';
 import PersonHome from './Person/Pages/personHome';
+import PersonForPermisson from './Person/Pages/personForPermisson';
 function App() {
 
   return (
@@ -44,10 +45,12 @@ function App() {
 
   {/*Personel Sayfaları*/}
 
-  
+
       <Router>
+      
         <Routes>  
           <Route path="/person/home" element={<PersonHome />} />
+          <Route path="/person/permisson" element={<PersonForPermisson />} />
         </Routes>
       </Router>
     

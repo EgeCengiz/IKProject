@@ -40,12 +40,7 @@ function personMenu() {
                                         <TiThMenu />
                                     </button>
                                 </li>
-                                <li className="d-none d-lg-block">
-                                    <div className="position-relative topbar-search">
-                                        <input type="text" className="form-control bg-light bg-opacity-75 border-light ps-4" placeholder="Search..." />
-                                        <i className="mdi mdi-magnify fs-16 position-absolute text-muted top-50 translate-middle-y ms-2"></i>
-                                    </div>
-                                </li>
+                            
                             </ul>
 
                             <ul className="list-unstyled topnav-menu mb-0 d-flex align-items-center">
@@ -95,12 +90,12 @@ function personMenu() {
 
                 </div>
 
-                <div className="app-sidebar-menu" >
+                <div className="app-sidebar-menu" style={{backgroundColor:'#1D1D41'}}>
                     <div className="h-100" data-simplebar>
                         <div id="sidebar-menu">
 
-                            <div className="d-flex justify-content-center m-3">
-                                <img src="../src/images/smart_logo.png" alt="" height="45" />
+                        <div className="d-flex justify-content-center p-3"style={{width:'100%', backgroundColor:'white'}}>
+                                <img src="../src/images/smart.png" style={{width:'75%'}} />
                             </div>
 
                             <ul id="side-menu">
@@ -116,7 +111,7 @@ function personMenu() {
 
                                         <ul className="nav-second-level">
                                             <li>
-                                                <NavLink to="/bos" className="tp-link" activeClassName="active">
+                                                <NavLink to="/person/home" className="tp-link" activeClassName="active">
                                                     Profil
                                                 </NavLink>
                                             </li>
@@ -139,7 +134,7 @@ function personMenu() {
 
                                         <ul className="nav-second-level">
                                             <li>
-                                                <NavLink to="/bos" className="tp-link" activeClassName="active">
+                                                <NavLink to="/person/permisson" className="tp-link" activeClassName="active">
                                                     İzin İşlemleri
                                                 </NavLink>
                                             </li>

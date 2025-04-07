@@ -14684,9 +14684,6 @@ body {
     box-shadow: 0 .125rem .5rem rgba(0, 0, 0, .04)
 }
 
-#sidebar-menu {
-    padding: 0 9px 0 9px
-}
 
 #sidebar-menu>ul {
     list-style: none;
@@ -14694,7 +14691,7 @@ body {
 }
 
 #sidebar-menu>ul>li>a {
-    color: #2f384f;
+    color: #ffffff;
     display: block;
     padding: 10px 20px;
     position: relative;
@@ -14721,7 +14718,7 @@ body {
     height: 16px;
     width: 16px;
     margin: 0 7px 0 3px;
-    fill: rgba(44, 44, 44,0.7)
+    fill: rgba(255, 255, 255, 0.7)
 }
 
 #sidebar-menu>ul>li>a .drop-arrow {
@@ -14767,7 +14764,7 @@ body {
     cursor: default;
     font-size: .6875rem;
     text-transform: uppercase;
-    color: #2f384f;
+    color: #ffffff;
     opacity: .75
 }
 
@@ -14784,7 +14781,7 @@ body {
 
 .nav-second-level li a {
     padding: 8px 20px;
-    color: #2f384f;
+    color: #d8d8d8;
     display: block;
     position: relative;
     transition: all .4s;
@@ -14793,17 +14790,17 @@ body {
 
 .nav-second-level li a:focus,
 .nav-second-level li a:hover {
-    color: #537aef
+    color: #ffffff
 }
 
 .nav-second-level li.active>a {
-    color: #537aef
+    color: #ffffff
 }
 
 .nav-second-level li .tp-link.active {
     background-color: #0040ff1a;
     transition: color .2s ease;
-    color: blueviolet;
+    color: white;
     border-radius: .475rem
 }
 
@@ -14887,7 +14884,7 @@ body[data-menu-color=dark] .app-sidebar-menu #sidebar-menu>ul>li>a:hover {
 }
 
 body[data-menu-color=dark] .app-sidebar-menu #sidebar-menu>ul>li>a svg {
-    fill: rgba(35, 35, 36)
+    fill: rgb(255, 255, 255)
 }
 
 body[data-menu-color=dark] .app-sidebar-menu #sidebar-menu .menu-title {

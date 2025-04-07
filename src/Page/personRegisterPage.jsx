@@ -17,7 +17,7 @@ function personRegisterPage() {
                                     <div class="mb-0 border-0 p-md-5 p-lg-0 p-4">
                                         <div class="mb-4 p-0">
                                             <a href="index.html" class="auth-logo d-flex justify-content-center">
-                                                <img src="../src/images/smart_logo.png" alt="logo-dark" class="mx-auto" height="50" />
+                                                <img src="../src/images/smart.png" alt="logo-dark" class="mx-auto" height="50" />
                                             </a>
                                         </div>
 

@@ -1,7 +1,6 @@
 import { React, useState, useEffect } from 'react'
 import { TiThMenu } from "react-icons/ti";
 import { FaHome, FaRegFilePdf } from "react-icons/fa";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { IoMdPerson, IoMdSettings, IoIosBusiness } from "react-icons/io";
 import { NavLink } from 'react-router-dom';
 function menu() {
@@ -42,7 +41,7 @@ function menu() {
                                 </li>
                                 <li className="d-none d-lg-block">
                                     <div className="position-relative topbar-search">
-                                        <input type="text" className="form-control bg-light bg-opacity-75 border-light ps-4" placeholder="Search..." />
+                                        <input type="text" className="form-control bg-light bg-opacity-75 border-light ps-4" placeholder="Personel Ara..." />
                                         <i className="mdi mdi-magnify fs-16 position-absolute text-muted top-50 translate-middle-y ms-2"></i>
                                     </div>
                                 </li>
@@ -95,14 +94,14 @@ function menu() {
 
                 </div>
 
-                <div className="app-sidebar-menu" >
+                <div className="app-sidebar-menu" style={{ backgroundColor: '#1D1D41' }} >
                     <div className="h-100" data-simplebar>
-                        <div id="sidebar-menu">
+                        <div id="sidebar-menu" >
 
-                            <div className="d-flex justify-content-center m-3">
-                                <img src="src/images/smart_logo.png" alt="" height="45" />
+                            <div className="d-flex justify-content-center p-3 " style={{ width: '100%', backgroundColor: 'white' }}>
+                                <img src="src/images/smart.png" style={{ width: '75%' }} />
                             </div>
-
+                            <br></br>
                             <ul id="side-menu">
 
                                 <li className="menu-title">Genel</li>
