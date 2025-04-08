@@ -3,6 +3,8 @@ import { TiThMenu } from "react-icons/ti";
 import { FaHome, FaRegFilePdf } from "react-icons/fa";
 import { IoMdPerson, IoMdSettings, IoIosBusiness } from "react-icons/io";
 import { NavLink } from 'react-router-dom';
+import { MdHeight } from 'react-icons/md';
+import { IoMailOutline } from "react-icons/io5";
 function menu() {
     const [activeLink, setActiveLink] = useState(''); // Aktif linki tutacak state
 
@@ -49,9 +51,11 @@ function menu() {
 
                             <ul className="list-unstyled topnav-menu mb-0 d-flex align-items-center">
 
-                                <li className="d-none d-sm-flex">
+                                <li className="d-none d-sm-flex " >
                                     <button type="button" className="btn nav-link" data-toggle="fullscreen">
-                                        <i data-feather="maximize" className="align-middle fullscreen noti-icon"></i>
+                                    <div className=" rounded-circle d-flex justify-content-center align-items-center" style={{backgroundColor:'#f5f5f9', width:40, height:40}}>
+                                    <IoMailOutline  style={{fontSize:22}}/>
+                                    </div>
                                     </button>
                                 </li>
 
@@ -65,20 +69,11 @@ function menu() {
                                         </span>
                                     </a>
                                     <div className="dropdown-menu dropdown-menu-end profile-dropdown ">
-
-
-
                                         <a href="pages-profile.html" className="dropdown-item notify-item">
                                             <i className="mdi mdi-account-circle-outline fs-16 align-middle"></i>
                                             <span>Profil</span>
                                         </a>
-
-
-
-
                                         <div className="dropdown-divider"></div>
-
-
                                         <a href="auth-logout.html" className="dropdown-item notify-item">
                                             <i className="mdi mdi-location-exit fs-16 align-middle"></i>
                                             <span>Çıkış Yap</span>
@@ -99,7 +94,7 @@ function menu() {
                         <div id="sidebar-menu" >
 
                             <div className="d-flex justify-content-center p-3 " style={{ width: '100%', backgroundColor: 'white' }}>
-                                <img src="src/images/smart.png" style={{ width: '75%' }} />
+                                <img  src="src/images/smart.png" style={{ width: '75%' }} />
                             </div>
                             <br></br>
                             <ul id="side-menu">

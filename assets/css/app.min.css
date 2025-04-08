@@ -14739,7 +14739,7 @@ body {
 #sidebar-menu>ul>li>a:active svg,
 #sidebar-menu>ul>li>a:focus svg,
 #sidebar-menu>ul>li>a:hover svg {
-    fill: rgba(16, 16, 17) !important;
+    fill: #537aef !important;
 }
 
 #sidebar-menu>ul>li ul {

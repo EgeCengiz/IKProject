@@ -4,6 +4,7 @@ import { FaHome, FaRegFilePdf } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { IoMdPerson, IoMdSettings, IoIosBusiness } from "react-icons/io";
 import { NavLink } from 'react-router-dom';
+import { IoMailOutline } from "react-icons/io5";
 function personMenu() {
     const [activeLink, setActiveLink] = useState(''); // Aktif linki tutacak state
 
@@ -40,14 +41,16 @@ function personMenu() {
                                         <TiThMenu />
                                     </button>
                                 </li>
-                            
+
                             </ul>
 
                             <ul className="list-unstyled topnav-menu mb-0 d-flex align-items-center">
 
-                                <li className="d-none d-sm-flex">
+                                <li className="d-none d-sm-flex " >
                                     <button type="button" className="btn nav-link" data-toggle="fullscreen">
-                                        <i data-feather="maximize" className="align-middle fullscreen noti-icon"></i>
+                                        <div className=" rounded-circle d-flex justify-content-center align-items-center" style={{ backgroundColor: '#f5f5f9', width: 40, height: 40 }}>
+                                            <IoMailOutline style={{ fontSize: 22 }} />
+                                        </div>
                                     </button>
                                 </li>
 
@@ -57,7 +60,7 @@ function personMenu() {
                                     <a className="nav-link dropdown-toggle nav-user me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                                         <img src="../src/images/profile.png" alt="user-image" className="rounded-circle" />
                                         <span className="pro-user-name ms-1">
-                                            Okan Karaçor
+                                            Ege Cengiz Ortakcı
                                         </span>
                                     </a>
                                     <div className="dropdown-menu dropdown-menu-end profile-dropdown ">
@@ -90,12 +93,12 @@ function personMenu() {
 
                 </div>
 
-                <div className="app-sidebar-menu" style={{backgroundColor:'#1D1D41'}}>
+                <div className="app-sidebar-menu" style={{ backgroundColor: '#1D1D41' }}>
                     <div className="h-100" data-simplebar>
                         <div id="sidebar-menu">
 
-                        <div className="d-flex justify-content-center p-3"style={{width:'100%', backgroundColor:'white'}}>
-                                <img src="../src/images/smart.png" style={{width:'75%'}} />
+                            <div className="d-flex justify-content-center p-3" style={{ width: '100%', backgroundColor: 'white' }}>
+                                <img src="../src/images/smart.png" style={{ width: '75%' }} />
                             </div>
 
                             <ul id="side-menu">
@@ -139,22 +142,22 @@ function personMenu() {
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/bos" className="tp-link" activeClassName="active">
+                                                <NavLink to="/person/personNotice" className="tp-link" activeClassName="active">
                                                     Duyurular
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/bos" className="tp-link" activeClassName="active">
-                                                    Notlar
+                                                <NavLink to="/person/zimmet" className="tp-link" activeClassName="active">
+                                                    Personel Zimmet
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/bos" className="tp-link" activeClassName="active">
-                                                   Şirket Etkinlikleri
+                                                <NavLink to="/person/personCompanyDay" className="tp-link" activeClassName="active">
+                                                    Şirket Etkinlikleri
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/bos" className="tp-link" activeClassName="active">
+                                                <NavLink to="/person/PersonCommonShare" className="tp-link" activeClassName="active">
                                                     Paylaşılan Dosyalar
                                                 </NavLink>
                                             </li>

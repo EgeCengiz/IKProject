@@ -16,6 +16,10 @@ import CompanyDayPage from './Page/companyDayPage';
 import Menu from './item/menu';
 import PersonHome from './Person/Pages/personHome';
 import PersonForPermisson from './Person/Pages/personForPermisson';
+import PersonNoticePage from './Person/Pages/personNoticePage';
+import PersonZimmetPage from './Person/Pages/PersonZimmetPage';
+import PersonCompanyDay from './Person/Pages/personCompanyDay';
+import PersonCommonSharePage from './Person/Pages/personCommonSharePage';
 function App() {
 
   return (
@@ -51,6 +55,10 @@ function App() {
         <Routes>  
           <Route path="/person/home" element={<PersonHome />} />
           <Route path="/person/permisson" element={<PersonForPermisson />} />
+          <Route path="/person/personNotice" element={<PersonNoticePage />} />
+          <Route path="/person/zimmet" element={<PersonZimmetPage />} />
+          <Route path="/person/personCompanyDay" element={<PersonCompanyDay />} />
+          <Route path="/person/PersonCommonShare" element={<PersonCommonSharePage />} />
         </Routes>
       </Router>
     
