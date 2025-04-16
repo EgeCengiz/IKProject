@@ -97,12 +97,12 @@ function personMenu() {
                     <div className="h-100" data-simplebar>
                         <div id="sidebar-menu">
 
-                            <div className="d-flex justify-content-center p-3" style={{ width: '100%', backgroundColor: 'white' }}>
-                                <img src="../src/images/smart.png" style={{ width: '75%' }} />
+                            <div className="d-flex justify-content-center p-3 " style={{ width: '100%', backgroundColor: 'white' }}>
+                            <img  src="../src/images/smart.png" style={{ width: '60%' }} />
                             </div>
 
                             <ul id="side-menu">
-
+<br></br>
                                 <li className="menu-title">Genel</li>
                                 <li>
                                     <a href="#sidebarDashboards2" data-bs-toggle="collapse" aria-expanded="true">

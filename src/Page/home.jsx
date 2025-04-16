@@ -4,23 +4,23 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Notes from '../item/notes';
 import Calender from '../item/calender';
 import PersonPermission from '../item/personPermission';
-import Personinfo from '../item/personinfo';
 import BirthdayPage from './birthdayPage';
+
 function home() {
     return (
         <div>
            
-            <div class="content-page">
-                <div class="content">
-                    <div class="container-xxl"> 
+            <div className="content-page">
+                <div className="content">
+                    <div className="container-xxl"> 
                         <PersonPermission/>
-                        <div class="row">
-                            <div class="col-md-8"><Notes/></div>
-                            <div class="col-md-4"><BirthdayPage/></div>
-                        </div>
-                         
+                       <br></br>
+                        <div className="row">
+                          
+                            <div className="col-md-8"><Notes/></div>
+                            <div className="col-md-4"><BirthdayPage/></div>
+                        </div> 
                          <Calender />
-                       
                       
                     </div>
                 </div>

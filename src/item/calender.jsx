@@ -1,147 +1,423 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import { Modal, Button, Form } from 'react-bootstrap';
+import axios from 'axios';
+import UsersApi from '../Api/UsersApi';
+import { TbListDetails } from "react-icons/tb";
+import { FaSearch } from "react-icons/fa";
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
-// Moment'i localizer olarak kullanıyoruz.
+moment.locale('tr');
 const localizer = momentLocalizer(moment);
 
-// Özel Toolbar: Sadece ay etiketini, önceki ve sonraki ay butonlarını gösterir.
-const CustomToolbar = (toolbar) => {
-  const goToBack = () => {
-    toolbar.onNavigate('prev');
-  };
+const CalendarContainer = styled(motion.div)`
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+`;
 
-  const goToNext = () => {
-    toolbar.onNavigate('next');
-  };
+const CalendarTitle = styled.h4`
+  color: #1e40af;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 1.5rem;
+`;
 
-  return (
-    <div className="rbc-toolbar d-flex justify-content-between align-items-center mb-2">
-      <Button variant="outline-secondary" size="sm" onClick={goToBack}>
-        ←
-      </Button>
-      <span style={{ fontWeight: '500', fontSize: '1rem', color: '#90caf9' }}>
-        {toolbar.label}
-      </span>
-      <Button variant="outline-secondary" size="sm" onClick={goToNext}>
-        →
-      </Button>
-    </div>
-  );
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+`;
+
+const Card = styled.div`
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin:20px;
+`;
+
+const CustomToolbar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+`;
+
+const ToolbarButton = styled.button`
+  background-color: #fff;
+  border: 1px solid #a0aec0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: #2d3748;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f7fafc;
+    border-color: #4299e1;
+  }
+`;
+
+const ToolbarLabel = styled.span`
+  font-weight: 500;
+  font-size: 1rem;
+  color: #4299e1;
+`;
+
+
+
+const FormInput = styled.input`
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #a0aec0;
+  font-size: 0.9rem;
+  color: #2d3748;
+  width:100%;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+  }
+`;
+
+const FormButton = styled.button`
+  background-color: #4299e1;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #3182ce;
+  }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled(motion.div)`
+  background-color: #fff;
+  border-radius: 8px;
+  width: 400px;
+  padding: 20px;
+`;
+
+const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+`;
+
+const ModalTitle = styled.h5`
+  color: #2d3748;
+  font-size: 1.2rem;
+  margin: 0;
+`;
+
+const ModalCloseButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #a0aec0;
+  cursor: pointer;
+`;
+
+const ModalBody = styled.div`
+  margin-bottom: 15px;
+`;
+
+const ModalFooter = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+`;
+
+const ModalButton = styled.button`
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+
+  &.save {
+    background-color: #4299e1;
+    color: #fff;
+  }
+
+  &.delete {
+    background-color: #e53e3e;
+    color: #fff;
+  }
+
+  &.close {
+    background-color: #edf2f7;
+    color: #2d3748;
+  }
+
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+
+const EventTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  @media (max-width: 768px) {
+    /* Küçük ekranlarda tabloyu kaydırılabilir yap */
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+`;
+
+const TableHead = styled.thead`
+  background-color: #edf2f7;
+`;
+
+const TableHeader = styled.th`
+  padding: 10px;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #2c5282;
+`;
+
+const TableBody = styled.tbody`
+  tr {
+    border-bottom: 1px solid #e2e8f0;
+  }
+  tr:last-child {
+    border-bottom: none;
+  }
+`;
+
+const TableRow = styled.tr`
+  &:hover {
+    background-color: #f7fafc;
+  }
+`;
+
+const TableData = styled.td`
+  padding: 10px;
+  font-size: 0.85rem;
+  color: #2d3748;
+`;
+
+const ProfileImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+`;
+
+const Badge = styled.span`
+  background-color: #fed7e2;
+  color: #9f1a44;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  margin-left: 5px;
+`;
+
+const cardVariants = {
+ 
 };
 
-function CalendarComponent() {
-  // Eklenen etkinlikleri tutan state
-  const [events, setEvents] = useState([]);
-  
-  // Form verileri
-  const [formData, setFormData] = useState({
-    title: '',
-    start: '',
-    end: '',
-    color: '#5a9bd4', // Yumuşak mavi tonu
-  });
+function CustomToolbarComponent({ label, onNavigate }) {
+  return (
+    <CustomToolbar>
+      <ToolbarButton onClick={() => onNavigate('PREV')}>← Geri</ToolbarButton>
+      <ToolbarLabel>{label}</ToolbarLabel>
+      <ToolbarButton onClick={() => onNavigate('NEXT')}>İleri →</ToolbarButton>
+    </CustomToolbar>
+  );
+}
 
-  // Takvimden seçim yapıldığında açılacak modal için state
+function CalendarComponent() {
+  const [events, setEvents] = useState([]);
+  const [formData, setFormData] = useState({ title: '', start: '', end: '', color: '#5a9bd4' });
   const [showModal, setShowModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [modalData, setModalData] = useState({
-    title: '',
-    color: '#5a9bd4',
-  });
+  const [modalData, setModalData] = useState({ title: '', color: '#5a9bd4' });
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
-  // Formdaki değişiklikler
+  const handleNavigate = (date) => {
+    setCurrentDate(date);
+    const year = moment(date).year();
+    const month = moment(date).month() + 1;
+    setEvents([]);
+    getCalender(year, month);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Form aracılığıyla etkinlik ekleme
-  const handleAddEvent = (e) => {
+  const handleAddEvent = async (e) => {
     e.preventDefault();
-    const { title, start, end, color } = formData;
-    if (!title || !start || !end) return;
+    if (!formData.title || !formData.start || !formData.end) return;
+
     const newEvent = {
-      title,
-      start: new Date(start),
-      end: new Date(end),
-      color,
+      title: formData.title,
+      startDate: formData.start,
+      endDate: formData.end,
+      color: formData.color,
     };
-    setEvents([...events, newEvent]);
-    // Formu sıfırla
-    setFormData({
-      title: '',
-      start: '',
-      end: '',
-      color: '#5a9bd4',
-    });
+
+    try {
+      const response = await axios.post(UsersApi.ENDPOINTS.POST_CALENDER_DATA, newEvent, {
+        headers: { Authorization: 'Bearer ' + UsersApi.TOKEN }
+      });
+
+      const savedEvent = {
+        id: response.data.id,
+        title: response.data.title,
+        start: new Date(response.data.startDate),
+        end: new Date(response.data.endDate),
+        color: response.data.color,
+      };
+
+      setEvents(prev => [...prev, savedEvent]);
+      setFormData({ title: '', start: '', end: '', color: '#5a9bd4' });
+    } catch (error) {
+      console.error("Etkinlik ekleme hatası:", error);
+      alert("Etkinlik eklenirken bir hata oluştu.");
+    }
   };
 
-  // Takvimden tarih aralığı seçildiğinde modalı aç
-  const handleSelectSlot = ({ start, end }) => {
-    setSelectedSlot({ start, end });
+  const handleSelectSlot = (slotInfo) => {
+    setSelectedSlot(slotInfo);
+    setSelectedEvent(null);
     setModalData({ title: '', color: '#5a9bd4' });
     setShowModal(true);
   };
 
-  // Modal üzerinden etkinlik ekleme
-  const handleSaveModalEvent = () => {
-    if (!modalData.title) return;
+  const handleSelectEvent = (event) => {
+    setSelectedEvent(event);
+    setModalData({ title: event.title, color: event.color });
+    setShowModal(true);
+  };
+
+  const handleSaveModalEvent = async () => {
+    if (!modalData.title || !selectedSlot) return;
+
+    const isSingleDay = moment(selectedSlot.start).isSame(selectedSlot.end, 'day');
+
     const newEvent = {
       title: modalData.title,
-      start: selectedSlot.start,
-      end: selectedSlot.end,
+      startDate: moment(selectedSlot.start).format('YYYY-MM-DD'),
+      endDate: isSingleDay
+        ? moment(selectedSlot.start).format('YYYY-MM-DD')
+        : moment(selectedSlot.end).format('YYYY-MM-DD'),
       color: modalData.color,
     };
-    setEvents([...events, newEvent]);
-    setShowModal(false);
-    setSelectedSlot(null);
+
+    try {
+      const response = await axios.post(UsersApi.ENDPOINTS.POST_CALENDER_DATA, newEvent, {
+        headers: { Authorization: 'Bearer ' + UsersApi.TOKEN }
+      });
+
+      const savedEvent = {
+        id: response.data.id,
+        title: response.data.title,
+        start: new Date(response.data.startDate),
+        end: new Date(response.data.endDate),
+        color: response.data.color,
+      };
+      setEvents(prev => [...prev, savedEvent]);
+      setShowModal(false);
+    } catch (error) {
+      console.error("Etkinlik ekleme hatası:", error);
+      alert("Etkinlik eklenirken bir hata oluştu.");
+    }
   };
 
-  // Takvimdeki etkinliklerin stilini belirleyelim (minimal tasarım)
-  const eventStyleGetter = (event) => {
-    const style = {
-      backgroundColor: event.color,
-      borderRadius: '4px',
-      opacity: 0.9,
-      color: 'white',
-      border: 'none',
-      padding: '2px 4px',
-      fontSize: '0.85rem',
-    };
-    return { style };
+  const handleDeleteEvent = async () => {
+    if (!selectedEvent) return;
+
+    try {
+      await axios.delete(`${UsersApi.ENDPOINTS.DELETE_CALENDER_DATA}/${selectedEvent.id}`, {
+        headers: { Authorization: 'Bearer ' + UsersApi.TOKEN }
+      });
+
+      setEvents(prev => prev.filter(ev => ev.id !== selectedEvent.id));
+      setShowModal(false);
+      alert("Etkinlik Başarıyla Silindi");
+    } catch (error) {
+      console.error("Etkinlik silme hatası:", error);
+      alert("Etkinlik silinirken bir hata oluştu.");
+    }
   };
+
+  const getCalender = async (year, month) => {
+    try {
+      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_CALENDER_ALL}?year=${year}&month=${month}`, {
+        headers: { Authorization: 'Bearer ' + UsersApi.TOKEN }
+      });
+      const parsedEvents = response.data.map(ev => ({
+        id: ev.id,
+        title: ev.title,
+        start: new Date(ev.startDate),
+        end: new Date(ev.endDate),
+        color: ev.color,
+      }));
+      setEvents(parsedEvents);
+    } catch (error) {
+      console.error("Takvim verisi çekme hatası:", error);
+    }
+  };
+
+  const eventStyleGetter = (event) => {
+    return {
+      style: {
+        backgroundColor: event.color,
+        borderRadius: '4px',
+        opacity: 0.9,
+        color: 'white',
+        border: 'none',
+        padding: '2px 4px',
+        fontSize: '0.85rem',
+      }
+    };
+  };
+
+  useEffect(() => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    getCalender(year, month);
+  }, []);
 
   return (
-    <div className=' p-3'>  
-     <h5 style={{ color: "#4a5a6b" }}>Takvim</h5>
-   
-  <div className='card'>
-      
-      <div className='card-body'>
-         <div className="container mt-4">
-      {/* Stil ayarlarını global olarak ekliyoruz */}
-      <style type="text/css">
-        {`
-          /* Takvimdeki header ve toolbar yazılarını soluk mavi yapıyoruz */
-          .rbc-header, .rbc-toolbar-label {
-            color: #90caf9 !important;
-          }
-          /* Diğer ay (mevcut ay dışı) günlerin arka planını hafif mavi yapıyoruz */
-          .rbc-day-bg.rbc-off-range-bg {
-            background-color: #e3f2fd !important;
-          }
-        `}
-      </style>
-
+    <CalendarContainer
      
-
-      {/* Takvim */}
-      <div className="row">
-        <div className="col-12 mb-3">
+    >
+        <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}>Takvim</h5>
+       
+      <ContentWrapper>
+        <Card className='p-2' >
           <Calendar
             localizer={localizer}
             events={events}
@@ -150,127 +426,137 @@ function CalendarComponent() {
             style={{ height: 600 }}
             selectable
             onSelectSlot={handleSelectSlot}
+            onSelectEvent={handleSelectEvent}
+            onNavigate={handleNavigate}
             views={['month']}
             defaultView="month"
-            toolbar
-            components={{ toolbar: CustomToolbar }}
             eventPropGetter={eventStyleGetter}
+            components={{ toolbar: CustomToolbarComponent }}
           />
-        </div>
-      </div>
+       
+        </Card>
+        <Card >
+          <EventTable>
+            <TableHead>
+              <tr>
+                <TableHeader>Personel</TableHeader>
+                <TableHeader>Takvim Başlık</TableHeader>
+                <TableHeader>Başlangıç Tarihi</TableHeader>
+                <TableHeader>Bitiş Tarihi</TableHeader>
+                <TableHeader>Aksiyon</TableHeader>
+              </tr>
+            </TableHead>
+            <TableBody>
+              {events.length > 0 ? (
+                events.map((data) => {
+                  const today = moment().startOf('day');
+                  const start = moment(data.start).startOf('day');
+                  const end = moment(data.end).startOf('day');
+                  const isToday = today.isSameOrAfter(start) && today.isSameOrBefore(end);
 
-      {/* Etkinlik Ekleme Formu */}
-      <div className="row">
-        <div className="col-12">
-          <div className=" shadow-sm p-2">
-            <Form onSubmit={handleAddEvent} className="d-flex flex-wrap align-items-center">
-              <div className="col-md-3 mb-2 px-1">
-                <Form.Control
+                  return (
+                    <TableRow
+                      key={data.id}
+                      style={{ backgroundColor: isToday ? '#fed7e2' : 'inherit' }}
+                    >
+                      <TableData>
+                        <div className="d-flex align-items-center">
+                          <ProfileImage src="../src/images/okan.jpg" alt="Kullanıcı" />
+                          Okan Karaçor
+                          <Badge>IK</Badge>
+                        </div>
+                      </TableData>
+                      <TableData>{data.title}</TableData>
+                      <TableData>{moment(data.start).format('DD.MM.YYYY')}</TableData>
+                      <TableData>{moment(data.end).format('DD.MM.YYYY')}</TableData>
+                      <TableData>
+                        <TbListDetails
+                          color="#4299e1"
+                          onClick={() => handleSelectEvent(data)}
+                          style={{ cursor: 'pointer' }}
+                        />
+                      </TableData>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow>
+                  <TableData colSpan="5" className="text-center">
+                    Veri bulunamadı
+                  </TableData>
+                </TableRow>
+              )}
+            </TableBody>
+          </EventTable>
+        </Card>
+      </ContentWrapper>
+
+      {showModal && (
+        <ModalOverlay>
+          <ModalContent
+          
+          
+          >
+            <ModalHeader>
+              <ModalTitle>{selectedEvent ? 'Etkinlik Detayları' : 'Yeni Etkinlik'}</ModalTitle>
+              <ModalCloseButton onClick={() => setShowModal(false)}>×</ModalCloseButton>
+            </ModalHeader>
+            <ModalBody>
+              <div className="mb-3">
+                <label className="form-label small">Başlık</label>
+                <FormInput
                   type="text"
-                  placeholder="Başlık"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  size="sm"
+                  placeholder="Etkinlik başlığı"
+                  value={modalData.title}
+                  onChange={(e) => setModalData(prev => ({ ...prev, title: e.target.value }))}
+                  readOnly={!!selectedEvent}
                 />
               </div>
-              <div className="col-md-3 mb-2 px-1">
-                <Form.Control
-                  type="date"
-                  name="start"
-                  value={formData.start}
-                  onChange={handleChange}
-                  size="sm"
-                />
-              </div>
-              <div className="col-md-3 mb-2 px-1">
-                <Form.Control
-                  type="date"
-                  name="end"
-                  value={formData.end}
-                  onChange={handleChange}
-                  size="sm"
-                />
-              </div>
-              <div className="col-md-2 mb-2 px-1">
-                <Form.Control
+              <div className="mb-3">
+                <label className="form-label small">Renk</label>
+                <input
+                  className=' border-0'
                   type="color"
-                  name="color"
-                  value={formData.color}
-                  onChange={handleChange}
-                  size="sm"
-                  title="Renk Seç"
+                  id='renk'
+                  value={modalData.color}
+                  onChange={(e) => setModalData(prev => ({ ...prev, color: e.target.value }))}
+                  disabled={!!selectedEvent}
                 />
               </div>
-              <div className="col-md-1 mb-2 px-1">
-                <Button variant="secondary" type="submit" size="sm" block="true">
-                  Ekle
-                </Button>
-              </div>
-            </Form>
-          </div>
-        </div>
-      </div>
-
-      {/* Takvimden slot seçildiğinde açılan Modal */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Yeni Etkinlik</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="modalTitle" className="mb-2">
-              <Form.Label className="small">Başlık</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Etkinlik başlığı"
-                value={modalData.title}
-                onChange={(e) => setModalData(prev => ({ ...prev, title: e.target.value }))}
-                size="sm"
-              />
-            </Form.Group>
-            <Form.Group controlId="modalColor" className="mb-2">
-              <Form.Label className="small">Renk</Form.Label>
-              <Form.Control
-                type="color"
-                value={modalData.color}
-                onChange={(e) => setModalData(prev => ({ ...prev, color: e.target.value }))}
-                size="sm"
-              />
-            </Form.Group>
-            <Form.Group controlId="modalRange" className="mb-2">
-              <Form.Label className="small">Tarih Aralığı</Form.Label>
-              <div className="small">
-                {selectedSlot && (
-                  <>
-                    <div>
-                      <strong>Başlangıç:</strong> {selectedSlot.start.toLocaleDateString()}
+              {selectedEvent ? (
+                <div className="mb-3">
+                  <label className="form-label small">Tarih Aralığı</label>
+                  <div className="small">
+                    <div><strong>Başlangıç:</strong> {moment(selectedEvent.start).format('DD.MM.YYYY')}</div>
+                    <div><strong>Bitiş:</strong> {moment(selectedEvent.end).format('DD.MM.YYYY')}</div>
+                  </div>
+                </div>
+              ) : (
+                selectedSlot && (
+                  <div className="mb-3">
+                    <label className="form-label small">Tarih Aralığı</label>
+                    <div className="small">
+                      <div><strong>Başlangıç:</strong> {moment(selectedSlot.start).format('DD.MM.YYYY')}</div>
+                      <div><strong>Bitiş:</strong> {moment(selectedSlot.end).subtract(1, 'days').format('DD.MM.YYYY')}</div>
                     </div>
-                    <div>
-                      <strong>Bitiş:</strong> {selectedSlot.end.toLocaleDateString()}
-                    </div>
-                  </>
-                )}
-              </div>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer className="p-2">
-          <Button variant="outline-secondary" size="sm" onClick={() => setShowModal(false)}>
-            İptal
-          </Button>
-          <Button variant="secondary" size="sm" onClick={handleSaveModalEvent}>
-            Kaydet
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
-      </div>
-    </div>
-    </div>
-  
-   
+                  </div>
+                )
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <ModalButton className="close" onClick={() => setShowModal(false)}>Kapat</ModalButton>
+              {!selectedEvent && (
+                <ModalButton className="save" onClick={handleSaveModalEvent}>Kaydet</ModalButton>
+              )}
+              {selectedEvent && (
+                <ModalButton className="delete" onClick={handleDeleteEvent}>Sil</ModalButton>
+              )}
+            </ModalFooter>
+          </ModalContent>
+        </ModalOverlay>
+      )}
+    </CalendarContainer>
   );
-};
+}
 
 export default CalendarComponent;

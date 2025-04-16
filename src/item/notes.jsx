@@ -1,113 +1,154 @@
-import React from 'react'
-import { TiPinOutline } from "react-icons/ti";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import UsersApi from '../Api/UsersApi';
+import { FaThumbtack } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
-function notes() {
-    return (
-        <div>  <h5 style={{color:"#4a5a6b"}}>Notlar</h5>
-              <div className='card' >
-                <div className='card-body'>
-                     <br></br>
-                        <div>
-                          
-                         <br></br>
-                        </div>
-                        <div className='row'>
-                            <div class="col-sm-6 col-lg-6">
-                                <div className="mb-3" style={{padding:10,borderRadius:10, border: '3px solid #EFF1F4'}} >
-                                    <div class=" d-flex justify-content-between">Hazırlanan Not
-                                        <TiPinOutline />
-                                    </div>
-                                    <div class="">
-                                        <blockquote class="card-blockquote ">
-                                            <p class="card-text text-muted">Notun Açıklama kısmı burada olacak ve bu not tarihi yaklaştığı zaman gösterilecek</p>
-                                            <footer class="blockquote-footer mt-0 font-size-12 ">
-                                               <div className='d-flex justify-content-between'>
-                                                 <div >28.03.2025 <cite title="Source Title">Okan Karaçor</cite></div>
-                                                <FaRegTrashCan style={{color:"#e27171", width:15,height:15,cursor:'pointer'}} />
-                                               </div>
-                                               
-                                            </footer>
-                                        </blockquote>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="mb-3" class="col-sm-6 col-lg-6">
-                            <div style={{padding:10,borderRadius:10, border: '3px solid #EFF1F4'}} >
-                                    <div class=" d-flex justify-content-between">Hazırlanan Not
-                                        <TiPinOutline />
-
-                                    </div>
-
-                                    <div >
-                                        <blockquote class="card-blockquote mb-0">
-                                            <p class="card-text text-muted">Notun Açıklama kısmı burada olacak ve bu not tarihi yaklaştığı zaman gösterilecek</p>
-                                            <footer class="blockquote-footer mt-0 font-size-12">
-                                            <div className='d-flex justify-content-between'>
-                                                 <div >28.03.2025 <cite title="Source Title">Okan Karaçor</cite></div>
-                                                <FaRegTrashCan style={{color:"#e27171", width:15,height:15,cursor:'pointer'}} />
-                                               </div>
-                                            </footer>
-                                        </blockquote>
-                                    </div>
-
-                                </div>
-                            </div>
+import { motion } from 'framer-motion';
+import styled from 'styled-components';
+import { TiPinOutline } from "react-icons/ti";
+const NotesContainer = styled(motion.div)`
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+ 
+`;
 
 
 
+const NotesGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+`;
 
-                            <div className="mb-3" class="col-sm-6 col-lg-6">
-                            <div style={{padding:10,borderRadius:10, border: '3px solid #EFF1F4'}} >
-                                    <div class=" d-flex justify-content-between">Hazırlanan Not
-                                        <TiPinOutline />
+const NoteCard = styled(motion.div)`
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+ 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+`;
 
-                                    </div>
+const NoteHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding:15px;
+  border-radius: 8px 8px 0 0;
+  color:#2c5282;
+  background-color: #edf2f7 !important;
+`;
 
-                                    <div >
-                                        <blockquote class="card-blockquote mb-0">
-                                            <p class="card-text text-muted">Notun Açıklama kısmı burada olacak ve bu not tarihi yaklaştığı zaman gösterilecek</p>
-                                            <footer class="blockquote-footer mt-0 font-size-12">
-                                            <div className='d-flex justify-content-between'>
-                                                 <div >28.03.2025 <cite title="Source Title">Okan Karaçor</cite></div>
-                                                <FaRegTrashCan style={{color:"#e27171", width:15,height:15, cursor:'pointer'}} />
-                                               </div>
-                                            </footer>
-                                        </blockquote>
-                                    </div>
+const NoteTitleText = styled.h6`
+  margin-bottom: 0;
+  color:rgb(71, 82, 101);
+  font-size: 1rem;
+`;
 
-                                </div>
-                            </div>
+const PinIcon = styled(FaThumbtack)`
+  font-size: 14px;
+  color: #a0aec0;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+  &:hover {
+    color: #4299e1;
+  }
+`;
 
-                            <div className="mb-3" class="col-sm-6 col-lg-6">
-                            <div style={{padding:10,borderRadius:10, border: '3px solid #EFF1F4'}} >
-                                    <div class=" d-flex justify-content-between">Hazırlanan Not
-                                        <TiPinOutline />
+const NoteContent = styled.blockquote`
+  margin-bottom: 10px;
+   padding:10px;
+`;
 
-                                    </div>
+const NoteText = styled.p`
+  color: #4a5568;
+  font-size: 0.9rem;
+  line-height: 1.5;
+`;
 
-                                    <div >
-                                        <blockquote class="card-blockquote mb-0">
-                                            <p class="card-text text-muted">Notun Açıklama kısmı burada olacak ve bu not tarihi yaklaştığı zaman gösterilecek</p>
-                                            <footer class="blockquote-footer mt-0 font-size-12">
-                                            <div className='d-flex justify-content-between'>
-                                                 <div >28.03.2025 <cite title="Source Title">Okan Karaçor</cite></div>
-                                                <FaRegTrashCan style={{color:"#e27171", width:15,height:15, cursor:'pointer'}} />
-                                               </div>
-                                            </footer>
-                                        </blockquote>
-                                    </div>
+const NoteFooter = styled.footer`
+  font-size: 0.8rem;
+  color: #718096;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+   padding:15px;
+`;
 
-                                </div>
-                            </div>
+const TrashIcon = styled(FaRegTrashCan)`
+  color: #e53e3e;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+  &:hover {
+    color:rgb(240, 26, 26);
+  }
+`;
 
+const cardVariants = {
+ 
+};
 
-                        </div>
-                    
-                </div>
+function Notes() {
+  const [data, setData] = useState([]);
+
+  const getAllNotes = async () => {
+    try {
+      const response = await axios.get(UsersApi.ENDPOINTS.GET_NOTES, {
+        headers: {
+          Authorization: 'Bearer ' + UsersApi.TOKEN
+        }
+      });
+      setData(response.data);
+    } catch (error) {
+      console.error("Hata:", error.response ? error.response.data : error.message);
+    }
+  };
+
+  useEffect(() => {
+    getAllNotes();
+  }, []);
+
+  return (
+    <NotesContainer
+    
+    
+    >
+      <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}>Notlarım</h5>
+      <NotesGrid>
+        {data.map((notesData, index) => (
+          <NoteCard
+            key={index}
+            variants={cardVariants}
+         
+       
+            transition={{ delay: index * 0.1 }}
+          >
+            <NoteHeader>
+              <NoteTitleText>{notesData.notesName}</NoteTitleText>
+              <TiPinOutline />
+            </NoteHeader>
+            <NoteContent>
+              <NoteText>{notesData.description}</NoteText>
+            </NoteContent>
+            <NoteFooter>
+              <div>
+                {new Date().toLocaleDateString('tr-TR')} <cite title="Source Title">Okan Karaçor</cite>
               </div>
-        </div>
-    )
+              <TrashIcon />
+            </NoteFooter>
+          </NoteCard>
+        ))}
+      </NotesGrid>
+    </NotesContainer>
+  );
 }
 
-export default notes
+export default Notes;

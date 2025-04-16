@@ -33,7 +33,7 @@ function App() {
 
           <Route path="/" element={<Home />} />
           <Route path="/person" element={<PersonPage />} />
-          <Route path="/personDetails" element={<PersonDetails />} />
+          <Route path="/personDetails/:username" element={<PersonDetails />} />
           <Route path="/personPermission" element={<PersonPermissionPage />} />
           <Route path="/zimmet" element={<ZimmetPage />} />
           <Route path="/personregister" element={<PersonRegisterPage />} />

@@ -14735,6 +14735,10 @@ body {
     color: #537aef;
     text-decoration: none
 }
+.logo_shadow{
+    box-shadow: 0 .05rem .25rem rgb(255, 255, 255);
+}
+
 
 #sidebar-menu>ul>li>a:active svg,
 #sidebar-menu>ul>li>a:focus svg,
@@ -15377,7 +15381,7 @@ body{
 }
 
 .card-header {
-   background-color: white !important;
+   background-color: #edf2f7 !important ;
    border-bottom: 10 px solid red !important;
    
 }

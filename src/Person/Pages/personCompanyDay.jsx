@@ -12,7 +12,7 @@ function personCompanyDay() {
             <br></br>
                   <h5 style={{color:"#4a5a6b"}}>Etkinlikler</h5>
                   <br></br>         
-             <div className='card' >
+             <div className='card me-5 ms-5 p-1' >
                          <div className='card-body'>
                               <br></br>
                                  <div>
@@ -20,7 +20,7 @@ function personCompanyDay() {
                                  </div>
                                  <div className='row'>
                                      <div class="col-md-3">
-                                         <div className="mb-3 p-3" style={{padding:10,borderRadius:10, border: '3px solid #EFF1F4'}} >
+                                         <div className="mb-3 p-3" style={{padding:5,borderRadius:10, border: '3px solid #EFF1F4'}} >
                                              
                                            <img src='../src/images/companyday.png' style={{width:'100%'}}/>
                                         

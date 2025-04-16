@@ -63,7 +63,7 @@ function menu() {
 
                                 <li className="dropdown notification-list topbar-dropdown">
                                     <a className="nav-link dropdown-toggle nav-user me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                                        <img src="src/images/profile.png" alt="user-image" className="rounded-circle" />
+                                        <img src="../src/images/okan.jpg" alt="user-image" className="rounded-circle" />
                                         <span className="pro-user-name ms-1">
                                             Okan Karaçor
                                         </span>
@@ -93,8 +93,8 @@ function menu() {
                     <div className="h-100" data-simplebar>
                         <div id="sidebar-menu" >
 
-                            <div className="d-flex justify-content-center p-3 " style={{ width: '100%', backgroundColor: 'white' }}>
-                                <img  src="src/images/smart.png" style={{ width: '75%' }} />
+                            <div className="d-flex justify-content-center p-3 " style={{ width: '100%', backgroundColor: 'white'}}>
+                                <img  src="../src/images/smart.png" style={{ width: '60%' }} />
                             </div>
                             <br></br>
                             <ul id="side-menu">
@@ -110,7 +110,7 @@ function menu() {
 
                                         <ul className="nav-second-level">
                                             <li>
-                                                <NavLink to="/" className="tp-link" activeClassName="active">
+                                                <NavLink to="/" className="tp-link">
                                                     Anasayfa
                                                 </NavLink>
                                             </li>
@@ -133,22 +133,22 @@ function menu() {
 
                                         <ul className="nav-second-level">
                                             <li>
-                                                <NavLink to="/person" className="tp-link" activeClassName="active">
+                                                <NavLink to="/person" className="tp-link" >
                                                     Özlük Belgeleri
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/personPermission" className="tp-link" activeClassName="active">
+                                                <NavLink to="/personPermission" className="tp-link" >
                                                     İzin Talepleri
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/shift" className="tp-link" activeClassName="active">
+                                                <NavLink to="/shift" className="tp-link" >
                                                     Mesai Takip
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/zimmet" className="tp-link" activeClassName="active">
+                                                <NavLink to="/zimmet" className="tp-link" >
                                                     Zimmet Takip
                                                 </NavLink>
                                             </li>
@@ -169,27 +169,27 @@ function menu() {
 
                                         <ul className="nav-second-level">
                                             <li>
-                                                <NavLink to="/notes" className="tp-link" activeClassName="active">
+                                                <NavLink to="/notes" className="tp-link">
                                                     Notlar
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/notice" className="tp-link" activeClassName="active">
+                                                <NavLink to="/notice" className="tp-link" >
                                                     Duyurular
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/companyDay" className="tp-link" activeClassName="active">
+                                                <NavLink to="/companyDay" className="tp-link">
                                                     Şirket Etkinlikleri
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/personregister" className="tp-link" activeClassName="active">
+                                                <NavLink to="/personregister" className="tp-link">
                                                     Personel Ekle
                                                 </NavLink>
                                             </li>
                                             <li>
-                                                <NavLink to="/calender" className="tp-link" activeClassName="active">
+                                                <NavLink to="/calender" className="tp-link">
                                                     Takvim
                                                 </NavLink>
                                             </li>
@@ -211,7 +211,7 @@ function menu() {
                                         <ul className="nav-second-level">
 
                                             <li>
-                                                <NavLink to="/commonshare" className="tp-link" activeClassName="active">
+                                                <NavLink to="/commonshare" className="tp-link">
                                                     Ortak Dosya Paylaşımı
                                                 </NavLink>
                                             </li>

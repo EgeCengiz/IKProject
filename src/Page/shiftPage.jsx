@@ -1,112 +1,186 @@
-import React from 'react'
-import Menu from '../item/menu'
+import React from 'react';
+import Menu from '../item/menu';
 import { FaSearch } from "react-icons/fa";
 import { TbListDetails } from "react-icons/tb";
-function shiftPage() {
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
+
+const ShiftPageContainer = styled(motion.div)`
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const ShiftTitle = styled.h4`
+  color: #1e40af;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 1.5rem;
+`;
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+`;
+
+const Card = styled.div`
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 15px;
+`;
+
+const SearchForm = styled.form`
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+`;
+
+const SearchInput = styled.input`
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #a0aec0;
+  font-size: 0.9rem;
+  color: #2d3748;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+  }
+`;
+
+const SearchIcon = styled(FaSearch)`
+  color: #4299e1;
+  margin-left: 10px;
+  font-size: 1rem;
+`;
+
+const ShiftTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  @media (max-width: 768px) {
+    /* Küçük ekranlarda tabloyu kaydırılabilir yap */
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+`;
+
+const TableHead = styled.thead`
+  background-color: #edf2f7;
+`;
+
+const TableHeader = styled.th`
+  padding: 10px;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #2c5282;
+`;
+
+const TableBody = styled.tbody`
+  tr {
+    border-bottom: 1px solid #e2e8f0;
+  }
+  tr:last-child {
+    border-bottom: none;
+  }
+`;
+
+const TableRow = styled.tr`
+  &:hover {
+    background-color: #f7fafc;
+  }
+`;
+
+const TableData = styled.td`
+  padding: 10px;
+  font-size: 0.85rem;
+  color: #2d3748;
+`;
+
+const DetailIcon = styled(TbListDetails)`
+  color: #4299e1;
+  cursor: pointer;
+  font-size: 1rem;
+`;
+
+const cardVariants = {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -10 },
+};
+
+const shiftData = [
+    { name: 'Ubeyde Rizaoglu', position: 'Project Manager', annualLeave: 10, usedLeave: 3 },
+    { name: 'Ziya', position: 'Backend', annualLeave: 8, usedLeave: 3 },
+    { name: 'Ege Cengiz Ortakcı', position: 'Stajer', annualLeave: 5, usedLeave: 1 },
+    { name: 'Okan Karaçor', position: 'IK Menager', annualLeave: 15, usedLeave: 2 },
+    { name: 'Ülkü', position: 'Project Manager', annualLeave: 10, usedLeave: 3 },
+    { name: 'Recep', position: 'Project Manager', annualLeave: 15, usedLeave: 3 },
+    { name: 'Sefa', position: 'Project Manager', annualLeave: 12, usedLeave: 3 },
+];
+
+function ShiftPage() {
     return (
-        <div>
+        <div class="content-page">
 
-          
-            <div class="content-page">
-
-                <div class="content">
-                    <div class="container-xxl">
-                        <br></br>
-     <h5 style={{ color: "#4a5a6b" }}>Mesai Tablosu</h5>
-            <br></br>
-            <div className='row'>
-
-                <div class="col-12">
-                    <div class="card">
-
-                        <div class="card-header">
-
-                            <br></br>
-                            <form class="d-flex search-form align-item-center" action="/search" method="GET">
-                                <input class="form-control" type="text" name="name" placeholder="İsme göre ara..." aria-label="İsim" />
-                                <FaSearch style={{ margin: 5, width: 30 }} />
-                            </form>
-                        </div>
-
-                        <div class="card-body">
-                            <table id="datatable" class="table table-bordered dt-responsive table-responsive nowrap">
-                                <thead>
-                                    <tr>
-                                        <th>Ad Soyad</th>
-                                        <th>Position</th>                          
-                                        <th>Yıllık İzin Hakediş</th>
-                                        <th>İzin Kullanılan Gün Sayısı</th>
-                                        <th>Aksiyon</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Ubeyde Rizaoglu</td>
-                                        <td>Project Manager</td>
-                                        <td>10</td>
-                                        <td>3</td>
-                                     
-                                        <td>  <TbListDetails  color='blue'/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Ziya</td>
-                                        <td>Backend</td>
-                                        <td>8</td>
-                                        <td>3</td>
-                                        <td>  <TbListDetails  color='blue'/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Ege Cengiz Ortakcı</td>
-                                        <td>Stajer</td>
-                                        <td>5</td>
-                                        <td>1</td>
-                                        <td>  <TbListDetails  color='blue'/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Okan Karaçor</td>
-                                        <td>IK Menager</td>
-                                        <td>15</td>
-                                        <td>2</td>           
-                                        <td>  <TbListDetails  color='blue'/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Ülkü</td>
-                                        <td>Project Manager</td>
-                                        <td>10</td>
-                                        <td>3</td>                           
-                                        <td>  <TbListDetails  color='blue'/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Recep</td>
-                                        <td>Project Manager</td>
-                                        <td>15</td>
-                                        <td>3</td>                                 
-                                        <td><TbListDetails  color='blue'/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sefa</td>
-                                        <td>Project Manager</td>
-                                        <td>12</td>
-                                        <td>3</td>       
-                                        <td>  <TbListDetails  color='blue'/></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
+            <div class="content">
+                <div class="container-xxl">
+                    <ShiftPageContainer
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}>Mesai Tablosu</h5>
+                        <ContentWrapper>
+                            <Card variants={cardVariants} initial="initial" animate="animate" exit="exit">
+                                <SearchForm action="/search" method="GET">
+                                    <SearchInput
+                                        type="text"
+                                        name="name"
+                                        placeholder="İsme göre ara..."
+                                        aria-label="İsim"
+                                    />
+                                    <SearchIcon />
+                                </SearchForm>
+                                <ShiftTable>
+                                    <TableHead>
+                                        <tr>
+                                            <TableHeader>Ad Soyad</TableHeader>
+                                            <TableHeader>Pozisyon</TableHeader>
+                                            <TableHeader>Yıllık İzin Hakediş</TableHeader>
+                                            <TableHeader>İzin Kullanılan Gün Sayısı</TableHeader>
+                                            <TableHeader>Aksiyon</TableHeader>
+                                        </tr>
+                                    </TableHead>
+                                    <TableBody>
+                                        {shiftData.map((person, index) => (
+                                            <TableRow key={index}>
+                                                <TableData>{person.name}</TableData>
+                                                <TableData>{person.position}</TableData>
+                                                <TableData>{person.annualLeave}</TableData>
+                                                <TableData>{person.usedLeave}</TableData>
+                                                <TableData>
+                                                    <DetailIcon />
+                                                </TableData>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </ShiftTable>
+                            </Card>
+                        </ContentWrapper>
+                    </ShiftPageContainer>
                 </div>
             </div>
-
-                    </div>
-                </div>
-            </div>
-
-
-       
-
         </div>
-    )
+
+    );
 }
 
-export default shiftPage
+export default ShiftPage;

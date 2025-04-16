@@ -1,152 +1,136 @@
-import React from 'react'
-import Menu from '../item/menu'
+import React from 'react';
+import Menu from '../item/menu';
 import { CgProfile } from "react-icons/cg";
-function birthdayPage() {
-    return (
-        <div>
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
+
+const BirthdayPageContainer = styled(motion.div)`
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const BirthdayTitle = styled.h4`
+  color: #1e40af;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 1.5rem;
+`;
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+`;
+
+const Card = styled.div`
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+ 
+`;
+
+const BirthdayTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+    @media (max-width: 768px) {
+  
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+`;
+
+const TableHead = styled.thead`
+  background-color: #edf2f7;
+    border-radius: 15px;
+`;
+
+const TableHeader = styled.th`
+  padding: 10px;
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #2c5282;
+`;
+
+const TableBody = styled.tbody`
+  tr {
+    border-bottom: 1px solid #e2e8f0;
+  }
+  tr:last-child {
+    border-bottom: none;
+  }
+`;
+
+const TableRow = styled.tr`
+  &:hover {
+    background-color: #f7fafc;
+  }
+`;
+
+const TableData = styled.td`
+  padding: 10px;
+  font-size: 0.85rem;
+  color: #2d3748;
+`;
+
+const ProfileImage = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+`;
 
 
-   <h5 class="card-title mb-2 mt-2"  style={{color:"#4a5a6b"}}>Doğum Günü Takip Listesi</h5>
-            <div className='card' >
+const birthdayData = [
+  { id: '#3413', name: 'Ubeyde', days: 82, image: 'src/images/okan.jpg' },
+  { id: '#4125', name: 'Ege Cengiz', days: 93, image: 'src/images/ege.jpg' },
+  { id: '#6532', name: 'Ziya', days: 56, image: 'src/images/profile.png' },
+  { id: '#7405', name: 'Recep', days: 68, image: 'src/images/profile.png' },
+  { id: '#4526', name: 'Berat', days: 52, image: 'src/images/profile.png' },
+  { id: '#1054', name: 'Kevser', days: 45, image: 'src/images/profile.png' },
+  { id: '#1054', name: 'Yaren', days: 45, image: 'src/images/profile.png' },
+];
 
-                <div className='card-body'>
-                    <div class="row">
-                        <div class="col-md-12">
-                         
-                            <br></br>
-                            <div class=" overflow-hidden">
-
-
-                                <div class=" p-0">
-                                    <div class="table-responsive">
-                                        <table class="table mb-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Personel</th>
-                                                    <th>Gün</th>
-
-                                                </tr>
-                                            </thead>
-
-                                            <tr>
-                                                <td>
-                                                    <a href="javascript:void(0);" class="text-reset">#3413</a>
-                                                </td>
-                                                <td class="d-flex align-items-center">
-                                                    <img src="src/images/profile.png" style={{ width: 50, height: 50, borderRadius: 50 }} class=" me-3" />
-                                                    <p class="mb-0 fw-medium">Ubeyde</p>
-                                                </td>
-                                                <td>
-                                                    <p class="mb-0">82</p>
-                                                </td>
-
-                                            </tr>
-
-                                            <tr>
-                                                <td>
-                                                    <a href="javascript:void(0);" class="text-reset">#4125</a>
-                                                </td>
-                                                <td class="d-flex align-items-center">
-                                                    <img src="src/images/profile.png" style={{ width: 50, height: 50, borderRadius: 50 }} class=" me-3" />
-                                                    <p class="mb-0 fw-medium">Ege Cengiz </p>
-                                                </td>
-                                                <td>
-                                                    <p class="mb-0">93</p>
-                                                </td>
-
-                                            </tr>
-
-                                            <tr>
-                                                <td>
-                                                    <a href="javascript:void(0);" class="text-reset">#6532</a>
-                                                </td>
-                                                <td class="d-flex align-items-center">
-                                                    <img src="src/images/profile.png" style={{ width: 50, height: 50, borderRadius: 50 }} class=" me-3" />
-                                                    <p class="mb-0 fw-medium">Ziya</p>
-                                                </td>
-                                                <td>
-                                                    <p class="mb-0">56</p>
-                                                </td>
-
-                                            </tr>
-
-                                            <tr>
-                                                <td>
-                                                    <a href="javascript:void(0);" class="text-reset">#7405</a>
-                                                </td>
-                                                <td class="d-flex align-items-center">
-                                                    <img src="src/images/profile.png" style={{ width: 50, height: 50, borderRadius: 50 }} class=" me-3" />
-                                                    <p class="mb-0 fw-medium">Recep</p>
-                                                </td>
-                                                <td>
-                                                    <p class="mb-0">68</p>
-                                                </td>
-
-                                            </tr>
-
-                                            <tr>
-                                                <td>
-                                                    <a href="javascript:void(0);" class="text-reset">#4526</a>
-                                                </td>
-                                                <td class="d-flex align-items-center">
-                                                    <img src="src/images/profile.png" style={{ width: 50, height: 50, borderRadius: 50 }} class=" me-3" />
-                                                    <p class="mb-0 fw-medium">Berat</p>
-                                                </td>
-                                                <td>
-                                                    <p class="mb-0">52</p>
-                                                </td>
-
-                                            </tr>
-
-                                            <tr>
-                                                <td>
-                                                    <a href="javascript:void(0);" class="text-reset">#1054</a>
-                                                </td>
-                                                <td class="d-flex align-items-center">
-                                                    <img src="src/images/profile.png" style={{ width: 50, height: 50, borderRadius: 50 }} class=" me-3" />
-                                                    <p class="mb-0 fw-medium">Kevser</p>
-                                                </td>
-                                                <td>
-                                                    <p class="mb-0">45</p>
-                                                </td>
-
-                                            </tr>
-
-
-                                            <tr>
-                                                <td>
-                                                    <a href="javascript:void(0);" class="text-reset">#1054</a>
-                                                </td>
-                                                <td class="d-flex align-items-center">
-                                                    <img src="src/images/profile.png" style={{ width: 50, height: 50, borderRadius: 50 }} class=" me-3" />
-                                                    <p class="mb-0 fw-medium">Yaren</p>
-                                                </td>
-                                                <td>
-                                                    <p class="mb-0">45</p>
-                                                </td>
-
-                                            </tr>
-
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+function BirthdayPage() {
+  return (
+    <BirthdayPageContainer
+     
+    
+    >
+        <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}>Doğum Günü Listesi</h5>
+      <ContentWrapper>
+        <Card >
+          <BirthdayTable>
+            <TableHead>
+              <tr>
+                <TableHeader>ID</TableHeader>
+                <TableHeader>Personel</TableHeader>
+                <TableHeader>Gün</TableHeader>
+              </tr>
+            </TableHead>
+            <TableBody>
+              {birthdayData.map((person,index) => (
+                <TableRow key={index}>
+                  <TableData>
+                    <a href="javascript:void(0);" className="text-reset">{person.id}</a>
+                  </TableData>
+                  <TableData>
+                    <div className="d-flex align-items-center">
+                      <ProfileImage src={person.image} alt={person.name} />
+                      <span>{person.name}</span>
                     </div>
-                </div>
-            </div>
-
-
-
-
-
-
-
-
-
-        </div>
-    )
+                  </TableData>
+                  <TableData>{person.days}</TableData>
+                </TableRow>
+              ))}
+            </TableBody>
+          </BirthdayTable>
+        </Card>
+      </ContentWrapper>
+    </BirthdayPageContainer>
+  );
 }
 
-export default birthdayPage
+export default BirthdayPage;
