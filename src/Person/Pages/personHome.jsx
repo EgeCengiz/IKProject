@@ -238,11 +238,13 @@ const SkillRow = styled.div`
   }
 `;
 const ProjectTable = styled.table`
-  width: 100%;
+   width: 100%;
   border-collapse: collapse;
   @media (max-width: 768px) {
+    /* Küçük ekranlarda tabloyu kaydırılabilir yap */
+    display: block;
     overflow-x: auto;
-    white-space: nowrap;
+    
   }
 `;
 
@@ -277,6 +279,7 @@ const ProjectTableData = styled.td`
   padding: 10px;
   font-size: 0.85rem;
   color: #2d3748;
+  
 `;
 const ProgressBar = styled.div`
   flex: 1;

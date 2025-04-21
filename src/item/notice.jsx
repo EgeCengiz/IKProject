@@ -12,8 +12,7 @@ const NoticePageContainer = styled(motion.div)`
 const NoticeTitle = styled.h4`
   color: #1e40af;
   margin-bottom: 20px;
-  font-weight: 600;
-  font-size: 1.5rem;
+    font-size: 0.9rem;
 `;
 
 const ContentWrapper = styled.div`
@@ -285,7 +284,7 @@ function notice() {
           </AddNoticeCard>
         </div>
         <div className="col-md-8">
-          <NoticeTableCard  initial="initial" animate="animate" exit="exit">
+          <NoticeTableCard  style={{padding:'0'}} initial="initial" animate="animate" exit="exit">
             <NoticeTable>
               <TableHead>
                 <tr>

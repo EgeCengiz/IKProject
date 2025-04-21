@@ -66,6 +66,7 @@ const NoticeTable = styled.table`
   border-collapse: collapse;
   @media (max-width: 768px) {
     overflow-x: auto;
+    display: block;
     white-space: nowrap;
   }
 `;

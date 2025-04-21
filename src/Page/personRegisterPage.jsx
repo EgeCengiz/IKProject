@@ -1,157 +1,611 @@
-import React from 'react'
-import Menu from '../item/menu'
-import { TbListDetails } from "react-icons/tb";
-function personRegisterPage() {
-    return (
-        <div>
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
+import { FaUser, FaEnvelope, FaLock, FaPhone, FaBriefcase, FaCamera, FaGraduationCap, FaPlus, FaTrash } from 'react-icons/fa';
+import axios from 'axios';
+import UsersApi from '../Api/UsersApi';
+import { StyleSheetManager } from 'styled-components';
+import isPropValid from '@emotion/is-prop-valid';
+
+const RegisterPageContainer = styled(motion.div)`
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  width: 100%;
+  margin: 0 auto;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+const Card = styled(motion.div)`
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 15px;
+  flex: 1;
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 12px;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 5px;
+  color: #2c5282;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #a0aec0;
+  font-size: 0.9rem;
+  color: #2d3748;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+  }
+`;
+
+const Select = styled.select`
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #a0aec0;
+  font-size: 0.9rem;
+  color: #2d3748;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg fill="%232d3748" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+
+  &:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+  }
+`;
+
+const ButtonGroup = styled.div`
+  text-align: right;
+  display: flex;
+  justify-content: end;
+`;
+
+const SaveButton = styled.button`
+  padding: 8px 16px;
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  &:hover {
+    background-color: #2b6cb0;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.3);
+  }
+`;
+
+const AddButton = styled.button`
+  padding: 6px 12px;
+  background-color: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  &:hover {
+    background-color: #3182ce;
+  }
+`;
+
+const RemoveButton = styled.button`
+  padding: 6px 12px;
+  background-color: #e53e3e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  &:hover {
+    background-color: #c53030;
+  }
+`;
+
+const ProfileImage = styled.img`
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: 10px;
+`;
+
+const ErrorMessage = styled.p`
+  color: #e53e3e;
+  font-size: 0.8rem;
+  margin-top: 5px;
+`;
+
+const cardVariants = {
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -10 },
+};
+
+function PersonRegisterPage() {
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [error, setError] = useState('');
+  const [userData, setUserData] = useState({
+    username: '',
+    userImage: profilePicture,
+    email: '',
+    password: '',
+    phone: '',
+    role: '',
+    createDate: '',
+    birthDate: '',
+    position: '',
+  });
+
+  const [userDataEducation, setUserDataEducation] = useState([
+    {
+      universityName: '',
+      degree: '',
+      section: '',
+      location: '',
+      startDate: '',
+      endDate: '',
+      username: userData.username,
+    },
+  ]);
+
+  // Personel bilgisi değişikliklerini yönet
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Eğitim bilgisi değişikliklerini yönet
+  const handleEducationChange = (index, field, value) => {
+    setUserDataEducation((prev) => {
+      const newEducations = [...prev];
+      newEducations[index] = { ...newEducations[index], [field]: value, username: userData.username };
+      return newEducations;
+    });
+  };
+
+  // Profil resmi seçimi
+  const handleProfilePictureChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        setError('Sadece JPG, PNG veya GIF dosyaları kabul edilir.');
+        setProfilePicture(null);
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Dosya boyutu 5MB\'tan büyük olamaz.');
+        setProfilePicture(null);
+        return;
+      }
+      setError('');
+      setProfilePicture(file);
+    }
+  };
+
+  // Eğitim ekleme
+  const addEducation = () => {
+    setUserDataEducation((prev) => [
+      ...prev,
+      {
+        universityName: '',
+        degree: '',
+        section: '',
+        location: '',
+        startDate: '',
+        endDate: '',
+        username: userData.username,
+      },
+    ]);
+  };
+
+  // Eğitim silme
+  const removeEducation = (index) => {
+    setUserDataEducation((prev) => prev.filter((_, i) => i !== index));
+  };
+
+
+  //Personel Images
+  const addPersonImages = async(username)=>{
+    console.log("Şuan Personel Imageste");
+         const formData = new FormData();
+      formData.append("file", profilePicture);
+      formData.append("username",username);
+
+      let responseImages;
+      try {
+        responseImages = await axios.put(UsersApi.ENDPOINTS.PUT_USERS_IMAGES_ADD, formData, {
+          headers: {
+            Authorization: 'Bearer ' + UsersApi.TOKEN,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log(responseImages.data);
+      } catch (err) {
+        console.error("Upload failed", err);
+        responseImages = null;
+      }
+
+  }
+
+
+  // Personel Ekle
+  const addPersonData = async () => {
+    try {
+ 
+       
+        const responseUsers = await axios.post(
+          UsersApi.ENDPOINTS.POST_USERS_ADD,
+          userData,
+          {
+            headers: {
+              Authorization: 'Bearer ' + UsersApi.TOKEN,
+            },
+          }
+        );
+        console.log(userData);
+        if (responseUsers.status === 200 || responseUsers.status === 201) {
+          addPersonImages(userData.username);
+          const responseEducation = await axios.post(
+            UsersApi.ENDPOINTS.POST_USERS_EDUCATION_ADD,
+            userDataEducation,
+            {
+              headers: {
+                Authorization: 'Bearer ' + UsersApi.TOKEN,
+              },
+            }
+          );
+          if (responseEducation.status === 200 || responseEducation.status === 201) {
+            
+
+          //Users DETAİLS Eklenmesi Lazım her kullanıcıya
           
-            <div className="content-page">
-                <div className="content">
-                    <div className="container-xxl">
-                        <br></br>
-
-                        <div class="row">
-                            <div class="col-md-4 ">
-                                <div className='card p-5'>
-
-                                    <div class="mb-0 border-0 p-md-5 p-lg-0 p-4">
-                                        <div class="mb-4 p-0">
-                                            <a href="index.html" class="auth-logo d-flex justify-content-center">
-                                                <img src="../src/images/smart.png" alt="logo-dark" class="mx-auto" height="50" />
-                                            </a>
-                                        </div>
-
-                                        <div class="pt-0">
-                                            <form action="index.html" class="my-4">
-                                                <div class="form-group mb-3">
-                                                    <label for="username" class="form-label">Username</label>
-                                                    <input class="form-control" name="username" type="text" id="username" required="" placeholder="Enter your Username" />
-                                                </div>
-
-                                                <div class="form-group mb-3">
-                                                    <label for="emailaddress" class="form-label">Email address</label>
-                                                    <input class="form-control" type="email" id="emailaddress" required="" placeholder="Enter your email" />
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="position" class="form-label">Position</label>
-                                                    <input class="form-control" name="position" type="text" id="position" required="" placeholder="Enter your Position" />
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="password" class="form-label">Password</label>
-                                                    <input class="form-control" type="password" required="" id="password" placeholder="Enter your password" />
-                                                </div>
-
-                                                <div class="form-group mb-0 row">
-                                                    <div class="col-12">
-                                                        <div class="d-grid">
-                                                            <button class="btn btn-primary" type="submit"> Personel Ekle</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
 
 
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-md-8'>
-                                <h4 class="fs-18 fw-semibold m-0"  style={{color:"#4a5a6b"}}>Personel Tablosu</h4>
-                                <br></br>
-                                <div className='card '>
-                                    <div className='card-body'>
-
-                                        <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
-                                           
-                                            <div class="text-end">
-                                                <ol class="breadcrumb m-0 py-0">
-                                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Tables</a></li>
-                                                    <li class="breadcrumb-item active">Personel</li>
-                                                </ol>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-
-                                            <div class="col-xl-12">
-                                                <div class="p-2">
 
 
-                                                    <div >
-                                                        <div class="table-responsive">
-                                                            <table class="table mb-0">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th scope="col">#</th>
-                                                                        <th scope="col">Personel Ad</th>
-                                                                        <th scope="col">Pozisyon</th>
-                                                                   
-                                                                        <th scope="col">Tarih</th>
-                                                                        <th scope="col">Aksiyon</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <th scope="row">
-                                                                            <img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
-                                                                        </th>
-                                                                        <td>Ubeyde</td>
-                                                                        <td>17 Numaralı Bilgisayar</td>
-                                                                        
-                                                                        <td>30.03.2025</td>
-                                                                        <td><TbListDetails color='blue' /></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">
-                                                                            <img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
-                                                                        </th>
-                                                                        <td>Rıza</td>
-                                                                        <td>Sunucu</td>
-                                                                       
-                                                                        <td>30.03.2025</td>
-                                                                        <td><TbListDetails color='blue' /></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">
-                                                                            <img src="src/images/profile.png" alt="" class="thumb-sm rounded-circle me-2" style={{ width: 40 }} />
-                                                                        </th>
-                                                                        <td>Ziya</td>
-                                                                        <td>14 Numaralı Bilgisayar</td>
-                                                                        
-                                                                        <td>30.03.2025</td>
-                                                                        <td> <TbListDetails color='blue' /></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+          } else {
+            console.error("Eğitim bilgisi eklenemedi");
+          }
+        } else {
+          console.error("Kullanıcı eklenemedi");
+        }
+    
+    } catch (error) {
+      console.error("Hata:", error.response ? error.response.data : error.message);
+    }
+  };
 
+  // Form gönderimi
+  const handleSubmit = async () => {
+    if (!userData.username || !userData.email || !userData.position) {
+      setError('Ad, email ve pozisyon alanları zorunludur.');
+      return;
+    }
 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+    if (
+      userDataEducation.some(
+        (edu) =>
+          !edu.universityName ||
+          !edu.degree ||
+          !edu.section ||
+          !edu.location ||
+          !edu.startDate ||
+          !edu.endDate
+      )
+    ) {
+      setError('Tüm eğitim bilgileri doldurulmalıdır.');
+      return;
+    }
+
+    try {
+      await addPersonData();
+      alert('Personel başarıyla kaydedildi!');
+      setUserData({
+        username: '',
+        email: '',
+        password: '',
+        phone: '',
+        role: '',
+        createDate: '',
+        birthDate: '',
+        position: '',
+      });
+      setUserDataEducation([
+        {
+          universityName: '',
+          degree: '',
+          section: '',
+          location: '',
+          startDate: '',
+          endDate: '',
+          username: '',
+        },
+      ]);
+      setProfilePicture(null);
+      setError('');
+    } catch (error) {
+      console.error('Hata:', error.response ? error.response.data : error.message);
+      setError('Personel kaydedilirken bir hata oluştu.');
+    }
+  };
+
+  return (
+    <StyleSheetManager shouldForwardProp={isPropValid}>
+      <div className="content-page">
+        <div className="content">
+          <div className="container-xxl">
+            <br />
+            <RegisterPageContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+              <h5 className="card-title mb-2 mt-2" style={{ color: '#4a5a6b' }}>
+                Personel Kayıt
+              </h5>
+              <ContentWrapper>
+                <Card variants={cardVariants} initial="initial" animate="animate" exit="exit">
+                  <FormGroup>
+                    <Label htmlFor="profilePicture">
+                      <FaCamera /> Profil Resmi
+                    </Label>
+                    <Input
+                      type="file"
+                      id="profilePicture"
+                      accept="image/*"
+                      onChange={handleProfilePictureChange}
+                    />
+                    {profilePicture && (
+                      <ProfileImage src={URL.createObjectURL(profilePicture)} alt="Profil Resmi" />
+                    )}
+                  </FormGroup>
+                  <FormGroup>
+                    <Label htmlFor="username">
+                      <FaUser /> Ad Soyad
+                    </Label>
+                    <Input
+                      type="text"
+                      id="username"
+                      name="username"
+                      placeholder="Personel Ad Soyad Giriniz.."
+                      value={userData.username}
+                      onChange={handleInputChange}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label htmlFor="email">
+                      <FaEnvelope /> Email
+                    </Label>
+                    <Input
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder="Personel Mail Giriniz.."
+                      value={userData.email}
+                      onChange={handleInputChange}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label htmlFor="password">
+                      <FaLock /> Şifre
+                    </Label>
+                    <Input
+                      type="password"
+                      id="password"
+                      name="password"
+                      placeholder="Şifrenizi giriniz"
+                      value={userData.password}
+                      onChange={handleInputChange}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label htmlFor="position">
+                      <FaBriefcase /> Pozisyon
+                    </Label>
+                    <Input
+                      type="text"
+                      id="position"
+                      name="position"
+                      placeholder="Personel Pozisyonu Giriniz.."
+                      value={userData.position}
+                      onChange={handleInputChange}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label htmlFor="phone">
+                      <FaPhone /> Telefon
+                    </Label>
+                    <Input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      placeholder="Personel Telefon Numarası Giriniz.."
+                      value={userData.phone}
+                      onChange={handleInputChange}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label htmlFor="role">
+                      <FaBriefcase /> Rol
+                    </Label>
+                    <Select id="role" name="role" value={userData.role} onChange={handleInputChange}>
+                      <option value="">Rol Seçiniz</option>
+                      <option value="Personel">Personel</option>
+                      <option value="IK">İK</option>
+                      <option value="Takım Lideri">Takım Lideri</option>
+                      <option value="Müdür">Müdür</option>
+                      <option value="Müdür Yardımcısı">Müdür Yardımcısı</option>
+                      <option value="Yetkili">Yetkili</option>
+                      <option value="Diğer">Diğer</option>
+                    </Select>
+                  </FormGroup>
+                  <FormGroup>
+                    <Label htmlFor="createDate">
+                      <FaBriefcase /> İşe Başlama Tarihi
+                    </Label>
+                    <Input
+                      type="date"
+                      id="createDate"
+                      name="createDate"
+                      value={userData.createDate}
+                      onChange={handleInputChange}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label htmlFor="birthDate">
+                      <FaUser /> Doğum Tarihi
+                    </Label>
+                    <Input
+                      type="date"
+                      id="birthDate"
+                      name="birthDate"
+                      value={userData.birthDate}
+                      onChange={handleInputChange}
+                    />
+                  </FormGroup>
+                </Card>
+                <Card variants={cardVariants} initial="initial" animate="animate" exit="exit">
+                  <FormGroup>
+                    <Label>
+                      <FaGraduationCap /> Eğitim Bilgileri
+                    </Label>
+                    {userDataEducation.map((edu, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          marginBottom: '12px',
+                          border: '1px solid #e2e8f0',
+                          borderRadius: '6px',
+                          padding: '10px',
+                        }}
+                      >
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <FormGroup style={{ flex: 1 }}>
+                            <Label>Üniversite Adı</Label>
+                            <Input
+                              type="text"
+                              placeholder="Üniversite adını giriniz"
+                              value={edu.universityName}
+                              onChange={(e) => handleEducationChange(index, 'universityName', e.target.value)}
+                            />
+                          </FormGroup>
+                          <FormGroup style={{ flex: 1 }}>
+                            <Label>Derece</Label>
+                            <Input
+                              type="text"
+                              placeholder="Dereceyi giriniz"
+                              value={edu.degree}
+                              onChange={(e) => handleEducationChange(index, 'degree', e.target.value)}
+                            />
+                          </FormGroup>
                         </div>
-
-
-
-
-
-                    </div>
-                </div>
-            </div>
-
-
-
-
-
-
-
-        </div >
-    )
+                        <FormGroup>
+                          <Label>Bölüm</Label>
+                          <Input
+                            type="text"
+                            placeholder="Bölümü giriniz"
+                            value={edu.section}
+                            onChange={(e) => handleEducationChange(index, 'section', e.target.value)}
+                          />
+                        </FormGroup>
+                        <FormGroup>
+                          <Label>Konum</Label>
+                          <Input
+                            type="text"
+                            placeholder="Konum giriniz"
+                            value={edu.location}
+                            onChange={(e) => handleEducationChange(index, 'location', e.target.value)}
+                          />
+                        </FormGroup>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <FormGroup style={{ flex: 1 }}>
+                            <Label>Başlama Tarihi</Label>
+                            <Input
+                              type="date"
+                              value={edu.startDate}
+                              onChange={(e) => handleEducationChange(index, 'startDate', e.target.value)}
+                            />
+                          </FormGroup>
+                          <FormGroup style={{ flex: 1 }}>
+                            <Label>Bitirme Tarihi</Label>
+                            <Input
+                              type="date"
+                              value={edu.endDate}
+                              onChange={(e) => handleEducationChange(index, 'endDate', e.target.value)}
+                            />
+                          </FormGroup>
+                        </div>
+                        {userDataEducation.length > 1 && (
+                          <RemoveButton onClick={() => removeEducation(index)}>
+                            <FaTrash /> Sil
+                          </RemoveButton>
+                        )}
+                      </div>
+                    ))}
+                    <AddButton onClick={addEducation}>
+                      <FaPlus /> Eğitim Ekle
+                    </AddButton>
+                  </FormGroup>
+                  {error && <ErrorMessage>{error}</ErrorMessage>}
+                  <ButtonGroup>
+                    <SaveButton onClick={handleSubmit}>Kaydet</SaveButton>
+                  </ButtonGroup>
+                </Card>
+              </ContentWrapper>
+            </RegisterPageContainer>
+          </div>
+        </div>
+      </div>
+    </StyleSheetManager>
+  );
 }
 
-export default personRegisterPage
+export default PersonRegisterPage;

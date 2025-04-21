@@ -312,7 +312,7 @@ function Zimmet() {
         </AddZimmetCard>
           </div>
           <div className='col-md-8'>
-               <ZimmetTableCard variants={cardVariants} initial="initial" animate="animate" exit="exit">
+               <ZimmetTableCard style={{padding:'0'}} variants={cardVariants} initial="initial" animate="animate" exit="exit">
           <ZimmetTable>
             <TableHead>
               <tr>

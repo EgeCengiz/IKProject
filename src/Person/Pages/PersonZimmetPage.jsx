@@ -67,6 +67,7 @@ const ZimmetTable = styled.table`
   @media (max-width: 768px) {
     overflow-x: auto;
     white-space: nowrap;
+    display: block;
   }
 `;
 

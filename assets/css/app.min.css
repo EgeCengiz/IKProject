@@ -6134,6 +6134,7 @@ fieldset:disabled .btn {
 .modal-header {
     display: flex;
     flex-shrink: 0;
+    background-color: #edf2f7 !important;
     align-items: center;
     padding: var(--bs-modal-header-padding);
     border-bottom: var(--bs-modal-header-border-width) solid var(--bs-modal-header-border-color);

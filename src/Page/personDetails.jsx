@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -21,44 +20,6 @@ const Card = styled.div`
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   padding: 20px;
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const Title = styled.h4`
-  color: #1e40af;
-  font-weight: 600;
-  font-size: 1.25rem;
-  margin: 0;
-`;
-
-const Breadcrumb = styled.ol`
-  list-style: none;
-  display: flex;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  font-size: 0.85rem;
-  color: #718096;
-`;
-
-const BreadcrumbItem = styled.li`
-  a {
-    color: #2d3748;
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-  &.active {
-    color: #1e40af;
-    font-weight: 500;
-  }
 `;
 
 const ProfileHeader = styled.div`
@@ -119,8 +80,8 @@ const NavLink = styled.button`
   border-radius: 4px 4px 0 0;
   cursor: pointer;
   ${(props) =>
-        props.active &&
-        `
+    props.active &&
+    `
     background-color: #edf2f7;
     color: #1e40af;
     font-weight: 500;
@@ -345,238 +306,255 @@ const FooterLink = styled.a`
 `;
 
 function PersonDetails() {
-    const { username } = useParams();
-    const [details, setDetails] = useState({});
-    const [project, setProject] = useState([]);
-    const [information, setInformation] = useState([]);
-    const [education, setEducation] = useState([]);
-    const [activeTab, setActiveTab] = useState('about'); // Aktif sekme durumu
+  const { username } = useParams();
+  const [details, setDetails] = useState({});
+  const [project, setProject] = useState([]);
+  const [information, setInformation] = useState([]);
+  const [education, setEducation] = useState([]);
+  const [activeTab, setActiveTab] = useState('about');
+  const [profileImage, setProfileImage] = useState([]);
+  const [error, setError] = useState('');
 
-    const getDetails = async () => {
-        try {
-            const response = await axios.get(`${UsersApi.ENDPOINTS.GET_PERSON_DETAILS}${username}`, {
-                headers: {
-                    Authorization: `Bearer ${UsersApi.TOKEN}`,
-                },
-            });
-            setDetails(response.data);
-        } catch (error) {
-            console.error('Hata:', error);
-        }
-    };
+  const getDetails = async () => {
+    try {
+      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_PERSON_DETAILS}${username}`, {
+        headers: {
+          Authorization: `Bearer ${UsersApi.TOKEN}`,
+        },
+      });
+      setDetails(response.data);
+      console.log('Detaylar:', response.data);
+    } catch (error) {
+      console.error('Hata:', error);
+      setError('Kullanıcı detayları alınırken bir hata oluştu: ' + (error.response?.data?.message || error.message));
+    }
+  };
 
-    const getProjects = async () => {
-        try {
-            const response = await axios.get(`${UsersApi.ENDPOINTS.GET_PERSON_DETAILS_PROJECT}${username}`, {
-                headers: {
-                    Authorization: `Bearer ${UsersApi.TOKEN}`,
-                },
-            });
-            setProject(response.data);
-        } catch (error) {
-            console.error('Hata:', error);
-        }
-    };
+  const getProfileImages = async () => {
+    try {
+      if (!details.username) {
+        setError('Kullanıcı adı bulunamadı.');
+        return;
+      }
+      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_USERS_IMAGE}?username=${details.username}`, {
+        headers: {
+          Authorization: `Bearer ${UsersApi.TOKEN}`,
+        },
+        responseType: 'blob',
+      });
+      const imageUrl = URL.createObjectURL(response.data);
+      setProfileImage({ image: imageUrl });
+    } catch (error) {
+      setError('Profil resmi alınırken hata: ' + (error.response?.data?.message || error.message));
+    }
+  };
 
-    const getInformation = async () => {
-        try {
-            const response = await axios.get(`${UsersApi.ENDPOINTS.GET_PERSON_DETAILS_INFORMATION}${username}`, {
-                headers: {
-                    Authorization: `Bearer ${UsersApi.TOKEN}`,
-                },
-            });
-            setInformation(response.data);
-        } catch (error) {
-            console.error('Hata:', error);
-        }
-    };
+  const getProjects = async () => {
+    try {
+      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_PERSON_DETAILS_PROJECT}${username}`, {
+        headers: {
+          Authorization: `Bearer ${UsersApi.TOKEN}`,
+        },
+      });
+      setProject(response.data);
+    } catch (error) {
+      console.error('Hata:', error);
+      setError('Projeler alınırken bir hata oluştu: ' + (error.response?.data?.message || error.message));
+    }
+  };
 
-    const getEducation = async () => {
-        try {
-            const response = await axios.get(`${UsersApi.ENDPOINTS.GET_PERSON_DETAILS_EDUCATION}${username}`, {
-                headers: {
-                    Authorization: `Bearer ${UsersApi.TOKEN}`,
-                },
-            });
-            setEducation(response.data);
-        } catch (error) {
-            console.error('Hata:', error);
-        }
-    };
+  const getInformation = async () => {
+    try {
+      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_PERSON_DETAILS_INFORMATION}${username}`, {
+        headers: {
+          Authorization: `Bearer ${UsersApi.TOKEN}`,
+        },
+      });
+      setInformation(response.data);
+    } catch (error) {
+      console.error('Hata:', error);
+      setError('Bilgiler alınırken bir hata oluştu: ' + (error.response?.data?.message || error.message));
+    }
+  };
 
-    useEffect(() => {
-        getEducation();
-        getInformation();
-        getProjects();
-        getDetails();
-    }, [username]);
+  const getEducation = async () => {
+    try {
+      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_PERSON_DETAILS_EDUCATION}${username}`, {
+        headers: {
+          Authorization: `Bearer ${UsersApi.TOKEN}`,
+        },
+      });
+      setEducation(response.data);
+    } catch (error) {
+      console.error('Hata:', error);
+      setError('Eğitim bilgileri alınırken bir hata oluştu: ' + (error.response?.data?.message || error.message));
+    }
+  };
 
-    return (
+  // İlk olarak sadece getDetails çağrılır
+  useEffect(() => {
+    getDetails();
+  }, [username]);
 
-        <div>
+  // details.username mevcut olduğunda diğer fonksiyonlar çağrılır
+  useEffect(() => {
+    if (details.username) {
+      getProfileImages();
+      getProjects();
+      getInformation();
+      getEducation();
+    }
+  }, [details.username]);
 
-            <div class="content-page">
-
-                <div class="content">
-                    <div class="container-xxl">
-                       
-                        <DetailsContainer
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                         <h5 className=" m-3" style={{ color: "#4a5a6b" }}>Profil </h5>
-                            <ContentWrapper>
-                                <Card>
-                                   
-                                    <ProfileHeader>
-                                        <ProfileImage src="../src/images/ege.jpg" alt="profile" />
-                                        <ProfileInfo>
-                                            <Username>{details.username || 'Kullanıcı Adı'}</Username>
-                                            <Position>{details.position || 'Pozisyon'}</Position>
-                                            <Speaks>Konuşulan Diller: {details.speaks || 'Bilinmiyor'}</Speaks>
-                                        </ProfileInfo>
-                                    </ProfileHeader>
-                                    <NavTabs>
-                                        <NavItem>
-                                            <NavLink
-                                                active={activeTab === 'about'}
-                                                onClick={() => setActiveTab('about')}
-                                            >
-                                                Hakkında
-                                            </NavLink>
-                                        </NavItem>
-                                        <NavItem>
-                                            <NavLink
-                                                active={activeTab === 'education'}
-                                                onClick={() => setActiveTab('education')}
-                                            >
-                                                Eğitim Bilgileri
-                                            </NavLink>
-                                        </NavItem>
-                                    </NavTabs>
-                                    <TabContent>
-                                        {activeTab === 'about' && (
-                                            <div>
-                                                <Grid>
-                                                    <div>
-                                                        <SectionTitle>Hakkında</SectionTitle>
-                                                        <AboutText>{details.about || 'Hakkında bilgi bulunamadı.'}</AboutText>
-                                                    </div>
-                                                    <div>
-                                                        <SectionTitle>İletişim Bilgileri</SectionTitle>
-                                                        <ContactGrid>
-                                                            <ContactItem>
-                                                                <ContactLabel>Email</ContactLabel>
-                                                                <ContactLink href={`mailto:${details.email}`}>
-                                                                    {details.email || 'Bilinmiyor'}
-                                                                </ContactLink>
-                                                            </ContactItem>
-                                                            <ContactItem>
-                                                                <ContactLabel>Sosyal Medya</ContactLabel>
-                                                                <SocialList>
-                                                                    <SocialItem>
-                                                                        <SocialLink href={details.socialMedia || '#'}>
-                                                                            <i className="mdi mdi-linkedin fs-14"></i>
-                                                                        </SocialLink>
-                                                                        <span>{details.socialMedia || 'Bilinmiyor'}</span>
-                                                                    </SocialItem>
-                                                                </SocialList>
-                                                            </ContactItem>
-                                                            <ContactItem>
-                                                                <ContactLabel>Konum</ContactLabel>
-                                                                <ContactLink href="#">{details.location || 'Bilinmiyor'}</ContactLink>
-                                                            </ContactItem>
-                                                        </ContactGrid>
-                                                    </div>
-                                                </Grid>
-                                                <Grid>
-                                                    <div>
-                                                        <SectionTitle>Projeler</SectionTitle>
-                                                        <ProjectTable>
-                                                            <TableHead>
-                                                                <tr>
-                                                                    <TableHeader>Proje</TableHeader>
-                                                                    <TableHeader>Pozisyon</TableHeader>
-                                                                    <TableHeader>Tarih</TableHeader>
-                                                                </tr>
-                                                            </TableHead>
-                                                            <TableBody>
-                                                                {project.length > 0 ? (
-                                                                    project.map((data) => (
-                                                                        <TableRow key={data.projectName}>
-                                                                            <TableData>{data.projectName}</TableData>
-                                                                            <TableData>{data.position}</TableData>
-                                                                            <TableData>{data.createDate}</TableData>
-                                                                        </TableRow>
-                                                                    ))
-                                                                ) : (
-                                                                    <TableRow>
-                                                                        <TableData colSpan="3">Proje bulunamadı.</TableData>
-                                                                    </TableRow>
-                                                                )}
-                                                            </TableBody>
-                                                        </ProjectTable>
-                                                    </div>
-                                                    <div>
-                                                        <SectionTitle>Bilgiler</SectionTitle>
-                                                        {information.length > 0 ? (
-                                                            information.map((data) => (
-                                                                <SkillRow key={data.softwareName}>
-                                                                    <SkillLabel>
-                                                                        <i className="mdi mdi-circle-medium text-primary me-2"></i>
-                                                                        {data.softwareName}
-                                                                    </SkillLabel>
-                                                                    <ProgressBar>
-                                                                        <ProgressFill width={data.degree} />
-                                                                    </ProgressBar>
-                                                                </SkillRow>
-                                                            ))
-                                                        ) : (
-                                                            <p>Bilgi bulunamadı.</p>
-                                                        )}
-                                                    </div>
-                                                </Grid>
-                                            </div>
-                                        )}
-                                        {activeTab === 'education' && (
-                                            <div>
-                                                <SectionTitle>Eğitim Bilgileri</SectionTitle>
-                                                <EducationGrid>
-                                                    {education.length > 0 ? (
-                                                        education.map((data) => (
-                                                            <EducationCard key={data.universityName}>
-                                                                <EducationImage src="../src/images/university.png" alt="university" />
-                                                                <EducationInfo>
-                                                                    <UniversityName>{data.universityName}</UniversityName>
-                                                                    <Section>{data.section}</Section>
-                                                                    <EducationDetails>
-                                                                        {data.startAndEndDate} - {data.loaction}
-                                                                    </EducationDetails>
-                                                                </EducationInfo>
-                                                            </EducationCard>
-                                                        ))
-                                                    ) : (
-                                                        <p>Eğitim bilgisi bulunamadı.</p>
-                                                    )}
-                                                </EducationGrid>
-                                            </div>
-                                        )}
-                                    </TabContent>
-                                </Card>
-                                <Footer>
-                                    © {new Date().getFullYear()} -{' '}
-                                    <FooterLink href="#!">SmartICT</FooterLink>
-                                </Footer>
-                            </ContentWrapper>
-                        </DetailsContainer>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div>
+      <div className="content-page">
+        <div className="content">
+          <div className="container-xxl">
+            <DetailsContainer initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+              <h5 className="m-3" style={{ color: '#4a5a6b' }}>
+                Profil
+              </h5>
+              {error && <p style={{ color: 'red' }}>{error}</p>}
+              <ContentWrapper>
+                <Card>
+                  <ProfileHeader>
+                    <ProfileImage src={profileImage.image || 'default-image-url'} alt="profile" />
+                    <ProfileInfo>
+                      <Username>{details.username || 'Kullanıcı Adı'}</Username>
+                      <Position>{details.position || 'Pozisyon'}</Position>
+                      <Speaks>Konuşulan Diller: {details.speaks || 'Bilinmiyor'}</Speaks>
+                    </ProfileInfo>
+                  </ProfileHeader>
+                  <NavTabs>
+                    <NavItem>
+                      <NavLink active={activeTab === 'about'} onClick={() => setActiveTab('about')}>
+                        Hakkında
+                      </NavLink>
+                    </NavItem>
+                    <NavItem>
+                      <NavLink active={activeTab === 'education'} onClick={() => setActiveTab('education')}>
+                        Eğitim Bilgileri
+                      </NavLink>
+                    </NavItem>
+                  </NavTabs>
+                  <TabContent>
+                    {activeTab === 'about' && (
+                      <div>
+                        <Grid>
+                          <div>
+                            <SectionTitle>Hakkında</SectionTitle>
+                            <AboutText>{details.about || 'Hakkında bilgi bulunamadı.'}</AboutText>
+                          </div>
+                          <div>
+                            <SectionTitle>İletişim Bilgileri</SectionTitle>
+                            <ContactGrid>
+                              <ContactItem>
+                                <ContactLabel>Email</ContactLabel>
+                                <ContactLink href={`mailto:${details.email}`}>{details.email || 'Bilinmiyor'}</ContactLink>
+                              </ContactItem>
+                              <ContactItem>
+                                <ContactLabel>Sosyal Medya</ContactLabel>
+                                <SocialList>
+                                  <SocialItem>
+                                    <SocialLink href={details.socialMedia || '#'}>
+                                      <i className="mdi mdi-linkedin fs-14"></i>
+                                    </SocialLink>
+                                    <span>{details.socialMedia || 'Bilinmiyor'}</span>
+                                  </SocialItem>
+                                </SocialList>
+                              </ContactItem>
+                              <ContactItem>
+                                <ContactLabel>Konum</ContactLabel>
+                                <ContactLink href="#">{details.location || 'Bilinmiyor'}</ContactLink>
+                              </ContactItem>
+                            </ContactGrid>
+                          </div>
+                        </Grid>
+                        <Grid>
+                          <div>
+                            <SectionTitle>Projeler</SectionTitle>
+                            <ProjectTable>
+                              <TableHead>
+                                <tr>
+                                  <TableHeader>Proje</TableHeader>
+                                  <TableHeader>Pozisyon</TableHeader>
+                                  <TableHeader>Tarih</TableHeader>
+                                </tr>
+                              </TableHead>
+                              <TableBody>
+                                {project.length > 0 ? (
+                                  project.map((data) => (
+                                    <TableRow key={data.projectName}>
+                                      <TableData>{data.projectName}</TableData>
+                                      <TableData>{data.position}</TableData>
+                                      <TableData>{data.createDate}</TableData>
+                                    </TableRow>
+                                  ))
+                                ) : (
+                                  <TableRow>
+                                    <TableData colSpan="3">Proje bulunamadı.</TableData>
+                                  </TableRow>
+                                )}
+                              </TableBody>
+                            </ProjectTable>
+                          </div>
+                          <div>
+                            <SectionTitle>Bilgiler</SectionTitle>
+                            {information.length > 0 ? (
+                              information.map((data) => (
+                                <SkillRow key={data.softwareName}>
+                                  <SkillLabel>
+                                    <i className="mdi mdi-circle-medium text-primary me-2"></i>
+                                    {data.softwareName}
+                                  </SkillLabel>
+                                  <ProgressBar>
+                                    <ProgressFill width={data.degree} />
+                                  </ProgressBar>
+                                </SkillRow>
+                              ))
+                            ) : (
+                              <p>Bilgi bulunamadı.</p>
+                            )}
+                          </div>
+                        </Grid>
+                      </div>
+                    )}
+                    {activeTab === 'education' && (
+                      <div>
+                        <SectionTitle>Eğitim Bilgileri</SectionTitle>
+                        <EducationGrid>
+                          {education.length > 0 ? (
+                            education.map((data) => (
+                              <EducationCard key={data.universityName}>
+                                <EducationImage src="../src/images/university.png" alt="university" />
+                                <EducationInfo>
+                                  <UniversityName>{data.universityName}</UniversityName>
+                                  <Section>{data.section}</Section>
+                                  <EducationDetails>
+                                    {data.startAndEndDate} - {data.location}
+                                  </EducationDetails>
+                                </EducationInfo>
+                              </EducationCard>
+                            ))
+                          ) : (
+                            <p>Eğitim bilgisi bulunamadı.</p>
+                          )}
+                        </EducationGrid>
+                      </div>
+                    )}
+                  </TabContent>
+                </Card>
+                <Footer>
+                  © {new Date().getFullYear()} - <FooterLink href="#!">SmartICT</FooterLink>
+                </Footer>
+              </ContentWrapper>
+            </DetailsContainer>
+          </div>
         </div>
-
-
-    );
+      </div>
+    </div>
+  );
 }
 
 export default PersonDetails;

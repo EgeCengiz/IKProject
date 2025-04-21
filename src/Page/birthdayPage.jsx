@@ -3,7 +3,7 @@ import Menu from '../item/menu';
 import { CgProfile } from "react-icons/cg";
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-
+import { LiaBirthdayCakeSolid } from "react-icons/lia";
 const BirthdayPageContainer = styled(motion.div)`
   padding: 20px;
   display: flex;
@@ -99,7 +99,8 @@ function BirthdayPage() {
      
     
     >
-        <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}>Doğum Günü Listesi</h5>
+
+<h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}><LiaBirthdayCakeSolid/> Doğum Günü Listesi</h5>
       <ContentWrapper>
         <Card >
           <BirthdayTable>

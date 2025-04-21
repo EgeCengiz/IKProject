@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TiPinOutline } from "react-icons/ti";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { motion } from 'framer-motion';
+import axios from 'axios';
+import UsersApi from '../Api/UsersApi';
+
+
 
 const NotePageContainer = styled(motion.div)`
   padding: 20px;
@@ -50,7 +54,7 @@ const NoteHeader = styled.div`
 `;
 
 const NoteTitle = styled.div`
-  font-weight: 500;
+   font-size: 0.9rem;
   color: #444;
 `;
 
@@ -101,42 +105,64 @@ const cardVariants = {
   exit: { opacity: 0, y: -10 },
 };
 
+
+//Sayfada NOTLARIN gösterildiğ kısım
 function NotePageItems() {
-  // Örnek not verileri (gerçek uygulamada API'den çekilir)
-  const notesData = [
-    { id: 1, title: "Hazırlanan Not", description: "Notun Açıklama kısmı burada olacak ve bu not tarihi yaklaştığı zaman gösterilecek", date: "28.03.2025", author: "Okan Karaçor" },
-    { id: 2, title: "Diğer Önemli Not", description: "Bu da başka bir önemli notun içeriği...", date: "15.04.2025", author: "Ayşe Demir" },
-    { id: 3, title: "Hatırlatma", description: "Unutulmaması gereken bir hatırlatma notu.", date: "01.05.2025", author: "Mehmet Yılmaz" },
-    { id: 4, title: "Alışveriş Listesi", description: "Süt, ekmek, yumurta...", date: "17.04.2025", author: "Elif Kaya" },
-    { id: 5, title: "Proje Fikirleri", description: "Yeni proje için beyin fırtınası notları.", date: "22.04.2025", author: "Can Tekin" },
-    { id: 6, title: "Kitap Önerileri", description: "Okunması gereken kitapların listesi.", date: "30.04.2025", author: "Selin Öztürk" },
-  ];
+  const [data, setData] = useState([]);
+
+  const getAllNotes = async () => {
+    try {
+      const response = await axios.get(UsersApi.ENDPOINTS.GET_NOTES, {
+        headers: {
+          Authorization: 'Bearer ' + UsersApi.TOKEN
+        }
+      });
+      setData(response.data);
+    } catch (error) {
+      console.error("Hata:", error.response ? error.response.data : error.message);
+    }
+  };
+
+  useEffect(() => {
+    getAllNotes();
+  }, []);
+
+
 
   return (
-    <NotePageContainer
+    <>
+     <NotePageContainer
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
       <NotePageTitle>Notlarım</NotePageTitle>
       <NoteCardGrid>
-        {notesData.map((note) => (
+        {data.map((note) => (
           <NoteItem key={note.id} variants={cardVariants} initial="initial" animate="animate" exit="exit">
             <NoteHeader>
-              <NoteTitle>{note.title}</NoteTitle>
+              <NoteTitle>{note.notesName}</NoteTitle>
               <PinIcon />
             </NoteHeader>
             <NoteContent>
               <NoteText>{note.description}</NoteText>
             </NoteContent>
             <NoteFooter>
-              <div>{note.date} <cite title="Source Title">{note.author}</cite></div>
+              <div>{note.createDate} <cite title="Source Title">{note.username}</cite></div>
               <TrashIcon />
             </NoteFooter>
           </NoteItem>
         ))}
       </NoteCardGrid>
     </NotePageContainer>
+
+
+
+
+
+
+    </>
+   
   );
 }
 
