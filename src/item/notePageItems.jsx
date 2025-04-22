@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import { TiPinOutline } from "react-icons/ti";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { motion } from 'framer-motion';
-import axios from 'axios';
-import UsersApi from '../Api/UsersApi';
+
 
 
 
@@ -107,25 +106,7 @@ const cardVariants = {
 
 
 //Sayfada NOTLARIN gösterildiğ kısım
-function NotePageItems() {
-  const [data, setData] = useState([]);
-
-  const getAllNotes = async () => {
-    try {
-      const response = await axios.get(UsersApi.ENDPOINTS.GET_NOTES, {
-        headers: {
-          Authorization: 'Bearer ' + UsersApi.TOKEN
-        }
-      });
-      setData(response.data);
-    } catch (error) {
-      console.error("Hata:", error.response ? error.response.data : error.message);
-    }
-  };
-
-  useEffect(() => {
-    getAllNotes();
-  }, []);
+function NotePageItems({notes}) {
 
 
 
@@ -138,7 +119,7 @@ function NotePageItems() {
     >
       <NotePageTitle>Notlarım</NotePageTitle>
       <NoteCardGrid>
-        {data.map((note) => (
+        {notes.map((note) => (
           <NoteItem key={note.id} variants={cardVariants} initial="initial" animate="animate" exit="exit">
             <NoteHeader>
               <NoteTitle>{note.notesName}</NoteTitle>

@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-
+import { FaUser, FaEnvelope, FaLock, FaPhone, FaBriefcase, FaCamera, FaGraduationCap, FaPlus, FaTrash } from 'react-icons/fa';
+import axios from 'axios';
+import UsersApi from '../Api/UsersApi';
+import { StyleSheetManager } from 'styled-components';
+import isPropValid from '@emotion/is-prop-valid';
 const PublicHolidayContainer = styled(motion.div)`
-  padding:  0 50px 0 0;
+  padding:  0 80px 0 0;
   display: flex;
   flex-direction: column;
 `;
@@ -73,9 +77,30 @@ const holidayData = [
   { id: '#4526', name: 'Independence Day', daysUntil: 52 },
   { id: '#1054', name: 'Labor Day', daysUntil: 45 },
   { id: '#1055', name: 'Halloween', daysUntil: 45 },
+  
 ];
 
 function PublicHoliday() {
+
+
+const [holiday,setHoliday]= useState([]);
+
+const getAllHoliday= async()=> {
+   
+  const response = await axios.get(
+    UsersApi.ENDPOINTS.GET_PUBLIC_HOLIDAY,
+    {
+      headers: {
+        Authorization: 'Bearer ' + UsersApi.TOKEN,
+      },
+    }
+  );  
+  setHoliday(response.data);
+}
+useEffect(()=>{
+getAllHoliday();
+},[])
+
   return (
     <PublicHolidayContainer>
         
@@ -87,18 +112,21 @@ function PublicHoliday() {
               <TableHeader>ID</TableHeader>
               <TableHeader>Resmi Tatil</TableHeader>
               <TableHeader>Kalan Gün</TableHeader>
+           
             </tr>
           </TableHead>
           <TableBody>
-            {holidayData.map((holiday) => (
-              <TableRow key={holiday.id}>
+            {holiday.map((day) => (
+              <TableRow key={day.id}>
                 <TableData>
-                  <a href="javascript:void(0);" className="text-reset">{holiday.id}</a>
+                  <a href="javascript:void(0);" className="text-reset">#{day.id}</a>
                 </TableData>
                 <TableData>
-                  <span>{holiday.name}</span>
+                  <span>{day.holidayName}</span>
                 </TableData>
-                <TableData>{holiday.daysUntil}</TableData>
+                <TableData className='d-flex justify-content-center'><div style={{color:"#a69595", marginRight:10}}>
+                  {Math.ceil((new Date(day.holidayDate)-new Date()) / (1000 * 60 * 60 * 24))}g  </div>
+                  <p>{new Date(day.holidayDate).toLocaleDateString('tr-TR')}</p></TableData>
               </TableRow>
             ))}
           </TableBody>

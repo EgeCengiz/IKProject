@@ -283,47 +283,60 @@ function PersonRegisterPage() {
   // Personel Ekle
   const addPersonData = async () => {
     try {
- 
-       
-        const responseUsers = await axios.post(
-          UsersApi.ENDPOINTS.POST_USERS_ADD,
-          userData,
+      const responseUsers = await axios.post(
+        UsersApi.ENDPOINTS.POST_USERS_ADD,
+        userData,
+        {
+          headers: {
+            Authorization: 'Bearer ' + UsersApi.TOKEN,
+          },
+        }
+      );
+      console.log("User data:", userData);
+  
+      if (responseUsers.status === 200 || responseUsers.status === 201) {
+        await addPersonImages(userData.username); // Await image upload
+  
+        const responseEducation = await axios.post(
+          UsersApi.ENDPOINTS.POST_USERS_EDUCATION_ADD,
+          userDataEducation,
           {
             headers: {
               Authorization: 'Bearer ' + UsersApi.TOKEN,
             },
           }
         );
-        console.log(userData);
-        if (responseUsers.status === 200 || responseUsers.status === 201) {
-          addPersonImages(userData.username);
-          const responseEducation = await axios.post(
-            UsersApi.ENDPOINTS.POST_USERS_EDUCATION_ADD,
-            userDataEducation,
+  
+        if (responseEducation.status === 200 || responseEducation.status === 201) {
+          const userDetails = {
+            about: "Hakkımızda Kısmını doldurunuz..",
+            socialMedia: '',
+            location: "Adress giriniz..",
+            speaks: "Türkçe",
+            email: "mail giriniz..",
+            position: "Pozisyon giriniz..",
+            username: userData.username  
+          };
+  
+          const responseDetails = await axios.post(
+            UsersApi.ENDPOINTS.POST_PERSON_DETAILS,
+            userDetails,
             {
               headers: {
                 Authorization: 'Bearer ' + UsersApi.TOKEN,
               },
             }
           );
-          if (responseEducation.status === 200 || responseEducation.status === 201) {
-            
-
-          //Users DETAİLS Eklenmesi Lazım her kullanıcıya
-          
-
-
-
-
-          } else {
-            console.error("Eğitim bilgisi eklenemedi");
-          }
+          console.log("Details response:", responseDetails.data);
         } else {
-          console.error("Kullanıcı eklenemedi");
+          console.error("Eğitim bilgisi eklenemedi");
         }
-    
+      } else {
+        console.error("Kullanıcı eklenemedi");
+      }
     } catch (error) {
       console.error("Hata:", error.response ? error.response.data : error.message);
+      throw error; // Re-throw for handleSubmit to catch
     }
   };
 
@@ -450,14 +463,54 @@ function PersonRegisterPage() {
                     <Label htmlFor="position">
                       <FaBriefcase /> Pozisyon
                     </Label>
-                    <Input
-                      type="text"
-                      id="position"
-                      name="position"
-                      placeholder="Personel Pozisyonu Giriniz.."
-                      value={userData.position}
-                      onChange={handleInputChange}
-                    />
+                    <Select id="position" name="position" value={userData.position} onChange={handleInputChange}>
+  <option value="">Pozisyon Seçiniz</option>
+  <option value="Aşçı">Aşçı</option>
+  <option value="Backend Developer">Backend Developer</option>
+  <option value="Barista">Barista</option>
+  <option value="Bilgi Teknolojileri Uzmanı">Bilgi Teknolojileri Uzmanı</option>
+  <option value="Biyolog">Biyolog</option>
+  <option value="Doktor">Doktor</option>
+  <option value="Eğitimci">Eğitimci</option>
+  <option value="Elektrik Mühendisi">Elektrik Mühendisi</option>
+  <option value="Finans Analisti">Finans Analisti</option>
+  <option value="Frontend Developer">Frontend Developer</option>
+  <option value="Garson">Garson</option>
+  <option value="Grafik Tasarımcı">Grafik Tasarımcı</option>
+  <option value="Halkla İlişkiler Uzmanı">Halkla İlişkiler Uzmanı</option>
+  <option value="Hemşire">Hemşire</option>
+  <option value="IK (İnsan Kaynakları)">IK (İnsan Kaynakları)</option>
+  <option value="İnşaat Mühendisi">İnşaat Mühendisi</option>
+  <option value="Kimyager">Kimyager</option>
+  <option value="Komi">Komi</option>
+  <option value="Lojistik Uzmanı">Lojistik Uzmanı</option>
+  <option value="Makine Mühendisi">Makine Mühendisi</option>
+  <option value="Mimar">Mimar</option>
+  <option value="Muhasebeci">Muhasebeci</option>
+  <option value="Mühendis">Mühendis</option>
+  <option value="Müdür">Müdür</option>
+  <option value="Müdür Yardımcısı">Müdür Yardımcısı</option>
+  <option value="Operasyon Yöneticisi">Operasyon Yöneticisi</option>
+  <option value="Pazarlama Uzmanı">Pazarlama Uzmanı</option>
+  <option value="Personel">Personel</option>
+  <option value="Proje Yöneticisi">Proje Yöneticisi</option>
+  <option value="Psikolog">Psikolog</option>
+  <option value="Resepsiyonist">Resepsiyonist</option>
+  <option value="Satış Temsilcisi">Satış Temsilcisi</option>
+  <option value="Siber Güvenlik Uzmanı">Siber Güvenlik Uzmanı</option>
+  <option value="Sosyal Medya Yöneticisi">Sosyal Medya Yöneticisi</option>
+  <option value="Şoför">Şoför</option>
+  <option value="Takım Lideri">Takım Lideri</option>
+  <option value="Tasarımcı">Tasarımcı</option>
+  <option value="Teknisyen">Teknisyen</option>
+  <option value="UX Tasarımcı">UX Tasarımcı</option>
+  <option value="Veri Analisti">Veri Analisti</option>
+  <option value="Web Geliştirici">Web Geliştirici</option>
+  <option value="Yazılım Geliştirici">Yazılım Geliştirici</option>
+  <option value="Yetkili">Yetkili</option>
+  <option value="Yetkili">Diğer</option>
+</Select>
+                  
                   </FormGroup>
                   <FormGroup>
                     <Label htmlFor="phone">
@@ -478,11 +531,9 @@ function PersonRegisterPage() {
                     </Label>
                     <Select id="role" name="role" value={userData.role} onChange={handleInputChange}>
                       <option value="">Rol Seçiniz</option>
-                      <option value="Personel">Personel</option>
+                      <option value="Personel">Admin</option>
                       <option value="IK">İK</option>
-                      <option value="Takım Lideri">Takım Lideri</option>
-                      <option value="Müdür">Müdür</option>
-                      <option value="Müdür Yardımcısı">Müdür Yardımcısı</option>
+                      <option value="Takım Lideri">Personel</option>
                       <option value="Yetkili">Yetkili</option>
                       <option value="Diğer">Diğer</option>
                     </Select>

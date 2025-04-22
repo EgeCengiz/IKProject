@@ -13,7 +13,7 @@ const localizer = momentLocalizer(moment);
 
 // Styled Components
 const CalendarContainer = styled(motion.div)`
-  padding: 20px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
 `;

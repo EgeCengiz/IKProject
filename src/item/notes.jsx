@@ -9,7 +9,7 @@ import Modal from 'react-modal';
 import { TiPinOutline } from "react-icons/ti";
 
 const NotesContainer = styled(motion.div)`
-  padding: 20px;
+  padding: 0 0 0 40px;
   display: flex;
   flex-direction: column;
 `;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaPlus } from "react-icons/fa";
 import NotePageItems from '../item/notePageItems';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,6 +13,28 @@ function NotesPage() {
     const [isVisible, setIsVisible] = useState(false);
     const [importance, setImportance] = useState('Normal');
     const [notesDatas, setNotesDatas] = useState({ notesName: '', dateTarget: '', description: '' });
+
+
+    const [data, setData] = useState([]);
+
+    const getAllNotes = async () => {
+      try {
+        const response = await axios.get(UsersApi.ENDPOINTS.GET_NOTES, {
+          headers: {
+            Authorization: 'Bearer ' + UsersApi.TOKEN
+          }
+        });
+        setData(response.data);
+      } catch (error) {
+        console.error("Hata:", error.response ? error.response.data : error.message);
+      }
+    };
+  
+    useEffect(() => {
+      getAllNotes();
+    }, []);
+  
+
 
     const AddNotes = async () => {
 
@@ -42,6 +64,7 @@ function NotesPage() {
                     }
                 }
             );
+            await getAllNotes();
             console.log("Not başarıyla kaydedildi:", response.data);
           
                 //İzin Onaylanmışsa Calender Tablosunada Eklensin
@@ -77,7 +100,7 @@ function NotesPage() {
                 <div className="content">
                     <div className="container-xxl">
                         <br />
-                        <NotePageItems />
+                        <NotePageItems notes={data}/>
                         <div
                             style={{ position: 'fixed', bottom: 50, right: 55, borderRadius: 50, width: 50, height: 50 }}
                             className="btn btn-primary d-flex justify-content-center align-items-center"
