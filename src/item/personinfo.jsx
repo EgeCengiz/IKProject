@@ -7,7 +7,7 @@ import UsersApi from '../Api/UsersApi';
 import { FaSearch } from "react-icons/fa";
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-
+import { IoMdPerson } from "react-icons/io";
 
 
 const PermissionPageContainer = styled(motion.div)`
@@ -169,7 +169,7 @@ function personinfo() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-       <h5 className=" m-3" style={{ color: "#4a5a6b" }}>Personel Listesi </h5>
+       <h6 className=" mt-2 mb-2" style={{ color: "#4a5a6b" }}><IoMdPerson/> Personel Listesi </h6>
       <ContentWrapper>
         <Card variants={cardVariants} initial="initial" animate="animate" exit="exit">
     

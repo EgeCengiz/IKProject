@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { TiPinOutline } from "react-icons/ti";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { motion } from 'framer-motion';
-
+import { FaRegStickyNote } from "react-icons/fa";
 
 
 
@@ -117,7 +117,7 @@ function NotePageItems({notes}) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <NotePageTitle>Notlarım</NotePageTitle>
+      <NotePageTitle><FaRegStickyNote/> Notlarım</NotePageTitle>
       <NoteCardGrid>
         {notes.map((note) => (
           <NoteItem key={note.id} variants={cardVariants} initial="initial" animate="animate" exit="exit">

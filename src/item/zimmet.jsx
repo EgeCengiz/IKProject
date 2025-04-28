@@ -4,13 +4,13 @@ import { TbListDetails } from "react-icons/tb";
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import UsersApi from '../Api/UsersApi';
+import { BsBox2 } from "react-icons/bs";
 
 const ZimmetPageContainer = styled(motion.div)`
   padding: 20px;
   display: flex;
   flex-direction: column;
 `;
-
 
 const ContentWrapper = styled.div`
   display: flex;
@@ -168,7 +168,7 @@ function Zimmet() {
   const [assignmentDate, setAssignmentDate] = useState('');
   const [description, setDescription] = useState('');
   const [data, setData] = useState([]);
-  const [person, setPerson] = useState([]);
+  const [personnelList, setPersonnelList] = useState([]);
 
   const getAllDeposit = async () => {
     try {
@@ -180,24 +180,24 @@ function Zimmet() {
       console.error(err);
     }
   };
+
   const getAllPersonNames = async () => {
     try {
       const { data } = await axios.get(UsersApi.ENDPOINTS.GET_DEPOSIT_PERSON_NAME, {
         headers: { Authorization: 'Bearer ' + UsersApi.TOKEN }
       });
-      setPerson(data);
+      setPersonnelList(data);
     } catch (err) {
       console.error(err);
     }
   };
-
 
   const postAddDeposit = async (newZimmet) => {
     try {
       await axios.post(UsersApi.ENDPOINTS.POST_DEPOSIT, newZimmet, {
         headers: { Authorization: 'Bearer ' + UsersApi.TOKEN }
       });
-      getAllDeposit(); // Eklemeden sonra tabloyu güncelle
+      getAllDeposit();
     } catch (err) {
       console.error(err);
     }
@@ -208,40 +208,30 @@ function Zimmet() {
     getAllPersonNames();
   }, []);
 
-  const personnelList = [
-    { id: 'p1', name: 'Ahmet Yılmaz' },
-    { id: 'p2', name: 'Mehmet Demir' },
-    { id: 'p3', name: 'Ayşe Kara' },
-  ];
-
   const handleSave = () => {
     if (!itemName || !selectedPersonel) {
       alert('Eşya adı ve personel seçimi zorunludur.');
       return;
     }
-  
-    const personNameText = personnelList.find(p => p.id === selectedPersonel)?.name || 'Bilinmiyor';
-  
+
     const newZimmet = {
       name: itemName,
       degreeName: importance,
-      personName: personNameText,
+      personName: selectedPersonel,
       date: assignmentDate || new Date().toISOString().split('T')[0],
-  
       description: description
     };
-  
+
     console.log(newZimmet);
     postAddDeposit(newZimmet);
-  
+
+    // reset form
     setItemName('');
     setImportance('Az');
     setSelectedPersonel('');
     setAssignmentDate('');
     setDescription('');
-    setZimmetState('Verildi'); // temizle
   };
-  
 
   const handleDetailClick = zimmet => {
     alert(`Detay: ${zimmet.name} - ${zimmet.personName}`);
@@ -249,20 +239,15 @@ function Zimmet() {
 
   return (
     <ZimmetPageContainer
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={cardVariants}
     >
-            <h5 className=" m-3" style={{ color: "#4a5a6b" }}>Zimmet Takip </h5>
-
+      <h6 className=" mb-2" style={{ color: "#4a5a6b" }}><BsBox2/> Zimmet Takip</h6>
       <div className='row'>
         <div className='col-md-4'>
-          <AddZimmetCard
-            variants={cardVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-          >
+          <AddZimmetCard>
             <ZimmetFormGroup>
               <ZimmetLabel>Eşya Adı</ZimmetLabel>
               <ZimmetInput
@@ -290,7 +275,7 @@ function Zimmet() {
                 onChange={e => setSelectedPersonel(e.target.value)}
               >
                 <option value="">Seçiniz</option>
-                {person.map(p => (
+                {personnelList.map(p => (
                   <option key={p} value={p}>{p}</option>
                 ))}
               </ZimmetSelect>
@@ -317,12 +302,7 @@ function Zimmet() {
           </AddZimmetCard>
         </div>
         <div className='col-md-8'>
-          <ZimmetTableCard
-            variants={cardVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-          >
+          <ZimmetTableCard>
             <ZimmetTable>
               <TableHead>
                 <tr>
@@ -335,11 +315,11 @@ function Zimmet() {
               </TableHead>
               <TableBody>
                 {data.map(z => (
-                  <TableRow key={z.id}>  
+                  <TableRow key={z.id}>
                     <TableData>{z.personName}</TableData>
                     <TableData>{z.name}</TableData>
                     <TableData>{z.degreeName}</TableData>
-                    <TableData>{z.date}</TableData>
+                    <TableData>{new Date(z.date).toLocaleDateString('tr-TR')}</TableData>
                     <TableData>
                       <DetailIcon onClick={() => handleDetailClick(z)} />
                     </TableData>

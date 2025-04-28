@@ -4,6 +4,7 @@ import UsersApi from '../Api/UsersApi';
 import { FaSearch } from "react-icons/fa";
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { LuPlane } from "react-icons/lu";
 
 const PermissionPageContainer = styled(motion.div)`
   padding: 20px;
@@ -146,7 +147,7 @@ function PermissionList({ refreshSignal }) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}>İzin Tablosu</h5>
+      <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}><LuPlane/> İzin Tablosu</h5>
       <ContentWrapper>
         <Card variants={cardVariants} initial="initial" animate="animate" exit="exit">
           <SearchForm action="/search" method="GET">

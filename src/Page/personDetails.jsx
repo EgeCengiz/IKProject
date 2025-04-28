@@ -323,6 +323,7 @@ function PersonDetails() {
         },
       });
       setDetails(response.data);
+      console.log(`${UsersApi.ENDPOINTS.GET_PERSON_DETAILS}${username}`);
       console.log('Detaylar:', response.data);
     } catch (error) {
       console.error('Hata:', error);

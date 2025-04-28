@@ -1,7 +1,7 @@
 // src/api/config/apiConfig.js
 const API_BASE_URL = "http://localhost:8081";
 const TOKEN ='eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjpbeyJhdXRob3JpdHkiOiJST0xFX0FkbWluIn1dLCJ1c2VybmFtZSI6IkVnZSBDZW5naXogT3J0YWtjxLEiLCJzdWIiOiJFZ2UgQ2VuZ2l6IE9ydGFrY8SxIiwiaWF0IjoxNzQ1MzA1MzE0LCJleHAiOjE3NDU5MTAxMTR9.l6WvHPoERPOnvEKWpDwBkZi5Fh7EWdPZoX9jBhROkG4';
-const username ="Ege Cengiz Ortakcı"
+const username ="Ege Cengiz Ortakcı";
 
 const UsersApi = {
   API_BASE_URL,
@@ -41,6 +41,11 @@ const UsersApi = {
     GET_DEPOSIT_ALL:`${API_BASE_URL}/deposit/all`,
     GET_DEPOSIT_PERSON_NAME:`${API_BASE_URL}/deposit/person/name`,
     POST_DEPOSIT:`${API_BASE_URL}/deposit/add`,
+    //Notices
+    GET_NOTICES_ALL:`${API_BASE_URL}/notice/all`,
+    POST_NOTICES_ADD:`${API_BASE_URL}/notice/add`,
+    //Shift
+    GET_SHIFT_ALL:`${API_BASE_URL}/shift/all`,
   
   },
 };

@@ -315,12 +315,18 @@ function PersonForPermission() {
                             <option value="" disabled>
                               Seçiniz...
                             </option>
-                            <option value="bayram">Bayram İzni</option>
-                            <option value="mazeret">Mazeret İzni</option>
-                            <option value="yillik">Yıllık İzin</option>
-                            <option value="ucretli">Ücretli İzin</option>
-                            <option value="ucretsiz">Ücretsiz İzin</option>
-                            <option value="kisa">Kısa Süreli İzin</option>
+                            <option value="Yıllık Ücretli İzin">Yıllık Ücretli İzin</option>
+                            <option value="Hastalık İzni (Raporlu)">Hastalık İzni (Raporlu)</option>
+                            <option value="Mazeret İzni (Evlilik)">Mazeret İzni (Evlilik)</option>
+                            <option value="Mazeret İzni (Ölüm)">Mazeret İzni (Ölüm)</option>
+                            <option value="Doğum İzni">Doğum İzni </option>
+                            <option value="Babalık İzni">Babalık İzni</option>
+                            <option value="Süt İzni">Süt İzni</option>
+                            <option value="Adli İzin">Adli İzin (mahkeme, tanıklık gibi zorunlu durumlarda)</option>
+                            <option value="Ücretsiz İzin">Ücretsiz İzin</option>
+                            <option value="Askerlik İzni">Askerlik İzni </option>
+                            <option value="Uzun Süreli Sağlık İzni">Uzun Süreli Sağlık İzni</option>
+                            <option value="Doğum Sonrası Ücretsiz İzin">Doğum Sonrası Ücretsiz İzin </option>
                           </FormSelect>
                         </div>
                         <div className="mb-3">

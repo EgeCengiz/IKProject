@@ -6,10 +6,10 @@ function personPage() {
     return (
         <div>
             
-            <div class="content-page">
+            <div className="content-page">
 
-                <div class="content">
-                    <div class="container-xxl">
+                <div className="content">
+                    <div className="container-xxl">
                       
                         <Personinfo />
 

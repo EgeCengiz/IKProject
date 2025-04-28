@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TbListDetails } from "react-icons/tb";
 import { motion } from 'framer-motion';
+import axios from 'axios';
+import UsersApi from '../Api/UsersApi';
+import { AiOutlineNotification } from "react-icons/ai";
+
 
 const NoticePageContainer = styled(motion.div)`
   padding: 20px;
@@ -12,7 +16,7 @@ const NoticePageContainer = styled(motion.div)`
 const NoticeTitle = styled.h4`
   color: #1e40af;
   margin-bottom: 20px;
-    font-size: 0.9rem;
+  font-size: 0.9rem;
 `;
 
 const ContentWrapper = styled.div`
@@ -36,8 +40,7 @@ const Card = styled.div`
   flex: 1;
 `;
 
-const AddNoticeCard = styled(Card)`
-`;
+const AddNoticeCard = styled(Card)``;
 
 const NoticeFormGroup = styled.div`
   margin-bottom: 12px;
@@ -117,7 +120,7 @@ const PublishButton = styled.button`
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
-  font-weight: Ch 500;
+  font-weight: 500;
   transition: background-color 0.2s ease;
 
   &:hover {
@@ -130,8 +133,7 @@ const PublishButton = styled.button`
   }
 `;
 
-const NoticeTableCard = styled(Card)`
-`;
+const NoticeTableCard = styled(Card)``;
 
 const NoticeTable = styled.table`
   width: 100%;
@@ -193,40 +195,62 @@ const cardVariants = {
   exit: { opacity: 0, y: -10 },
 };
 
-function notice() {
+function Notice() {
   const [itemName, setItemName] = useState('');
   const [selectedPersonel, setSelectedPersonel] = useState('');
   const [description, setDescription] = useState('');
-  const [notices, setNotices] = useState([
-    { id: 1, publisher: 'Okan Karaçor', recipients: 'Tüm Kullanıcılar', message: 'Mesaj burada yer alacak', date: '30.03.2025' },
-    { id: 2, publisher: 'Okan Karaçor', recipients: 'Ahmet, Mehmet, +3', message: 'Mesaj burada yer alacak', date: '30.03.2025' },
-    { id: 3, publisher: 'Okan Karaçor', recipients: 'Tüm Kullanıcılar', message: 'Mesaj', date: '30.03.2025' },
-  ]);
+  const [notices, setNotices] = useState([]);
 
   const personnelList = [
-    { id: 'p1', name: 'Ahmet Yılmaz' },
-    { id: 'p2', name: 'Mehmet Demir' },
-    { id: 'p3', name: 'Ayşe Kara' },
-    { id: 'p4', name: 'Zeynep Güneş' },
+    { id: 'p1', name: 'Yetkili Kullanıcılar' },
+    { id: 'p2', name: 'Tüm Personel' },
+    { id: 'p3', name: 'IK Personel' },
+    { id: 'p4', name: 'CEO' },
   ];
 
-  const handleSave = () => {
-    if (!itemName || !description) {
-      alert('Duyuru başlığı ve açıklama zorunludur.');
-      return;
+  const getNotices = async () => {
+    try {
+      const response = await axios.get(UsersApi.ENDPOINTS.GET_NOTICES_ALL, {
+        headers: {
+          Authorization: 'Bearer ' + UsersApi.TOKEN
+        }
+      });
+      setNotices(response.data);
+    } catch (error) {
+      console.error('Error fetching notices:', error);
     }
+  };
 
-    const newNotice = {
-      id: Date.now(),
-      publisher: 'Kullanıcı Adı',
-      recipients: selectedPersonel ? personnelList.find(p => p.id === selectedPersonel)?.name : 'Tüm Kullanıcılar',
-      message: description,
-      date: new Date().toLocaleDateString('tr-TR'),
+  useEffect(() => {
+    getNotices();
+  }, []);
+
+  const postNotices = async () => {
+    const currentDate = new Date().toISOString().split('T')[0]; // Get current date in ISO format
+    const NewNotices = {
+      noticeName: itemName,
+      noticeDescription: description,
+      noticeDate: currentDate,
+      noticeAdmin: UsersApi.username,
+      noticeWho: selectedPersonel
     };
-    setNotices([...notices, newNotice]);
-    setItemName('');
-    setSelectedPersonel('');
-    setDescription('');
+
+    try {
+      await axios.post(UsersApi.ENDPOINTS.POST_NOTICES_ADD, NewNotices, {
+        headers: {
+          Authorization: 'Bearer ' + UsersApi.TOKEN
+        }
+      });
+      getNotices(); // Refresh the notices list
+      alert('Duyuru başarıyla yayınlandı!');
+    } catch (error) {
+      console.error('Error posting notice:', error);
+      alert('Duyuru yayınlanırken bir hata oluştu.');
+    }
+  };
+
+  const handlePublishClick = () => {
+    postNotices();
   };
 
   const handleDetailClick = (notice) => {
@@ -239,11 +263,11 @@ function notice() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}>Duyurular</h5>
+      <h5 className="card-title  mt-2" style={{ color: "#4a5a6b" }}><AiOutlineNotification/> Duyurular</h5>
       <br />
       <div className="row">
         <div className="col-md-4">
-          <AddNoticeCard  initial="initial" animate="animate" exit="exit">
+          <AddNoticeCard variants={cardVariants} initial="initial" animate="animate" exit="exit">
             <NoticeFormGroup>
               <NoticeLabel htmlFor="itemName">Duyuru Başlığı</NoticeLabel>
               <NoticeInput
@@ -263,7 +287,7 @@ function notice() {
               >
                 <option value="">Tüm Personel</option>
                 {personnelList.map((person) => (
-                  <option key={person.id} value={person.id}>
+                  <option key={person.id} value={person.name}>
                     {person.name}
                   </option>
                 ))}
@@ -279,29 +303,32 @@ function notice() {
               />
             </NoticeFormGroup>
             <NoticeButtonGroup>
-              <PublishButton onClick={handleSave}>Yayınla</PublishButton>
+              <PublishButton onClick={handlePublishClick}>Yayınla</PublishButton>
             </NoticeButtonGroup>
           </AddNoticeCard>
         </div>
         <div className="col-md-8">
-          <NoticeTableCard  style={{padding:'0'}} initial="initial" animate="animate" exit="exit">
+          <NoticeTableCard style={{ padding: '0' }} variants={cardVariants} initial="initial" animate="animate" exit="exit">
             <NoticeTable>
               <TableHead>
                 <tr>
                   <TableHeader>Yayınlayan</TableHeader>
                   <TableHeader>Alıcılar</TableHeader>
-                  <TableHeader>Mesaj</TableHeader>
+                  <TableHeader>Başlık</TableHeader>
+                  <TableHeader>Açıklama</TableHeader>
                   <TableHeader>Tarih</TableHeader>
                   <TableHeader>Detay</TableHeader>
                 </tr>
               </TableHead>
-              <TableBody>
+              <TableBody> 
                 {notices.map((notice) => (
-                  <TableRow key={notice.id}>
-                    <TableData>{notice.publisher}</TableData>
-                    <TableData>{notice.recipients}</TableData>
-                    <TableData>{notice.message}</TableData>
-                    <TableData>{notice.date}</TableData>
+                  <TableRow key={notice.id}> 
+                  <TableData>{notice.noticeAdmin}</TableData>
+                    <TableData>{notice.noticeWho}</TableData>
+                    <TableData>{notice.noticeName}</TableData>
+                    <TableData>{notice.noticeDescription}</TableData>
+                   
+                    <TableData>{new Date(notice.noticeDate).toLocaleDateString('tr-TR')}</TableData>
                     <TableData>
                       <DetailIcon onClick={() => handleDetailClick(notice)} />
                     </TableData>
@@ -316,4 +343,4 @@ function notice() {
   );
 }
 
-export default notice;
+export default Notice;
