@@ -7,10 +7,14 @@ import { LiaBirthdayCakeSolid } from "react-icons/lia";
 import axios from 'axios';
 import UsersApi from '../Api/UsersApi';
 
+// Container
 const BirthdayPageContainer = styled(motion.div)`
-  padding: 0 40px 0 0;
+  padding: 0 10% 0 0;
   display: flex;
   flex-direction: column;
+    @media (max-width: 768px) {
+     padding: 0 0 0 0;
+    }
 `;
 
 const BirthdayTitle = styled.h4`
@@ -31,13 +35,18 @@ const Card = styled.div`
   background-color: #fff;
   border-radius: 15px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  width: 100%;
 `;
 
+// Table: keep desktop layout, only enable scrolling on mobile
 const BirthdayTable = styled.table`
   width: 100%;
   border-collapse: collapse;
+
   @media (max-width: 768px) {
+    display: block;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     white-space: nowrap;
   }
 `;
@@ -94,9 +103,8 @@ function BirthdayPage() {
         const response = await axios.get(UsersApi.ENDPOINTS.GET_USERS_BIRTHDAY, {
           headers: { Authorization: `Bearer ${UsersApi.TOKEN}` },
         });
-        const users = response.data; // array with { birthDay, daysUntilBirthday, username }
+        const users = response.data;
 
-        // Fetch images and combine with birthday info
         const usersWithImages = await Promise.all(
           users.map(async (user) => {
             try {
@@ -126,7 +134,6 @@ function BirthdayPage() {
           })
         );
 
-        // Sort by days until birthday ascending
         usersWithImages.sort((a, b) => a.days - b.days);
         setBirthdayData(usersWithImages);
       } catch (err) {
@@ -144,10 +151,10 @@ function BirthdayPage() {
 
   return (
     <BirthdayPageContainer>
-      <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}>
-        <LiaBirthdayCakeSolid /> Doğum Günü Listesi
-      </h5>
-
+ 
+  <h6 style={{ color: '#4a5a6b', width: '100%', padding: '10px' }}>
+  <LiaBirthdayCakeSolid />  Doğum Günü Listesi
+      </h6>
       <ContentWrapper>
         <Card>
           <BirthdayTable>

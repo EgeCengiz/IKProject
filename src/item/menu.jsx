@@ -178,11 +178,7 @@ function menu() {
                                                     Duyurular
                                                 </NavLink>
                                             </li>
-                                            <li>
-                                                <NavLink to="/companyDay" className="tp-link">
-                                                    Şirket Etkinlikleri
-                                                </NavLink>
-                                            </li>
+                                  
                                             <li>
                                                 <NavLink to="/personregister" className="tp-link">
                                                     Personel Ekle

@@ -7,7 +7,7 @@ import UsersApi from '../Api/UsersApi';
 import { StyleSheetManager } from 'styled-components';
 import isPropValid from '@emotion/is-prop-valid';
 const PublicHolidayContainer = styled(motion.div)`
-  padding:  0 80px 0 0;
+  padding:  0 15% 0 0;
   display: flex;
   flex-direction: column;
 `;

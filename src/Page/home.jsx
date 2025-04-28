@@ -6,6 +6,7 @@ import Calender from '../item/calender';
 import PersonPermission from '../item/personPermission';
 import BirthdayPage from './birthdayPage';
 import PieAnalist from '../item/pieAnalist';
+import { MdPadding } from 'react-icons/md';
 function home() {
     return (
         <div>
@@ -17,7 +18,7 @@ function home() {
                        
                         <PersonPermission/>
                        <br></br>
-                        <div className="row" >
+                        <div className="row ps-5 pe-5" >
                           
                             <div className="col-md-8"><Notes/></div>
                             <div className="col-md-4"><BirthdayPage/></div>

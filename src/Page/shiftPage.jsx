@@ -170,7 +170,8 @@ const ModalHeader = styled.div`
 const ModalTitle = styled.h5`
   margin: 0;
   font-size: 1.25rem;
-  color: #1e40af;
+  padding:10px;
+  color:rgb(118, 134, 187);
 `;
 
 const CloseButton = styled.button`
@@ -190,6 +191,28 @@ const ModalBody = styled.div`
     line-height: 1.4;
   }
 `;
+function calculateWorkDays(startDate) {
+  const today = new Date();
+  let currentDate = new Date(startDate);
+  let daysCount = 0;
+
+  // İşe giriş tarihi ile bugünün tarihi arasındaki tüm günleri say
+  while (currentDate <= today) {
+    // Eğer gün Pazar değilse, sayıya ekle
+    if (currentDate.getDay() !== 0) { // getDay() 0'ı Pazar olarak döndürür
+      daysCount++;
+    }
+    // Bir gün ilerlet
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return daysCount;
+}
+
+// Kullanım
+
+
+
 
 
 function ShiftPage() {
@@ -216,7 +239,7 @@ function ShiftPage() {
 
       console.log('Shift :', response.data);
       setShift(response.data);
-      
+
     } catch (error) {
       console.error('Hata:', error);
       setError('Kullanıcı detayları alınırken bir hata oluştu: ' + (error.response?.data?.message || error.message));
@@ -232,8 +255,8 @@ function ShiftPage() {
         },
       });
       setDetails(response.data);
-      console.log(`${UsersApi.ENDPOINTS.GET_PERSON_DETAILS}${selectPerson}`);
-  
+      console.log(response.data);
+
     } catch (error) {
       console.error('Hata:', error);
       setError('Kullanıcı detayları alınırken bir hata oluştu: ' + (error.response?.data?.message || error.message));
@@ -298,7 +321,7 @@ function ShiftPage() {
                         <TableHeader>Pozisyon</TableHeader>
                         <TableHeader>Email</TableHeader>
                         <TableHeader>Yıllık İzin Hakediş</TableHeader>
-                        <TableHeader>İzin Kullanılan Gün Sayısı</TableHeader>
+                        <TableHeader>Ücretli İzin Sayısı</TableHeader>
                         <TableHeader>Aksiyon</TableHeader>
                       </tr>
                     </TableHead>
@@ -308,17 +331,17 @@ function ShiftPage() {
                           <TableData>{person.username}</TableData>
                           <TableData>{person.position}</TableData>
                           <TableData>{person.email}</TableData>
-                          <TableData>{person.permissionYear === "" ? "-" : person.permissionYear}</TableData>
-                          <TableData>{person.permission === "" ? "-" : person.permission}</TableData>
+                          <TableData>{person.permissionYear === 0 ? "-" : person.permissionYear}</TableData>
+                          <TableData>{person.pricePermission === 0 ? "-" : person.pricePermission}</TableData>
                           <TableData>
                             <DetailIcon onClick={() => {
                               setShowModal(true);
                               setSelectedPersonel({
                                 createDate: person.createDate,
-                                permissionYear:  person.permissionYear,
-                                permissionMoney: "",
-                                permissionNoneMoney: person.permission,
-                                shift: ""
+                                permissionYear: person.permissionYear,
+                                permissionMoney: person.permission,
+                                permissionNoneMoney: person.pricePermission,
+                                shift: person.howManyDays
 
                               })
                               getProfileImages(person.username);
@@ -348,7 +371,10 @@ function ShiftPage() {
                   >
 
                     <ModalHeader>
-                      <ModalTitle>Mesai Takip Sistemi</ModalTitle>
+                      <ModalTitle>
+
+
+                        Mesai Takip Sistemi</ModalTitle>
                       <CloseButton onClick={() => setShowModal(false)}><CgCloseO size={25} color='red' /></CloseButton>
                     </ModalHeader>
                     <ModalBody>
@@ -384,19 +410,19 @@ function ShiftPage() {
                                       </tr>
                                       <tr>
                                         <th scope="row" style={{ fontSize: 14, fontWeight: 500 }} className=" pe-3"><IoCheckboxOutline /> Kullanılan Ücretli İzin Sayısı</th>
-                                        <td>{selectPerson.permissionNoneMoney=="" ? 0 : selectPerson.permissionNoneMoney }</td>
+                                        <td>{selectPerson.permissionNoneMoney == "" ? 0 : selectPerson.permissionNoneMoney}</td>
                                       </tr>
                                       <tr>
                                         <th scope="row" style={{ fontSize: 14, fontWeight: 500 }} className="pe-3"><MdOutlineIndeterminateCheckBox /> Kullanılan Ücretsiz İzin Sayısı</th>
-                                        <td>0</td>
+                                        <td>{selectPerson.permissionMoney}</td>
                                       </tr>
                                       <tr>
                                         <th scope="row" style={{ fontSize: 14, fontWeight: 500 }} className=" pe-3"><GiProgression /> Yıllık İzin Hakediş Kalan Gün</th>
-                                        <td>95</td>
+                                        <td>{selectPerson.shift}</td>
                                       </tr>
                                       <tr>
                                         <th scope="row" style={{ fontSize: 14, fontWeight: 500 }} className="pe-3"><LuPlane /> Mevcut Yıllık İzin</th>
-                                        <td>{selectPerson.permissionYear=="" ? 0 : selectPerson.permissionYear}</td>
+                                        <td>{selectPerson.permissionYear == "" ? 0 : selectPerson.permissionYear}</td>
                                       </tr>
 
                                     </tbody>
@@ -407,7 +433,11 @@ function ShiftPage() {
                                 <h6 className="text-center mb-3"><FaChartBar /> Personel İzin & Çalışma Dağılımı</h6>
                                 <hr className="mb-4" />
 
-                                <PerformancePie />
+                                <PerformancePie
+                                  calisma={calculateWorkDays(selectPerson.createDate)}
+                                  ucretli={selectPerson.permissionMoney}
+                                  ucretsiz={selectPerson.permissionNoneMoney}
+                                />
 
                               </div>
                             </div>
@@ -416,6 +446,10 @@ function ShiftPage() {
 
                       </div>
                     </ModalBody>
+                    <div className='d-flex justify-content-end'>
+                      <img src='../src/images/smart.png' style={{ width: 100 }}></img>
+                    </div>
+
                   </ModalContent>
                 </ModalOverlay>
               )}

@@ -71,7 +71,7 @@ function PersonPermission({ onAction }) {
   }
 
   return (
-    <div style={{padding:"0 40px 0 40px"}}>
+    <div style={{padding:"0 10% 0 10%"}}>
   
       <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}><IoDocument/> İzin Talepleri</h5>
       <br></br> 

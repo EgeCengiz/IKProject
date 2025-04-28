@@ -5,7 +5,10 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import UsersApi from '../Api/UsersApi';
 import { BsBox2 } from "react-icons/bs";
+import { CgCloseO } from "react-icons/cg";
+import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 
+// Existing Styled Components (unchanged)
 const ZimmetPageContainer = styled(motion.div)`
   padding: 20px;
   display: flex;
@@ -17,7 +20,6 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   gap: 15px;
   width: 100%;
-  max-width: 900px;
 `;
 
 const Card = styled(motion.div)`
@@ -155,6 +157,160 @@ const DetailIcon = styled(TbListDetails)`
   &:hover { color: #2b6cb0; }
 `;
 
+const ModalOverlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled(motion.div)`
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  .personnel-image, .asset-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  p {
+    margin: 0;
+    color: #666;
+  }
+  strong {
+    color: #333;
+  }
+`;
+
+const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+const ModalTitle = styled.h5`
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+`;
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+`;
+
+const ModalBody = styled.div`
+  padding-bottom: 20px;
+`;
+
+const EditButton = styled.button`
+  padding: 8px 16px;
+  background-color: rgb(0, 136, 255);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  &:hover { background-color: rgb(78, 170, 240); }
+  &:focus { box-shadow: 0 0 0 2px rgba(116, 175, 226, 0.3); }
+`;
+
+const DeliveredButton = styled.button`
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  &:hover { background-color: #218838; }
+  &:focus { box-shadow: 0 0 0 2px rgba(40,167,69,0.3); }
+`;
+
+// New Styled Components for Modal
+const ModalBodyWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+const SectionCard = styled.div`
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  margin: 0 10px;
+  @media (max-width: 768px) {
+    margin: 10px 0;
+  }
+`;
+
+const ArrowIcon = styled(HiOutlineArrowNarrowRight)`
+  font-size: 24px;
+  color: #666;
+  margin: 0 20px;
+  @media (max-width: 768px) {
+    transform: rotate(90deg);
+    margin: 20px 0;
+  }
+`;
+
+const SectionContent = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Image = styled.img`
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  @media (max-width: 768px) {
+    width: 60px;
+    height: 60px;
+  }
+`;
+
+const Info = styled.div`
+  margin-left: 15px;
+  p {
+    margin: 5px 0;
+    color: #666;
+    strong {
+      color: #333;
+    }
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+`;
+
 const cardVariants = {
   initial: { opacity: 0, y: 10 },
   animate: { opacity: 1, y: 0 },
@@ -169,6 +325,7 @@ function Zimmet() {
   const [description, setDescription] = useState('');
   const [data, setData] = useState([]);
   const [personnelList, setPersonnelList] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   const getAllDeposit = async () => {
     try {
@@ -244,7 +401,7 @@ function Zimmet() {
       exit="exit"
       variants={cardVariants}
     >
-      <h6 className=" mb-2" style={{ color: "#4a5a6b" }}><BsBox2/> Zimmet Takip</h6>
+      <h6 className="mb-2" style={{ color: "#4a5a6b" }}><BsBox2 /> Zimmet Takip</h6>
       <div className='row'>
         <div className='col-md-4'>
           <AddZimmetCard>
@@ -321,7 +478,7 @@ function Zimmet() {
                     <TableData>{z.degreeName}</TableData>
                     <TableData>{new Date(z.date).toLocaleDateString('tr-TR')}</TableData>
                     <TableData>
-                      <DetailIcon onClick={() => handleDetailClick(z)} />
+                      <DetailIcon onClick={() => setShowModal(true)} />
                     </TableData>
                   </TableRow>
                 ))}
@@ -330,6 +487,68 @@ function Zimmet() {
           </ZimmetTableCard>
         </div>
       </div>
+
+      {showModal && (
+        <ModalOverlay
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={() => setShowModal(false)}
+        >
+          <ModalContent
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0.8 }}
+            onClick={e => e.stopPropagation()}
+          >
+            <ModalHeader>
+              <ModalTitle>Zimmet Takip Sistemi</ModalTitle>
+              <CloseButton onClick={() => setShowModal(false)}>
+                <CgCloseO size={25} color="red" />
+              </CloseButton>
+            </ModalHeader>
+            <ModalBody>
+              <ModalBodyWrapper>
+                <SectionCard>
+                  <h6 style={{ textAlign: 'center' }}>Zimmet Atanan Personel</h6>
+                  <hr />
+                  <SectionContent>
+                  
+                    <Info>
+                      <p className='d-flex justify-content-center p-2'>  <Image src="../src/images/ege.jpg" alt="Personel" /></p>
+                      <p><strong>Ad Soyad:</strong> Ege Cengiz Ortakcı</p>
+                      <p><strong>Eposta:</strong> egecengizortakci@gmail.com</p>
+                      <p><strong>Telefon:</strong> 0530 3816550</p>
+                      <p><strong>Pozisyon:</strong> Backend Developer</p>
+                    </Info>
+                  </SectionContent>
+                </SectionCard>
+                <ArrowIcon />
+                <SectionCard>
+                  <h6 style={{ textAlign: 'center' }}>Zimmet Atanan Ürün</h6>
+                  <hr />
+                  <SectionContent>
+                 
+                    <Info>
+                      <p><strong>Zimmet Adı:</strong> Araba</p>
+                      <p><strong>Önem Derecesi:</strong> Yüksek</p>
+                      <p><strong>Zimmet Tarihi:</strong> 1.1.2026</p>
+                      <p><strong>Açıklama:</strong> Araba zimmette</p>
+                    </Info>
+                  </SectionContent>
+                </SectionCard>
+              </ModalBodyWrapper>
+              <ButtonGroup>
+                <EditButton onClick={() => console.log('Düzenle clicked')}>Düzenle</EditButton>
+                <DeliveredButton onClick={() => console.log('Teslim Edildi clicked')} style={{ marginLeft: '10px' }}>Teslim Edildi</DeliveredButton>
+              </ButtonGroup>
+            </ModalBody>
+            <div className="d-flex justify-content-end mt-3">
+              <img src="../src/images/smart.png" style={{ width: 70 }} alt="Branding" />
+            </div>
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </ZimmetPageContainer>
   );
 }

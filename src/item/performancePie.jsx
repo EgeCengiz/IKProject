@@ -16,14 +16,15 @@ const PieChartCard = styled.div`
 
 `;
 
-function PerformancePie() {
+function PerformancePie({calisma,ucretli,ucretsiz}) {
   const [pieData, setPieData] = useState([]);
 
   // Rastgele veri oluştur
   useEffect(() => {
-    const çalışmaGünleri = Math.floor(Math.random() * 20) + 10; // 10-29 gün
-    const ücretliİzin = Math.floor(Math.random() * 10); // 0-9 gün
-    const ücretsizİzin = Math.floor(Math.random() * 5); // 0-4 gün
+    console.log("Degerler : "+ucretli)
+    const çalışmaGünleri = calisma; 
+    const ücretliİzin = ucretli; 
+    const ücretsizİzin =ucretsiz; 
 
     setPieData([
       { name: 'Çalışma Günleri', value: çalışmaGünleri },

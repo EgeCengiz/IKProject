@@ -327,7 +327,27 @@ function PersonRegisterPage() {
               },
             }
           );
-          console.log("Details response:", responseDetails.data);
+
+          const shiftDetails={
+            username: userData.username  ,
+            email: "",
+            position: "",
+            createDate: new Date(),
+            permissionYear: 0,
+            pricePermission: 0,
+            permission: 0
+          }
+
+          const responseShift = await axios.post(UsersApi.ENDPOINTS.POST_SHIFT,shiftDetails,{
+            headers:{
+              Authorization:'Bearer '+UsersApi.TOKEN
+            }
+          });
+
+          console.log(responseShift.data);
+
+
+
         } else {
           console.error("Eğitim bilgisi eklenemedi");
         }
