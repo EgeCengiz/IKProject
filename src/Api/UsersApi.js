@@ -1,6 +1,6 @@
 // src/api/config/apiConfig.js
 const API_BASE_URL = "http://localhost:8081";
-const TOKEN ='eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjpbeyJhdXRob3JpdHkiOiJST0xFX0FkbWluIn1dLCJ1c2VybmFtZSI6IkVnZSBDZW5naXogT3J0YWtjxLEiLCJzdWIiOiJFZ2UgQ2VuZ2l6IE9ydGFrY8SxIiwiaWF0IjoxNzQ1MzA1MzE0LCJleHAiOjE3NDU5MTAxMTR9.l6WvHPoERPOnvEKWpDwBkZi5Fh7EWdPZoX9jBhROkG4';
+const TOKEN ='eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjpbeyJhdXRob3JpdHkiOiJST0xFX0FkbWluIn1dLCJ1c2VybmFtZSI6IkVnZSBDZW5naXogT3J0YWtjxLEgTmV3Iiwic3ViIjoiRWdlIENlbmdpeiBPcnRha2PEsSBOZXciLCJpYXQiOjE3NDU5MTA4NzYsImV4cCI6MTc0NjUxNTY3Nn0.6hhSEes4fByuodaJ6rzxaupB800tZnX8v_-PmE27v0E';
 const username ='Ege Cengiz Ortakcı';
 
 const UsersApi = {
@@ -45,6 +45,10 @@ const UsersApi = {
     //Notices
     GET_NOTICES_ALL:`${API_BASE_URL}/notice/all`,
     POST_NOTICES_ADD:`${API_BASE_URL}/notice/add`,
+    POST_NOTICE_FILE_UPLOAD:`${API_BASE_URL}/notice/file/upload`,
+    GET_NOTICE_FILE:`${API_BASE_URL}/notice/file`,
+    DELETE_NOTICE:`${API_BASE_URL}/notice/delete`,
+    PUT_NOTICE:`${API_BASE_URL}/notice/update`,
     //Shift
     GET_SHIFT_ALL:`${API_BASE_URL}/shift/all`,
     POST_SHIFT:`${API_BASE_URL}/shift/add`,

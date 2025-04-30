@@ -258,7 +258,7 @@ function PersonRegisterPage() {
 
   //Personel Images
   const addPersonImages = async(username)=>{
-    console.log("Şuan Personel Imageste");
+  
          const formData = new FormData();
       formData.append("file", profilePicture);
       formData.append("username",username);
