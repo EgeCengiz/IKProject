@@ -5,14 +5,33 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { IoMdPerson, IoMdSettings, IoIosBusiness } from "react-icons/io";
 import { NavLink } from 'react-router-dom';
 import { IoMailOutline } from "react-icons/io5";
+import axios from 'axios';
+import UsersApi from '../../Api/UsersApi';
 function personMenu() {
-    const [activeLink, setActiveLink] = useState(''); // Aktif linki tutacak state
 
-    const handleLinkClick = (link) => {
 
-        setActiveLink(link); // Tıklanan linki state'e ata
+    const [profileImage, setProfileImage] = useState({});
+    const getProfileImages = async (person) => {
+        try {
 
+            const response = await axios.get(`${UsersApi.ENDPOINTS.GET_USERS_IMAGE}?username=${person}`, {
+                headers: {
+                    Authorization: `Bearer ${UsersApi.TOKEN}`,
+                },
+                responseType: 'blob',
+            });
+            const imageUrl = URL.createObjectURL(response.data);
+            console.log(imageUrl);
+            setProfileImage({ image: imageUrl });
+        } catch (error) {
+            console.log(imageUrl);
+        }
     };
+    useEffect(() => {
+        getProfileImages(localStorage.getItem('username'));
+
+    }, []);
+
 
     // Sidebar durumunu yöneten state
     const [sidebarState, setSidebarState] = useState('default');
@@ -58,9 +77,9 @@ function personMenu() {
 
                                 <li className="dropdown notification-list topbar-dropdown">
                                     <a className="nav-link dropdown-toggle nav-user me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                                        <img src="../src/images/profile.png" alt="user-image" className="rounded-circle" />
+                                        <img src={profileImage.image} alt="user-image" className="rounded-circle" />
                                         <span className="pro-user-name ms-1">
-                                            Ege Cengiz Ortakcı
+                                            {localStorage.getItem('username')}
                                         </span>
                                     </a>
                                     <div className="dropdown-menu dropdown-menu-end profile-dropdown ">
@@ -71,7 +90,6 @@ function personMenu() {
                                             <i className="mdi mdi-account-circle-outline fs-16 align-middle"></i>
                                             <span>Profil</span>
                                         </a>
-
 
 
 
@@ -98,11 +116,11 @@ function personMenu() {
                         <div id="sidebar-menu">
 
                             <div className="d-flex justify-content-center p-3 " style={{ width: '100%', backgroundColor: 'white' }}>
-                            <img  src="../src/images/smart.png" style={{ width: '60%' }} />
+                                <img src="../src/images/smart.png" style={{ width: '60%' }} />
                             </div>
 
                             <ul id="side-menu">
-<br></br>
+                                <br></br>
                                 <li className="menu-title">Genel</li>
                                 <li>
                                     <a href="#sidebarDashboards2" data-bs-toggle="collapse" aria-expanded="true">

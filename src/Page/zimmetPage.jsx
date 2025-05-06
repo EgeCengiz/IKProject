@@ -19,11 +19,6 @@ function ZimmetPage() {
                     <div className="container-xxl">
                         <br></br>
                         <Zimmet />
-                       
-
-
-
-
                     </div>
                 </div>
             </div>

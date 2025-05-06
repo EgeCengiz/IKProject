@@ -1,7 +1,8 @@
-import { useState } from 'react'
-import './App.css'
-import Home from './Page/home'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import './App.css';
+import Menu from './item/menu';
+import Home from './Page/home';
 import PersonPage from './Page/personPage';
 import PersonDetails from './Page/personDetails';
 import PersonPermissionPage from './Page/personPermissionPage';
@@ -13,24 +14,39 @@ import NoticePage from './Page/noticePage';
 import Calender from './Page/calenderPage';
 import CommonSharePage from './Page/commonSharePage';
 import CompanyDayPage from './Page/companyDayPage';
-import Menu from './item/menu';
+import Login from './Page/login';
 import PersonHome from './Person/Pages/personHome';
 import PersonForPermisson from './Person/Pages/personForPermisson';
 import PersonNoticePage from './Person/Pages/personNoticePage';
 import PersonZimmetPage from './Person/Pages/PersonZimmetPage';
 import PersonCompanyDay from './Person/Pages/personCompanyDay';
 import PersonCommonSharePage from './Person/Pages/personCommonSharePage';
-function App() {
+
+// Wrapper to conditionally render Menu based on current path
+function Layout({ children }) {
+  const location = useLocation();
+  // Paths where Menu should be hidden
+  const hideMenuOn = ['/login','/person/home'];
+
+  const hideMenu = hideMenuOn.includes(location.pathname);
 
   return (
     <>
+      {!hideMenu && <Menu />}
+      {children}
+    </>
+  );
+}
 
-      <Router>
-        <Menu />
+function App() {
+  return (
+    <Router>
+      <Layout>
         <Routes>
+          {/* Public / Auth Routes */}
+          <Route path="/login" element={<Login />} />
 
-          {/*Admin Sayfaları*/}
-
+          {/* Admin Pages */}
           <Route path="/" element={<Home />} />
           <Route path="/person" element={<PersonPage />} />
           <Route path="/personDetails/:username" element={<PersonDetails />} />
@@ -43,36 +59,21 @@ function App() {
           <Route path="/companyDay" element={<CompanyDayPage />} />
           <Route path="/calender" element={<Calender />} />
           <Route path="/commonshare" element={<CommonSharePage />} />
-        </Routes>
-      </Router>
 
-
-  {/*Personel Sayfaları*/}
-
-
-      <Router>
-      
-        <Routes>  
+          {/* Personnel Pages */}
           <Route path="/person/home" element={<PersonHome />} />
           <Route path="/person/permisson" element={<PersonForPermisson />} />
           <Route path="/person/personNotice" element={<PersonNoticePage />} />
           <Route path="/person/zimmet" element={<PersonZimmetPage />} />
           <Route path="/person/personCompanyDay" element={<PersonCompanyDay />} />
           <Route path="/person/PersonCommonShare" element={<PersonCommonSharePage />} />
+
+          {/* Catch-all: Redirect unknown to login or home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </Router>
-    
-    
-
-
-
-
-
-
-
-
-    </>
-  )
+      </Layout>
+    </Router>
+  );
 }
 
-export default App
+export default App;

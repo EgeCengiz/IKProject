@@ -5,7 +5,7 @@ import { FaSearch } from "react-icons/fa";
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { LuPlane } from "react-icons/lu";
-
+import PersonnelSearch from '../item/PersonnelSearch';
 const PermissionPageContainer = styled(motion.div)`
   padding: 20px;
   display: flex;
@@ -141,6 +141,26 @@ function PermissionList({ refreshSignal }) {
     getStatePermission();
   }, [refreshSignal]);
 
+
+  const [query, setQuery] = useState('');
+    const handleSearch = async e => {
+      e.preventDefault();
+      if (!query.trim()) return;
+      try {
+        const response = await axios.get(
+          `${UsersApi.ENDPOINTS.GET_PERMISSION_SEARCH}/${encodeURIComponent(query)}`,
+          { headers: { Authorization: `Bearer ${UsersApi.TOKEN}` } }
+        );
+        console.log(response.data );
+        setData(response.data || []);
+      
+      } catch (err) {
+        console.error('Personel arama hatası:', err);
+       
+  
+      }
+    };
+  
   return (
     <PermissionPageContainer
       initial={{ opacity: 0 }}
@@ -150,10 +170,13 @@ function PermissionList({ refreshSignal }) {
       <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}><LuPlane/> İzin Tablosu</h5>
       <ContentWrapper>
         <Card variants={cardVariants} initial="initial" animate="animate" exit="exit">
-          <SearchForm action="/search" method="GET">
+       
+          <SearchForm  onSubmit={handleSearch} >
             <SearchInput
               type="text"
               name="name"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
               placeholder="İsme göre ara..."
               aria-label="İsim"
             />

@@ -18,16 +18,6 @@ import { CgCloseO } from "react-icons/cg";
 
 
 
-// Orijinal shiftData dizisi
-const shiftData = [
-  { name: 'Ubeyde Rizaoglu', position: 'Project Manager', mail: 'egecengizortakci@gmail.com', annualLeave: 10, usedLeave: 3 },
-  { name: 'Ziya', position: 'Backend', mail: 'egecengizortakci@gmail.com', annualLeave: 8, usedLeave: 3 },
-  { name: 'Ege Cengiz Ortakcı', position: 'Stajer', mail: 'egecengizortakci@gmail.com', annualLeave: 5, usedLeave: 1 },
-  { name: 'Okan Karaçor', position: 'IK Menager', mail: 'egecengizortakci@gmail.com', annualLeave: 15, usedLeave: 2 },
-  { name: 'Ülkü', position: 'Project Manager', mail: 'egecengizortakci@gmail.com', annualLeave: 10, usedLeave: 3 },
-  { name: 'Recep', position: 'Project Manager', mail: 'egecengizortakci@gmail.com', annualLeave: 15, usedLeave: 3 },
-  { name: 'Sefa', position: 'Project Manager', mail: 'egecengizortakci@gmail.com', annualLeave: 12, usedLeave: 3 },
-];
 
 const ShiftPageContainer = styled(motion.div)`
   padding: 20px;
@@ -218,6 +208,7 @@ function calculateWorkDays(startDate) {
 function ShiftPage() {
   const [showModal, setShowModal] = useState(false);
   const [shift, setShift] = useState([]);
+  const [error, setError] = useState([]);
 
   const [selectPerson, setSelectedPersonel] = useState({
     createDate: "",
@@ -233,11 +224,11 @@ function ShiftPage() {
     try {
       const response = await axios.get(`${UsersApi.ENDPOINTS.GET_SHIFT_ALL}`, {
         headers: {
-          Authorization: `Bearer ${UsersApi.TOKEN}`,
+          Authorization: 'Bearer ' + UsersApi.TOKEN,
         },
       });
 
-      console.log('Shift :', response.data);
+
       setShift(response.data);
 
     } catch (error) {
@@ -255,7 +246,7 @@ function ShiftPage() {
         },
       });
       setDetails(response.data);
-      console.log(response.data);
+     
 
     } catch (error) {
       console.error('Hata:', error);
@@ -290,6 +281,24 @@ function ShiftPage() {
   };
 
 
+  const [query, setQuery] = useState('');
+  const handleSearch = async e => {
+    e.preventDefault();
+    if (!query.trim()) return;
+    try {
+      const response = await axios.get(
+        `${UsersApi.ENDPOINTS.GET_SHIFT_SEARCH}/${encodeURIComponent(query)}`,
+        { headers: { Authorization: `Bearer ${UsersApi.TOKEN}` } }
+      );
+      console.log(response.data);
+      setShift(response.data || []);
+
+    } catch (err) {
+      console.error('Personel arama hatası:', err);
+
+
+    }
+  };
 
 
   return (
@@ -305,10 +314,13 @@ function ShiftPage() {
               <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}><MdWorkOutline /> Mesai Tablosu</h5>
               <ContentWrapper>
                 <Card>
-                  <SearchForm action="/search" method="GET">
+
+                  <SearchForm onSubmit={handleSearch} >
                     <SearchInput
                       type="text"
                       name="name"
+                      value={query}
+                      onChange={e => setQuery(e.target.value)}
                       placeholder="İsme göre ara..."
                       aria-label="İsim"
                     />

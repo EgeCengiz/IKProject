@@ -7,7 +7,7 @@ import UsersApi from '../Api/UsersApi';
 import { BsBox2 } from "react-icons/bs";
 import { CgCloseO } from "react-icons/cg";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
-
+import { FaCheck } from "react-icons/fa";
 // Existing Styled Components (unchanged)
 const ZimmetPageContainer = styled(motion.div)`
   padding: 20px;
@@ -281,6 +281,7 @@ const ArrowIcon = styled(HiOutlineArrowNarrowRight)`
 const SectionContent = styled.div`
   display: flex;
   align-items: center;
+  justify-content:center;
 `;
 
 const Image = styled.img`
@@ -321,6 +322,16 @@ function Zimmet() {
   const [itemName, setItemName] = useState('');
   const [importance, setImportance] = useState('Az');
   const [selectedPersonel, setSelectedPersonel] = useState('');
+  const[details, setDetails] = useState({
+    id: "",
+    name: "",
+    degreeName: "",
+    personName: "",
+    date: "",
+    state: "",
+    description: ""
+
+  });
   const [assignmentDate, setAssignmentDate] = useState('');
   const [description, setDescription] = useState('');
   const [data, setData] = useState([]);
@@ -364,6 +375,54 @@ function Zimmet() {
     getAllDeposit();
     getAllPersonNames();
   }, []);
+
+  //Zimmet Teslim Edildi
+  const stateOk = async (id)=>{
+
+    const response = await axios.get(UsersApi.ENDPOINTS.PUT_DEPOSIT_STATE+"/"+id,{
+      headers:{
+        Authorization: 'Bearer ' + UsersApi.TOKEN
+      }
+    });
+    getAllDeposit();
+    console.log(response.data);
+  }
+
+ const [profileImage, setProfileImage] = useState({});
+  const getProfileImages = async (person) => {
+    try {
+      if (!details.personName) {
+        
+        return;
+      }
+      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_USERS_IMAGE}?username=${person}`, {
+        headers: {
+          Authorization: `Bearer ${UsersApi.TOKEN}`,
+        },
+        responseType: 'blob',
+      });
+      const imageUrl = URL.createObjectURL(response.data);
+      console.log(imageUrl);
+      setProfileImage({ image: imageUrl });
+    } catch (error) {
+    
+    }
+  };
+  useEffect(() => {
+    if (details.personName) {
+      getProfileImages(details.personName);
+    }
+  }, [details.personName]);
+
+  // Delete Notice Function
+  const handleDelete = async (noteId) => {
+    await axios.delete(UsersApi.ENDPOINTS.DELETE_DEPOSIT + `/${noteId}`, {
+      headers: { Authorization: 'Bearer ' + UsersApi.TOKEN }
+    });
+    setShowModal(false);
+   getAllDeposit();
+  };
+
 
   const handleSave = () => {
     if (!itemName || !selectedPersonel) {
@@ -464,9 +523,10 @@ function Zimmet() {
               <TableHead>
                 <tr>
                   <TableHeader>Personel</TableHeader>
-                  <TableHeader>Eşya</TableHeader>
+                  <TableHeader>Zimmet</TableHeader>
                   <TableHeader>Derece</TableHeader>
                   <TableHeader>Tarih</TableHeader>
+                  <TableHeader>Durum</TableHeader>
                   <TableHeader>Detay</TableHeader>
                 </tr>
               </TableHead>
@@ -476,9 +536,23 @@ function Zimmet() {
                     <TableData>{z.personName}</TableData>
                     <TableData>{z.name}</TableData>
                     <TableData>{z.degreeName}</TableData>
+                    <TableData>{z.state == null ? "Devam Ediyor" : z.state}</TableData>
                     <TableData>{new Date(z.date).toLocaleDateString('tr-TR')}</TableData>
                     <TableData>
-                      <DetailIcon onClick={() => setShowModal(true)} />
+                      <DetailIcon onClick={ () => {
+                        
+                        setShowModal(true);
+                        setDetails({
+                          id: z.id,
+                          name: z.name,
+                          degreeName: z.degreeName,
+                          personName: z.personName,
+                          date: new Date(z.date).toLocaleDateString('tr-TR'),
+                          state: z.state,
+                          description: z.description
+                        });
+                        
+                      }} />
                     </TableData>
                   </TableRow>
                 ))}
@@ -502,7 +576,7 @@ function Zimmet() {
             onClick={e => e.stopPropagation()}
           >
             <ModalHeader>
-              <ModalTitle>Zimmet Takip Sistemi</ModalTitle>
+              <ModalTitle><BsBox2 /> Zimmet Takip Sistemi</ModalTitle>
               <CloseButton onClick={() => setShowModal(false)}>
                 <CgCloseO size={25} color="red" />
               </CloseButton>
@@ -513,13 +587,12 @@ function Zimmet() {
                   <h6 style={{ textAlign: 'center' }}>Zimmet Atanan Personel</h6>
                   <hr />
                   <SectionContent>
-                  
                     <Info>
-                      <p className='d-flex justify-content-center p-2'>  <Image src="../src/images/ege.jpg" alt="Personel" /></p>
-                      <p><strong>Ad Soyad:</strong> Ege Cengiz Ortakcı</p>
-                      <p><strong>Eposta:</strong> egecengizortakci@gmail.com</p>
-                      <p><strong>Telefon:</strong> 0530 3816550</p>
-                      <p><strong>Pozisyon:</strong> Backend Developer</p>
+                      <p className='d-flex justify-content-center p-2'> 
+                         <Image src={profileImage.image} alt="Personel" />
+                         </p>
+                      <p><strong>Ad Soyad:</strong> {details.personName}</p>
+                      <a href={`/personDetails/${details.personName}`} style={{width:"100%"}} className='btn btn-primary'>Personel Bilgisi</a>
                     </Info>
                   </SectionContent>
                 </SectionCard>
@@ -528,22 +601,33 @@ function Zimmet() {
                   <h6 style={{ textAlign: 'center' }}>Zimmet Atanan Ürün</h6>
                   <hr />
                   <SectionContent>
-                 
+
                     <Info>
-                      <p><strong>Zimmet Adı:</strong> Araba</p>
-                      <p><strong>Önem Derecesi:</strong> Yüksek</p>
-                      <p><strong>Zimmet Tarihi:</strong> 1.1.2026</p>
-                      <p><strong>Açıklama:</strong> Araba zimmette</p>
+                      <p><strong>Zimmet Adı:</strong> {details.name}</p>
+                      <p><strong>Önem Derecesi:</strong> {details.degreeName}</p>
+                      <p><strong>Zimmet Tarihi:</strong> {details.date}</p>
+                      <p><strong>Açıklama:</strong> {details.description}</p>
                     </Info>
                   </SectionContent>
                 </SectionCard>
               </ModalBodyWrapper>
               <ButtonGroup>
-                <EditButton onClick={() => console.log('Düzenle clicked')}>Düzenle</EditButton>
-                <DeliveredButton onClick={() => console.log('Teslim Edildi clicked')} style={{ marginLeft: '10px' }}>Teslim Edildi</DeliveredButton>
+              {details.state == null ?  <a className='btn btn-danger' onClick={()=>{handleDelete(details.id)}}>Kaldır</a> : <a></a> }
+               {details.state == null ?   <DeliveredButton onClick={() =>{
+                stateOk(details.id);
+                getAllDeposit();
+                getAllPersonNames();
+                setShowModal(false);
+               } } 
+               style={{ marginLeft: '10px' }}>Teslim Edildi</DeliveredButton> : 
+               <div className='d-flex justify-content-center'>
+                <p className='m-3'>Teslim Edildi</p>
+                <FaCheck className='  mt-2 p-1' color='#5d00ff' fontSize={36}/> </div>}
+              
               </ButtonGroup>
             </ModalBody>
             <div className="d-flex justify-content-end mt-3">
+            
               <img src="../src/images/smart.png" style={{ width: 70 }} alt="Branding" />
             </div>
           </ModalContent>

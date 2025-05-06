@@ -8,7 +8,9 @@ import { AiOutlineNotification } from "react-icons/ai";
 import { HiOutlineArrowSmDown } from "react-icons/hi";
 import { CgCloseO } from "react-icons/cg";
 import { FaRegFilePdf } from "react-icons/fa";
-
+import { MdPersonPin } from "react-icons/md";
+import { GoPersonFill } from "react-icons/go";
+import { BsCalendarDate  } from "react-icons/bs";
 const NoticePageContainer = styled(motion.div)`
   padding: 20px;
   display: flex;
@@ -630,7 +632,7 @@ function Notice() {
         <ModalOverlay initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowModal(false)}>
           <ModalContent initial={{ scale: 0.8 }} animate={{ scale: 1 }} exit={{ scale: 0.8 }} onClick={e => e.stopPropagation()}>
             <ModalHeader>
-              <ModalTitle>Duyuru Takip</ModalTitle>
+              <ModalTitle><AiOutlineNotification/> Duyuru Takip</ModalTitle>
               <CloseButton onClick={() => setShowModal(false)}><CgCloseO size={24} /></CloseButton>
             </ModalHeader>
             <ModalBody>
@@ -638,13 +640,13 @@ function Notice() {
                 <SectionCard>
                   <Info>
                     <div className='d-flex justify-content-end'>
-                      <p><strong>Tarih:</strong> {selectedNotice.noticeDate}</p>
+                      <p><strong><BsCalendarDate  className='mb-1'/> Tarih:</strong> {selectedNotice.noticeDate}</p>
                     </div>
                     <p className='d-flex justify-content-center p-3' style={{ fontSize: 24, fontWeight: 500 }}>{selectedNotice.noticeName}</p>
                     <div className="ql-editor p-3 m-3" dangerouslySetInnerHTML={{ __html: selectedNotice.noticeDescription }} />
                     <div className='d-flex justify-content-between'>
-                      <p><strong>Alıcı:</strong> {selectedNotice.targetPerson}</p>
-                      <p className="text-right"><strong>Yayınlayan:</strong> {selectedNotice.person}</p>
+                      <p><strong><MdPersonPin/> Alıcı:</strong> {selectedNotice.targetPerson}</p>
+                      <p className="text-right"><strong> <GoPersonFill/> Yayınlayan:</strong> {selectedNotice.person}</p>
                     </div>
                     {selectedNotice.fileUrl && typeof selectedNotice.fileUrl === 'string' && selectedNotice.fileUrl.includes("___") ? (
                       <div style={{ marginTop: '10px' }}>

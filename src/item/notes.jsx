@@ -160,6 +160,7 @@ function Notes() {
         })
         .slice(0, 4);
       setData(sortedNotes);
+      console.log(response.data);
     } catch (error) {
       console.error('Hata:', error.response ? error.response.data : error.message);
     }
@@ -189,7 +190,7 @@ function Notes() {
                 {notesData.dateTarget
                   ? new Date(notesData.dateTarget).toLocaleDateString('tr-TR')
                   : new Date().toLocaleDateString('tr-TR')}{' '}
-                <cite title="Source Title">Okan Karaçor</cite>
+                <cite title="Source Title">{notesData.username}</cite>
               </div>
               <TrashIcon onClick={() => deleteNotes(`${notesData.id}`)} />
             </NoteFooter>

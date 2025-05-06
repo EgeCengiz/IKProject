@@ -24,6 +24,17 @@ function NotesPage() {
             Authorization: 'Bearer ' + UsersApi.TOKEN
           }
         });
+
+
+
+        
+
+
+
+
+
+
+
         setData(response.data);
       } catch (error) {
         console.error("Hata:", error.response ? error.response.data : error.message);
