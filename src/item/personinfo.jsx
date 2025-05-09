@@ -200,7 +200,7 @@ function personinfo() {
                   </TableData>
                   <TableData>{response.role}</TableData>
                   <TableData>
-                    <ActionIcon onClick={() => navigate(`/personDetails/${response.username}`)} />
+                    <ActionIcon onClick={() => navigate(`/personDetails/${response.username}/0`)} />
                   </TableData>
                 </TableRow>
               ))}

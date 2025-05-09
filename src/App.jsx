@@ -21,12 +21,13 @@ import PersonNoticePage from './Person/Pages/personNoticePage';
 import PersonZimmetPage from './Person/Pages/PersonZimmetPage';
 import PersonCompanyDay from './Person/Pages/personCompanyDay';
 import PersonCommonSharePage from './Person/Pages/personCommonSharePage';
+import PrivateRoute from './item/PrivateRoute';
 
-// Wrapper to conditionally render Menu based on current path
+
 function Layout({ children }) {
   const location = useLocation();
   // Paths where Menu should be hidden
-  const hideMenuOn = ['/login','/person/home'];
+  const hideMenuOn = ['/login', '/person/home'];
 
   const hideMenu = hideMenuOn.includes(location.pathname);
 
@@ -42,34 +43,35 @@ function App() {
   return (
     <Router>
       <Layout>
+
         <Routes>
           {/* Public / Auth Routes */}
           <Route path="/login" element={<Login />} />
+            <Route element={<PrivateRoute />}>
+              {/* Admin Pages */}
+              <Route path="/" element={<Home />} />
+              <Route path="/person" element={<PersonPage />} />
+              <Route path="/personDetails/:username/:id" element={<PersonDetails />} />
+              <Route path="/personPermission" element={<PersonPermissionPage />} />
+              <Route path="/zimmet" element={<ZimmetPage />} />
+              <Route path="/personregister" element={<PersonRegisterPage />} />
+              <Route path="/notes" element={<NotesPage />} />
+              <Route path="/shift" element={<ShiftPage />} />
+              <Route path="/notice" element={<NoticePage />} />
+              <Route path="/companyDay" element={<CompanyDayPage />} />
+              <Route path="/calender" element={<Calender />} />
+              <Route path="/commonshare" element={<CommonSharePage />} />
 
-          {/* Admin Pages */}
-          <Route path="/" element={<Home />} />
-          <Route path="/person" element={<PersonPage />} />
-          <Route path="/personDetails/:username" element={<PersonDetails />} />
-          <Route path="/personPermission" element={<PersonPermissionPage />} />
-          <Route path="/zimmet" element={<ZimmetPage />} />
-          <Route path="/personregister" element={<PersonRegisterPage />} />
-          <Route path="/notes" element={<NotesPage />} />
-          <Route path="/shift" element={<ShiftPage />} />
-          <Route path="/notice" element={<NoticePage />} />
-          <Route path="/companyDay" element={<CompanyDayPage />} />
-          <Route path="/calender" element={<Calender />} />
-          <Route path="/commonshare" element={<CommonSharePage />} />
-
-          {/* Personnel Pages */}
-          <Route path="/person/home" element={<PersonHome />} />
-          <Route path="/person/permisson" element={<PersonForPermisson />} />
-          <Route path="/person/personNotice" element={<PersonNoticePage />} />
-          <Route path="/person/zimmet" element={<PersonZimmetPage />} />
-          <Route path="/person/personCompanyDay" element={<PersonCompanyDay />} />
-          <Route path="/person/PersonCommonShare" element={<PersonCommonSharePage />} />
-
-          {/* Catch-all: Redirect unknown to login or home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+              {/* Personnel Pages */}
+              <Route path="/person/home" element={<PersonHome />} />
+              <Route path="/person/permisson" element={<PersonForPermisson />} />
+              <Route path="/person/personNotice" element={<PersonNoticePage />} />
+              <Route path="/person/zimmet" element={<PersonZimmetPage />} />
+              <Route path="/person/personCompanyDay" element={<PersonCompanyDay />} />
+              <Route path="/person/PersonCommonShare" element={<PersonCommonSharePage />} />
+            </Route>
+            {/* Catch-all: Redirect unknown to login or home */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Layout>
     </Router>

@@ -12,10 +12,7 @@ function noticePage() {
                 <div className="content">
                     <div className="container-xxl">
                         <br></br> <Notice />
-                      
-
-
-
+                    
 
                     </div>
                 </div>

@@ -121,110 +121,96 @@ const cardVariants = {
   exit: { opacity: 0, y: -10 },
 };
 
-function PermissionList({ refreshSignal }) {
+function PermissionList({ refreshSignal, userData }) {
   const [data, setData] = useState([]);
+  const [query, setQuery] = useState('');
 
-  const getStatePermission = async () => {
+  const fetchPermissions = async (endpoint) => {
     try {
-      const response = await axios.get(UsersApi.ENDPOINTS.GET_PERMISSION_ALL, {
-        headers: {
-          Authorization: 'Bearer ' + UsersApi.TOKEN
-        }
+      const res = await axios.get(endpoint, {
+        headers: { Authorization: `Bearer ${UsersApi.TOKEN}` }
       });
-      setData(response.data);
-    } catch (error) {
-      console.error("Hata:", error.response ? error.response.data : error.message);
+      setData(res.data || []);
+    } catch (err) {
+      console.error('Hata:', err.response?.data || err.message);
     }
   };
 
   useEffect(() => {
-    getStatePermission();
+    fetchPermissions(UsersApi.ENDPOINTS.GET_PERMISSION_ALL);
   }, [refreshSignal]);
 
+  const handleSearch = async e => {
+    e.preventDefault();
+    if (!query.trim()) return;
+    await fetchPermissions(
+      `${UsersApi.ENDPOINTS.GET_PERMISSION_SEARCH}/${encodeURIComponent(query)}`
+    );
+  };
 
-  const [query, setQuery] = useState('');
-    const handleSearch = async e => {
-      e.preventDefault();
-      if (!query.trim()) return;
-      try {
-        const response = await axios.get(
-          `${UsersApi.ENDPOINTS.GET_PERMISSION_SEARCH}/${encodeURIComponent(query)}`,
-          { headers: { Authorization: `Bearer ${UsersApi.TOKEN}` } }
-        );
-        console.log(response.data );
-        setData(response.data || []);
-      
-      } catch (err) {
-        console.error('Personel arama hatası:', err);
-       
-  
-      }
-    };
-  
+  // Birleştirilmiş veri kaynağı
+  const permissions = userData ?? data;
+
   return (
     <PermissionPageContainer
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial="initial"
+      animate="animate"
+      variants={cardVariants}
       transition={{ duration: 0.3 }}
     >
-      <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}><LuPlane/> İzin Tablosu</h5>
-      <ContentWrapper>
-        <Card variants={cardVariants} initial="initial" animate="animate" exit="exit">
-       
-          <SearchForm  onSubmit={handleSearch} >
-            <SearchInput
-              type="text"
-              name="name"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              placeholder="İsme göre ara..."
-              aria-label="İsim"
-            />
-            <SearchIcon />
-          </SearchForm>
-          <PermissionTable>
-            <TableHead>
-              <tr>
-                <TableHeader>Ad Soyad</TableHeader>
-                <TableHeader>İzin Açıklaması</TableHeader>
-                <TableHeader>Gün</TableHeader>
-                <TableHeader>Tarih Aralığı</TableHeader>
-                <TableHeader>Onay Durumu</TableHeader>
-              </tr>
-            </TableHead>
-            <TableBody>
-              {data.map((response) => (
-                <TableRow key={response.id}>
-                  <TableData>{response.username}</TableData>
+      <h5 style={{ color: '#4a5a6b' }}><LuPlane /> İzin Tablosu</h5>
+
+      {refreshSignal != null && (
+        <SearchForm onSubmit={handleSearch}>
+          <SearchInput
+            placeholder="İsme göre ara..."
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+          />
+          <SearchIcon />
+        </SearchForm>
+      )}
+
+      <Card variants={cardVariants}>
+        <PermissionTable>
+          <TableHead>
+            <tr>
+              <TableHeader>Ad Soyad</TableHeader>
+              <TableHeader>İzin Açıklaması</TableHeader>
+              <TableHeader>Gün</TableHeader>
+              <TableHeader>Tarih Aralığı</TableHeader>
+              <TableHeader>Onay Durumu</TableHeader>
+            </tr>
+          </TableHead>
+          <TableBody>
+            {permissions.map(item => {
+              const start = new Date(item.permissionStartDateTime);
+              const end   = new Date(item.permissionEndDateTime);
+              const days  = Math.ceil((end - start) / (1000*60*60*24));
+              const opts  = { day:'2-digit', month:'numeric', year:'numeric' };
+
+              return (
+                <TableRow key={item.id}>
+                  <TableData>{item.username}</TableData>
                   <TableData>
-                    <i>{response.permissionName}</i>
-                    <br />
-                    {response.permissionDescription}
+                    <i>{item.permissionName}</i><br />
+                    {item.permissionDescription}
                   </TableData>
-                  <TableData>
-                    {Math.ceil(
-                      (new Date(response.permissionEndDateTime) - new Date(response.permissionStartDateTime)) /
-                        (1000 * 60 * 60 * 24)
-                    )}
-                  </TableData>
+                  <TableData>{days}</TableData>
                   <TableData>
                     <div className="d-flex align-items-center gap-2">
-                      <DateBadge>
-                        {new Date(response.permissionStartDateTime).toLocaleDateString('tr-TR')}
-                      </DateBadge>
+                      <DateBadge>{start.toLocaleDateString('tr-TR', opts)}</DateBadge>
                       <span>-</span>
-                      <DateBadge>
-                        {new Date(response.permissionEndDateTime).toLocaleDateString('tr-TR')}
-                      </DateBadge>
+                      <DateBadge>{end.toLocaleDateString('tr-TR', opts)}</DateBadge>
                     </div>
                   </TableData>
-                  <TableData>{response.state}</TableData>
+                  <TableData>{item.state}</TableData>
                 </TableRow>
-              ))}
-            </TableBody>
-          </PermissionTable>
-        </Card>
-      </ContentWrapper>
+              );
+            })}
+          </TableBody>
+        </PermissionTable>
+      </Card>
     </PermissionPageContainer>
   );
 }

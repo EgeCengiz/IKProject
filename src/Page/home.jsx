@@ -24,7 +24,8 @@ function home() {
                             <div className="col-md-8"><Notes/></div>
                             <div className="col-md-4"><BirthdayPage/></div>
                         </div> 
-                         <Calender />
+                        <br></br>
+                         <Calender control={0} />
                        <PieAnalist/>
                     </div>
                 </div>

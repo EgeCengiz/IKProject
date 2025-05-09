@@ -35,7 +35,7 @@ function login() {
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('username',data.username);
 
-            if(response.data.role == "Admin" || response.data.role == "IK"){
+            if(response.data.role == "Admin" || response.data.role == "IK" || response.data.role == "Yonetici"){
                 window.location.href = '/';
             }else{
                 window.location.href='/person/home';
@@ -55,7 +55,7 @@ function login() {
         <div>
             <div className="account-page">
                 <div className="container-fluid p-0">
-                    <div className="row align-items-center g-0" backgroundColor='white'>
+                    <div className="row align-items-center g-0" style={{ backgroundColor:'white'}}>
                         <div className="col-xl-5">
                             <div className="row  ">
                                 <div className="col-md-7 card mx-auto">

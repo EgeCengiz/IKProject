@@ -24,6 +24,7 @@ const UsersApi = {
     POST_PERMISSION_PERSON:`${API_BASE_URL}/permission/add`,
     GET_YEAR_DETAILS:`${API_BASE_URL}/permission/yearDetails`,
     GET_PERMISSION_SEARCH:`${API_BASE_URL}/permission/search`,
+    GET_PERMISSION_FIND:`${API_BASE_URL}/permission/find`,
     //Details
     GET_PERSON_DETAILS: `${API_BASE_URL}/users/details/`,
     GET_PERSON_DETAILS_PROJECT :`${API_BASE_URL}/users/details/projects/`,

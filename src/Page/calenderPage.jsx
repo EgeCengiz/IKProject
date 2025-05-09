@@ -10,7 +10,8 @@ function calenderPage() {
                     <div className="container-xxl">
                       
                         <div className='ms-5 me-5'>
-                             <Calender />
+                            <br></br>
+                        <Calender control={1} />
                         </div>
                            
                     </div>

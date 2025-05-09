@@ -1,203 +1,179 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PersonMenu from '../items/personMenu';
-import { TbListDetails } from 'react-icons/tb';
+import { PiClockCountdown } from 'react-icons/pi';
+import { FaRegCircleCheck } from 'react-icons/fa6';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import UsersApi from '../../Api/UsersApi';
+import axios from 'axios';
 
-// Styled components based on BirthdayPage design
+// Responsive Styled Components
 const ZimmetPageContainer = styled(motion.div)`
   padding: 20px;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 576px) {
+    padding: 10px;
+  }
 `;
 
-const ContentWrapper = styled.div`
-  flex: 1;
-`;
-
-const Card = styled.div`
+const CardWrapper = styled.div`
+  margin: 0 auto 20px;
+  width: 100%;
+  max-width: 800px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-margin: 0 20px 0 20px;
 `;
 
-const Header = styled.div`
+const CardBody = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 16px;
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+const DateBox = styled.div`
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
-`;
+  justify-content: center;
+  padding: 8px;
+  margin-right: 16px;
+  border-right: 2px solid #dee2e6;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  min-width: 80px;
 
-const Title = styled.h4`
-  color: #1e40af;
-  font-weight: 600;
-  font-size: 1.25rem;
-  margin: 0;
-`;
-
-const Breadcrumb = styled.ol`
-  list-style: none;
-  display: flex;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  font-size: 0.85rem;
-  color: #718096;
-`;
-
-const BreadcrumbItem = styled.li`
-  a {
-    color: #2d3748;
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-  &.active {
-    color: #1e40af;
-    font-weight: 500;
+  @media (max-width: 576px) {
+    margin-right: 0;
+    border-right: none;
+    border-bottom: 2px solid #dee2e6;
+    margin-bottom: 8px;
   }
 `;
 
-const ZimmetTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  @media (max-width: 768px) {
-    overflow-x: auto;
-    white-space: nowrap;
-    display: block;
-  }
+const Day = styled.div`
+  font-size: 20px;
+  font-weight: bold;
 `;
 
-const ZimmetTableHead = styled.thead`
-  background-color: #edf2f7;
+const Month = styled.div`
+  font-size: 14px;
 `;
 
-const ZimmetTableHeader = styled.th`
-  padding: 10px;
-  text-align: left;
-  font-size: 0.85rem;
+const Year = styled.div`
+  font-size: 18px;
   font-weight: 500;
-  color: #2c5282;
 `;
 
-const ZimmetTableBody = styled.tbody`
-  tr {
-    border-bottom: 1px solid #e2e8f0;
-  }
-  tr:last-child {
-    border-bottom: none;
-  }
+const InfoSection = styled.div`
+  flex: 1;
+  min-width: 0;
 `;
 
-const ZimmetTableRow = styled.tr`
-  &:hover {
-    background-color: #f7fafc;
-  }
+const InfoRow = styled.div`
+  font-size: 14px;
+  margin-bottom: 6px;
 `;
 
-const ZimmetTableData = styled.td`
-  padding: 10px;
-  font-size: 0.85rem;
-  color: #2d3748;
-  vertical-align: middle;
-`;
+const StateBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  margin-left: 16px;
+  border-left: 2px solid #dee2e6;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  min-width: 90px;
 
-
-const ActionIcon = styled(TbListDetails)`
-  color: #1e40af;
-  cursor: pointer;
-  &:hover {
-    color: #2c5282;
+  @media (max-width: 576px) {
+    margin-left: 0;
+    border-left: none;
+    border-top: 2px solid #dee2e6;
+    margin-top: 8px;
   }
 `;
-
-// Sample zimmet data (replace with actual data source)
-const zimmetData = [
-  {
-    id: 1,
-    personnel: 'Ege Cengiz Ortakcı',
-    item: '17 Numaralı Bilgisayar',
-    degree: 'Orta',
-    date: '30.03.2025',
-    image: 'src/images/profile.png',
-  },
-  {
-    id: 2,
-    personnel: 'Ege Cengiz Ortakcı',
-    item: 'Sunucu',
-    degree: 'Yüksek',
-    date: '30.03.2025',
-    image: 'src/images/profile.png',
-  },
-  {
-    id: 3,
-    personnel: 'Ege Cengiz Ortakcı',
-    item: '14 Numaralı Bilgisayar',
-    degree: 'Orta',
-    date: '30.03.2025',
-    image: 'src/images/profile.png',
-  },
-];
 
 function PersonZimmetPage() {
+  const [depositData, setDepositData] = useState([]);
+
+  const getAllDeposit = async () => {
+    try {
+      const response = await axios.get(
+        `${UsersApi.ENDPOINTS.GET_DEPOSIT_ALL}/${localStorage.getItem('username')}`,
+        { headers: { Authorization: `Bearer ${UsersApi.TOKEN}` } }
+      );
+      setDepositData(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getAllDeposit();
+  }, []);
+
+  const turkishMonths = [
+    'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+    'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+  ];
+
   return (
-
     <div>
-    <PersonMenu />
-    <div class="content-page">
+    
+      <ZimmetPageContainer
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        {depositData.map((item) => {
+          const date = new Date(item.date);
+          const day = String(date.getDate()).padStart(2, '0');
+          const monthName = turkishMonths[date.getMonth()];
+          const year = date.getFullYear();
 
-      <div class="content">
-        <div class="container-xxl">
-          <br></br>
-              <ZimmetPageContainer
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-    <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}>Zimmet Tablosu</h5>
-    <br></br>
-      <ContentWrapper>
-        <Card>
-        
-          <ZimmetTable>
-            <ZimmetTableHead>
-              <tr>
-                <ZimmetTableHeader>#</ZimmetTableHeader>
-                <ZimmetTableHeader>Personel Ad</ZimmetTableHeader>
-                <ZimmetTableHeader>Zimmet Edilen Eşya</ZimmetTableHeader>
-                <ZimmetTableHeader>Derece</ZimmetTableHeader>
-                <ZimmetTableHeader>Tarih</ZimmetTableHeader>
-                <ZimmetTableHeader>Aksiyon</ZimmetTableHeader>
-              </tr>
-            </ZimmetTableHead>
-            <ZimmetTableBody>
-              {zimmetData.map((item) => (
-                <ZimmetTableRow key={item.id}>
-                  <ZimmetTableData>
-                  <ZimmetTableData>#{item.id}</ZimmetTableData>
-                  </ZimmetTableData>
-                  <ZimmetTableData>{item.personnel}</ZimmetTableData>
-                  <ZimmetTableData>{item.item}</ZimmetTableData>
-                  <ZimmetTableData>{item.degree}</ZimmetTableData>
-                  <ZimmetTableData>{item.date}</ZimmetTableData>
-                  <ZimmetTableData>
-                    <ActionIcon />
-                  </ZimmetTableData>
-                </ZimmetTableRow>
-              ))}
-            </ZimmetTableBody>
-          </ZimmetTable>
-        </Card>
-      </ContentWrapper>
-    </ZimmetPageContainer>
-          </div>
-          </div>
-          </div>
-</div>
+          return (
+            <CardWrapper key={item.id}>
+              <CardBody>
+                <DateBox>
+                  <Day>{day}</Day>
+                  <Month>{monthName}</Month>
+                  <Year>{year}</Year>
+                </DateBox>
 
+                <InfoSection>
+                  <InfoRow><b>Zimmet Adı:</b> {item.name}</InfoRow>
+                  <InfoRow><b>Önem Derecesi:</b> {item.degreeName}</InfoRow>
+                  <InfoRow><b>Açıklama:</b> {item.description}</InfoRow>
+                </InfoSection>
+
+                <StateBox>
+                  {item.state == null ? (
+                    <>
+                      <PiClockCountdown size={27} />
+                      <div style={{ fontSize: 12 }}>Devam Ediyor</div>
+                    </>
+                  ) : (
+                    <>
+                      <FaRegCircleCheck size={27} />
+                      <div style={{ fontSize: 12 }}>Teslim Edildi</div>
+                    </>
+                  )}
+                </StateBox>
+              </CardBody>
+            </CardWrapper>
+          );
+        })}
+      </ZimmetPageContainer>
+    </div>
   );
 }
 

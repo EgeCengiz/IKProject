@@ -251,6 +251,7 @@ function PersonRegisterPage() {
   };
 
   // Eğitim silme
+
   const removeEducation = (index) => {
     setUserDataEducation((prev) => prev.filter((_, i) => i !== index));
   };
@@ -551,11 +552,12 @@ function PersonRegisterPage() {
                     </Label>
                     <Select id="role" name="role" value={userData.role} onChange={handleInputChange}>
                       <option value="">Rol Seçiniz</option>
-                      <option value="Personel">Admin</option>
-                      <option value="IK">İK</option>
-                      <option value="Takım Lideri">Personel</option>
-                      <option value="Yetkili">Yetkili</option>
-                      <option value="Diğer">Diğer</option>
+                      <option value="Admin">Admin (Tüm Yetkilere Sahip)</option>
+                      <option value="Yonetici">Yönetici (Yetki Sahibi)</option>
+                      <option value="IK">IK (İnsan Kaynakları Personeli)</option>
+                      <option value="Personel">Personel (Kısıtlı Erişim)</option>
+                    
+                     
                     </Select>
                   </FormGroup>
                   <FormGroup>

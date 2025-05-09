@@ -367,12 +367,11 @@ function Notice() {
   const quillRef = useRef(null);
   const quillRef2 = useRef(null);
   const personnelList = [
-    { id: 'p1', name: 'Yetkili Kullanıcılar' },
-    { id: 'p2', name: 'Tüm Personel' },
-    { id: 'p3', name: 'IK Personel' },
-    { id: 'p4', name: 'CEO' },
+    { id: 'p1', name: 'Yöneticilere Yayınla' },
+    { id: 'p2', name: 'Personele Yayınla' },
+    { id: 'p3', name: 'Tüm Kullanıcılar' },
   ];
-
+ 
   // Quill Editor for Main Form
   useEffect(() => {
     if (window.Quill && !quillRef.current) {

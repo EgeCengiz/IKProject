@@ -1,8 +1,8 @@
 import { React, useState, useEffect } from 'react'
 import { TiThMenu } from "react-icons/ti";
-import { FaHome, FaRegFilePdf, FaRegStickyNote } from "react-icons/fa";
+import { FaHome,FaExclamation, FaRegFilePdf, FaRegStickyNote } from "react-icons/fa";
 import { IoMdPerson, IoMdSettings, IoIosBusiness } from "react-icons/io";
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { MdHeight, MdWorkOutline } from 'react-icons/md';
 import { IoMailOutline, IoPersonCircle, IoMailUnreadOutline, IoPersonAddOutline, IoPersonOutline, IoHomeOutline, IoClose } from "react-icons/io5";
 import { LuPlane } from "react-icons/lu";
@@ -14,7 +14,20 @@ import axios from 'axios';
 import Notification from '../item/notification';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MdClose } from 'react-icons/md';
-import { TbBorderRadius } from 'react-icons/tb';
+import styled, { keyframes } from 'styled-components';
+import smartImg from '../images/smart.png'
+const blink = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+`;
+
+const BlinkingIcon = styled(FaExclamation)`
+  color: red;
+  font-size:14px;
+  animation: ${blink} 1s infinite;
+`;
+
+
 function menu() {
     const [activeLink, setActiveLink] = useState(''); // Aktif linki tutacak state
 
@@ -161,6 +174,19 @@ function menu() {
         }
     };
 
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+    
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+   
+      delete axios.defaults.headers.common['Authorization'];
+    
+      navigate('/login', { replace: true });
+    };
+
     return (
         <div >
 
@@ -229,7 +255,9 @@ function menu() {
                                                                 {results.length === 0 ? (
                                                                     <p className="text-center text-muted mb-0">Personel bulunamadı</p>
                                                                 ) : (
-                                                                    search.map(person => ( <a href={`/personDetails/${person.username}`}  >
+                                                                    search.map(person => (
+                                                                        
+                                                                        <a href={`/personDetails/${person.username}/0`} className="pe-3 ps-3" >
                                                                             
                                                                         <motion.div
                                                                             key={person.id}
@@ -272,7 +300,7 @@ function menu() {
 
                                 <li className="dropdown notification-list topbar-dropdown">
                                     <a className="nav-link dropdown-toggle" onClick={handleMailClick} data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                                        {mail == false ? <IoMailOutline fontSize={22} /> : <IoMailUnreadOutline fontSize={22} color='red' />}
+                                        {mail == false ?  <IoMailOutline fontSize={22} /> :<><BlinkingIcon /> <IoMailUnreadOutline fontSize={22} color='red' /></> }
                                     </a>
                                     <div className="dropdown-menu dropdown-menu-end dropdown-lg" style={{ width: 400 }}>
 
@@ -301,12 +329,12 @@ function menu() {
                                         </span>
                                     </a>
                                     <div className="dropdown-menu dropdown-menu-end profile-dropdown ">
-                                        <a href="pages-profile.html" className="dropdown-item notify-item">
+                                        <a href={`/personDetails/${localStorage.getItem("username")}`} className="dropdown-item notify-item">
                                             <i className="mdi mdi-account-circle-outline fs-16 align-middle"></i>
                                             <span>Profil</span>
                                         </a>
                                         <div className="dropdown-divider"></div>
-                                        <a href="auth-logout.html" className="dropdown-item notify-item">
+                                        <a  onClick={handleLogout} className="dropdown-item notify-item">
                                             <i className="mdi mdi-location-exit fs-16 align-middle"></i>
                                             <span>Çıkış Yap</span>
                                         </a>
@@ -326,7 +354,8 @@ function menu() {
                         <div id="sidebar-menu" >
 
                             <div className="d-flex justify-content-center p-3 " style={{ width: '100%', backgroundColor: 'white' }}>
-                                <img src="../src/images/smart.png" style={{ width: '60%' }} />
+                              <img src={smartImg} style={{ width: '60%' }} />
+
                             </div>
                             <br></br>
                             <ul id="side-menu">
@@ -418,7 +447,7 @@ function menu() {
                                             </li>
                                             <li>
                                                 <NavLink to="/calender" className="tp-link">
-                                                    <SlCalender />  Takvim
+                                                    <SlCalender className='me-1 mb-1 '/> Şahsi Takvim
                                                 </NavLink>
                                             </li>
                                         </ul>
@@ -432,7 +461,7 @@ function menu() {
                                 <li>
                                     <a href="#sidebarError" data-bs-toggle="collapse" aria-expanded="true">
                                         <FaRegFilePdf />
-                                        <span> Dosyalar </span>
+                                        <span> Mülakat </span>
                                         <span className="menu-arrow"></span>
                                     </a>
                                     <div className="collapse show" id="sidebarError">
@@ -440,7 +469,7 @@ function menu() {
 
                                             <li>
                                                 <NavLink to="/commonshare" className="tp-link">
-                                                    Ortak Dosya Paylaşımı
+                                                    Aday Başvuru
                                                 </NavLink>
                                             </li>
 

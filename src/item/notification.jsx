@@ -11,12 +11,13 @@ const Notification = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const usernameEncoded = encodeURIComponent(UsersApi.username);
+   
         const response = await axios.get(
-          `${UsersApi.ENDPOINTS.GET_NOTIFICATION}/${usernameEncoded}/0`,
+          `${UsersApi.ENDPOINTS.GET_NOTIFICATION}`,
           { headers: { Authorization: `Bearer ${UsersApi.TOKEN}` } }
         );
         const data = response.data || [];
+        console.log(data);
         setNotifications(data);
         setVisibleIds(new Set(data.map(n => n.id)));
       } catch (error) {

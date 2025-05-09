@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { LiaBirthdayCakeSolid } from "react-icons/lia";
 import axios from 'axios';
 import UsersApi from '../Api/UsersApi';
-
+import { FaBirthdayCake } from "react-icons/fa";
 // Container
 const BirthdayPageContainer = styled(motion.div)`
   padding: 0 10% 0 0;
@@ -168,7 +168,7 @@ function BirthdayPage() {
 
             <TableBody>
               {birthdayData.map((person) => (
-                <TableRow key={person.id}>
+                   <TableRow key={person.id}>
                   <TableData>
                     <a href="#" className="text-reset">
                       {person.id}
@@ -180,7 +180,9 @@ function BirthdayPage() {
                       <span>{person.name}</span>
                     </div>
                   </TableData>
-                  <TableData>{person.days}</TableData>
+                 {person.days=="0"? <TableData>
+                  <FaBirthdayCake className='m-1 ' style={{fontSize:18, color:"blue"}}/>
+               </TableData>:<TableData>{person.days}</TableData>}
                 </TableRow>
               ))}
             </TableBody>

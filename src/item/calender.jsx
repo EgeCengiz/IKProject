@@ -7,7 +7,10 @@ import { TbListDetails } from "react-icons/tb";
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { SlCalender } from "react-icons/sl"; 
+import { SlCalender } from "react-icons/sl";
+import { MdOutlineLocalActivity } from "react-icons/md";
+import { TbCategory2 } from "react-icons/tb";
+import { IoColorPaletteOutline } from "react-icons/io5";
 moment.locale('tr');
 const localizer = momentLocalizer(moment);
 
@@ -29,7 +32,7 @@ const Card = styled.div`
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  margin: 5px 30px 0 30px ;
+  margin: 5px 30px 0 30px;
   padding: 15px;
 `;
 
@@ -203,12 +206,12 @@ function CustomToolbarComponent({ label, onNavigate }) {
 // Event Card Component
 const EventCardComponent = ({ event, onSelect }) => {
   return (
-    <EventCard color={event.color} style={{backgroundColor:'rgb(90 154 63 / 10%)'}}>
-      <EventCardContent >
-        <ProfileImage src="../src/images/okan.jpg" alt="Kullanıcı" />
+    <EventCard color={event.color} style={{ backgroundColor: 'rgb(90 154 63 / 10%)' }}>
+      <EventCardContent>
+        <ProfileImage src={event.image} alt="Kullanıcı" />
         <div>
           <div style={{ fontSize: '0.8rem' }}>
-            Okan Karaçor <Badge color={event.color}>IK</Badge>
+            {event.user} <Badge color={event.color}>{event.category}</Badge>
           </div>
           <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{event.title}</div>
         </div>
@@ -227,11 +230,11 @@ const EventCardComponent = ({ event, onSelect }) => {
   );
 };
 
-function CalendarComponent() {
+function CalendarComponent(control) {
   const [events, setEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [modalData, setModalData] = useState({ title: '', color: '#5a9bd4' });
+  const [modalData, setModalData] = useState({ title: '', color: '#5a9bd4' ,category:''});
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -246,13 +249,13 @@ function CalendarComponent() {
   const handleSelectSlot = (slotInfo) => {
     setSelectedSlot(slotInfo);
     setSelectedEvent(null);
-    setModalData({ title: '', color: '#5a9bd4' });
+    setModalData({ title: '', color: '#5a9bd4'  ,category:''});
     setShowModal(true);
   };
 
   const handleSelectEvent = (event) => {
     setSelectedEvent(event);
-    setModalData({ title: event.title, color: event.color });
+    setModalData(null); 
     setShowModal(true);
   };
 
@@ -262,6 +265,8 @@ function CalendarComponent() {
     const newEvent = {
       title: modalData.title,
       startDate: moment(selectedSlot.start).format('YYYY-MM-DD'),
+      control: control.control,
+      category: modalData.category,
       endDate: isSingleDay
         ? moment(selectedSlot.start).format('YYYY-MM-DD')
         : moment(selectedSlot.end).subtract(1, 'days').format('YYYY-MM-DD'),
@@ -271,11 +276,14 @@ function CalendarComponent() {
       const response = await axios.post(UsersApi.ENDPOINTS.POST_CALENDER_DATA, newEvent, {
         headers: { Authorization: 'Bearer ' + UsersApi.TOKEN }
       });
+      console.log(" Category : "+newEvent.category);
       const savedEvent = {
         id: response.data.id,
         title: response.data.title,
         start: new Date(response.data.startDate),
         end: new Date(response.data.endDate),
+        control: control.control,
+        category:  modalData.category,
         color: response.data.color,
       };
       setEvents(prev => [...prev, savedEvent]);
@@ -307,17 +315,49 @@ function CalendarComponent() {
 
   const getCalender = async (year, month) => {
     try {
-      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_CALENDER_ALL}?year=${year}&month=${month}`, {
+      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_CALENDER_ALL}/${control.control}?year=${year}&month=${month}`, {
         headers: { Authorization: 'Bearer ' + UsersApi.TOKEN }
       });
-      const parsedEvents = response.data.map(ev => ({
-        id: ev.id,
-        title: ev.title,
-        start: new Date(ev.startDate),
-        end: new Date(ev.endDate),
-        color: ev.color,
-      }));
-      setEvents(parsedEvents);
+
+      const users = response.data;
+
+      const usersWithImages = await Promise.all(
+        users.map(async (user) => {
+          try {
+            const imgRes = await axios.get(
+              `${UsersApi.ENDPOINTS.GET_USERS_IMAGE}?username=${encodeURIComponent(user.username)}`,
+              {
+                headers: { Authorization: `Bearer ${UsersApi.TOKEN}` },
+                responseType: 'blob',
+              }
+            );
+            const imageUrl = URL.createObjectURL(imgRes.data);
+            return {
+              id: user.id,
+              user: user.username,
+              title: user.title,
+              category: user.category, 
+              start: new Date(user.startDate),
+              end: new Date(user.endDate),
+              color: user.color,
+              image: imageUrl,
+            };
+          } catch (imgError) {
+            console.error(`Error fetching image for ${user.username}:`, imgError);
+            return {
+              id: user.id,
+              title: user.title,
+              user: user.username,
+              start: new Date(user.startDate),
+              end: new Date(user.endDate),
+              color: user.color,
+              image: null,
+            };
+          }
+        })
+      );
+
+      setEvents(usersWithImages);
     } catch (error) {
       console.error("Takvim verisi çekme hatası:", error);
     }
@@ -354,8 +394,9 @@ function CalendarComponent() {
 
   return (
     <CalendarContainer>
-
-<h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b", marginLeft:'30px' }}><SlCalender/> Takvim</h5>
+      <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b", marginLeft: '30px' }}>
+        <SlCalender className='me-1 mb-1' /> Şirket Takvimi
+      </h5>
       <ContentWrapper>
         <Card className='p-3'>
           <Calendar
@@ -372,20 +413,20 @@ function CalendarComponent() {
             defaultView="month"
             eventPropGetter={eventStyleGetter}
             components={{ toolbar: CustomToolbarComponent }}
-            popup={true} // Bu satır eklendi
+            popup={true}
           />
         </Card>
         <Card>
           <h6 style={{ fontSize: '0.85rem', color: '#2d3748', marginBottom: '12px' }}>
             Bugün
           </h6>
-          <div style={{  display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {todayEvents.length > 0 ? (
               todayEvents.map((data) => (
                 <EventCardComponent key={data.id} event={data} onSelect={handleSelectEvent} />
               ))
             ) : (
-              <div style={{ textAlign: 'center', color: '#a0aec0', padding: '15px', fontSize: '0.8rem' }}>
+              <div style={{ textAlign: 'center', color: '#a0aec0', Mapadding: '15px', fontSize: '0.8rem' }}>
                 Bugün için etkinlik bulunamadı
               </div>
             )}
@@ -395,60 +436,168 @@ function CalendarComponent() {
 
       {showModal && (
         <ModalOverlay>
-          <ModalContent>
-            <ModalHeader>
-              <ModalTitle>{selectedEvent ? 'Etkinlik Detayları' : 'Yeni Etkinlik'}</ModalTitle>
-              <ModalCloseButton onClick={() => setShowModal(false)}>×</ModalCloseButton>
+          <ModalContent style={{ maxWidth: '400px', margin: 'auto', padding: '20px', borderRadius: '8px', backgroundColor: '#fff' }}>
+            <ModalHeader style={{ borderBottom: 'none', textAlign: 'center' }}>
+              <ModalTitle style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
+                {selectedEvent ? 'Etkinlik Detayları' : <> <MdOutlineLocalActivity/> Yeni Etkinlik</>}
+              </ModalTitle>
+              <ModalCloseButton onClick={() => setShowModal(false)} style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '1.2rem' }}>
+                ×
+              </ModalCloseButton>
             </ModalHeader>
             <ModalBody>
-              <div className="mb-3">
-                <label className="form-label small">Başlık</label>
-                <FormInput
-                  type="text"
-                  placeholder="Etkinlik başlığı"
-                  value={modalData.title}
-                  onChange={(e) => setModalData(prev => ({ ...prev, title: e.target.value }))}
-                  readOnly={!!selectedEvent}
-                />
-              </div>
-              <div className="mb-3">
-                <label className="form-label small">Renk</label>
-                <input
-                  className="border-0"
-                  type="color"
-                  id="renk"
-                  value={modalData.color}
-                  onChange={(e) => setModalData(prev => ({ ...prev, color: e.target.value }))}
-                  disabled={!!selectedEvent}
-                />
-              </div>
               {selectedEvent ? (
-                <div className="mb-3">
-                  <label className="form-label small">Tarih Aralığı</label>
-                  <div className="small">
-                    <div><strong>Başlangıç:</strong> {moment(selectedEvent.start).format('DD.MM.YYYY')}</div>
-                    <div><strong>Bitiş:</strong> {moment(selectedEvent.end).format('DD.MM.YYYY')}</div>
+                <div style={{ 
+                  borderLeft: `5px solid ${selectedEvent.color}`, 
+                  padding: '10px 15px', 
+                  backgroundColor: '#f9fafb', 
+                  borderRadius: '4px' 
+                }}>
+                  <h6 style={{ 
+                    color: '#2d3748', 
+                    marginBottom: '10px', 
+                    fontWeight: '600' 
+                  }}>
+                    {selectedEvent.title}
+                  </h6>
+                  <div style={{ 
+                    display: 'flex', 
+                    gridTemplateColumns: 'auto 1fr', 
+                    gap: '10px', 
+                    margin:'50px 0 5px 0',
+                    fontSize: '0.9rem', 
+                    color: '#4a5568' 
+                  }}>
+                    <strong>Başlangıç:</strong>
+                    <span>{moment(selectedEvent.start).format('DD.MM.YYYY')}</span>
+                    <strong>Bitiş:</strong>
+                    <span>{moment(selectedEvent.end).format('DD.MM.YYYY')}</span>
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    gridTemplateColumns: 'auto 1fr', 
+                    gap: '10px', 
+                    margin:'5px',
+                    fontSize: '0.9rem', 
+                    color: '#4a5568' 
+                  }}>
+                    <strong>Renk:</strong>
+                    <span style={{ 
+                      display: 'inline-block', 
+                      width: '20px', 
+                      height: '20px', 
+                      backgroundColor: selectedEvent.color, 
+                      borderRadius: '4px', 
+                      verticalAlign: 'middle' 
+                    }}></span>
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    gridTemplateColumns: 'auto 1fr', 
+                    gap: '10px', 
+                    margin:'5px',
+                    fontSize: '0.9rem', 
+                    color: '#4a5568' 
+                  }}>
+                    <strong>Yayınlayan:</strong>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {selectedEvent.image && (
+                        <img 
+                          src={selectedEvent.image} 
+                          alt="Yayınlayan" 
+                          style={{ 
+                            width: '30px', 
+                            height: '30px', 
+                            borderRadius: '50%', 
+                            border: '1px solid #e2e8f0' 
+                          }} 
+                        />   
+                      )}  
+                      <span>{selectedEvent.user}</span>
+                    </div>
                   </div>
                 </div>
               ) : (
-                selectedSlot && (
-                  <div className="mb-3">
-                    <label className="form-label small">Tarih Aralığı</label>
-                    <div className="small">
-                      <div><strong>Başlangıç:</strong> {moment(selectedSlot.start).format('DD.MM.YYYY')}</div>
-                      <div><strong>Bitiş:</strong> {moment(selectedSlot.end).subtract(1, 'days').format('DD.MM.YYYY')}</div>
+                <>
+                  {/* Başlık */}
+                  <div style={{ marginBottom: '15px' }}>
+                    <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Başlık</label>
+                    <textarea
+                      style={{ width: '100%', padding: '10px', borderRadius: '4px', borderColor: '#ccc', resize: 'none' }}
+                      placeholder="Etkinlik başlığı"
+                      value={modalData.title}
+                      onChange={e => setModalData(prev => ({ ...prev, title: e.target.value }))}
+                      rows={2}
+                    />
+                  </div>
+
+                  {/* Kategori Seçimi */}
+                  <div style={{ marginBottom: '15px' }}>
+                    <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>
+                      <TbCategory2 className='mt-1 me-1' /> Kategori
+                    </label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      {['Toplantı', 'Mülakat', 'Önemli', 'Duyuru', 'Diğer'].map((label, index) => (
+                        <label key={index} style={{ fontSize: '0.9rem' }}>
+                          <input
+                            type="radio"
+                            name="category"
+                            value={label}
+                            checked={modalData.category === label}
+                            onChange={() => setModalData(prev => ({ ...prev, category: label }))}
+                          />
+                          {label}
+                        </label>
+                      ))}
                     </div>
                   </div>
-                )
+
+                  {/* Renk Seçimi */}
+                  <div style={{ marginBottom: '15px' }}>
+                    <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>
+                      <IoColorPaletteOutline className='mt-1 me-1' /> Renk
+                    </label>
+                    <input
+                      type="color"
+                      value={modalData.color}
+                      onChange={e => setModalData(prev => ({ ...prev, color: e.target.value }))}
+                      style={{ width: '25%', height: '40px', border: 'none' }}
+                    />
+                  </div>
+
+                  {/* Tarih Aralığı */}
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Tarih Aralığı</label>
+                    <div style={{ fontSize: '0.9rem' }}>
+                      <div><strong>Başlangıç:</strong> {moment(selectedSlot?.start).format('DD.MM.YYYY')}</div>
+                      <div><strong>Bitiş:</strong> {moment(selectedSlot?.end).format('DD.MM.YYYY')}</div>
+                    </div>
+                  </div>
+                </>
               )}
             </ModalBody>
-            <ModalFooter>
-              <ModalButton className="close" onClick={() => setShowModal(false)}>Kapat</ModalButton>
+            <ModalFooter style={{ borderTop: 'none', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button 
+                onClick={() => setShowModal(false)} 
+                style={{ padding: '8px 16px', borderRadius: '4px', backgroundColor: '#ccc', border: 'none' }}
+              >
+                Kapat
+              </button>
               {!selectedEvent && (
-                <ModalButton className="save" color={modalData.color} onClick={handleSaveModalEvent}>Kaydet</ModalButton>
+                <button 
+                  onClick={handleSaveModalEvent} 
+                  style={{ padding: '8px 16px', borderRadius: '4px', backgroundColor: modalData.color, border: 'none', color: '#fff' }}
+                >
+                  Kaydet
+                </button>
               )}
-              {selectedEvent && (
-                <ModalButton className="delete" color={modalData.color} onClick={handleDeleteEvent}>Sil</ModalButton>
+              {selectedEvent && selectedEvent.user === localStorage.getItem("username") && (
+                <button 
+                  onClick={handleDeleteEvent} 
+                  style={{ padding: '8px 16px', borderRadius: '4px', backgroundColor: '#e74c3c', border: 'none', color: '#fff' }}
+                >
+                  Sil
+                </button>
               )}
             </ModalFooter>
           </ModalContent>

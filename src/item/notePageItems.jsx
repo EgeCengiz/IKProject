@@ -4,6 +4,8 @@ import { TiPinOutline } from "react-icons/ti";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { motion } from 'framer-motion';
 import { FaRegStickyNote } from "react-icons/fa";
+import axios from 'axios';
+import UsersApi from '../Api/UsersApi';
 
 
 
@@ -108,7 +110,18 @@ const cardVariants = {
 //Sayfada NOTLARIN gösterildiğ kısım
 function NotePageItems({notes}) {
 
-
+ const deleteNotes = async (ID) => {
+    try {
+      await axios.delete(
+        UsersApi.ENDPOINTS.DELETE_NOTES + `?id=${ID}`,
+        { headers: { Authorization: 'Bearer ' + UsersApi.TOKEN } }
+      );
+      alert('Başarı ile Silindi');
+      window.location.reload();
+    } catch (error) {
+      console.error('Hata:', error.response ? error.response.data : error.message);
+    }
+  };
 
   return (
     <>
@@ -130,7 +143,7 @@ function NotePageItems({notes}) {
             </NoteContent>
             <NoteFooter>
               <div>{note.createDate} <cite title="Source Title">{note.username}</cite></div>
-              <TrashIcon />
+              <TrashIcon onClick={() => deleteNotes(`${note.id}`)} />
             </NoteFooter>
           </NoteItem>
         ))}

@@ -4,8 +4,12 @@ import axios from 'axios';
 import UsersApi from '../Api/UsersApi';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { PiClockCountdown } from "react-icons/pi";
+import { FaRegCircleCheck } from "react-icons/fa6";
+import PermissionList from '../item/permissonList';
+import { FaRegFilePdf } from "react-icons/fa";
 
-// Styled components (BirthdayPage ile uyumlu)
+// Styled components with responsive adjustments
 const DetailsContainer = styled(motion.div)`
   padding: 20px;
 `;
@@ -26,6 +30,10 @@ const ProfileHeader = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  @media (max-width: 576px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const ProfileImage = styled.img`
@@ -33,6 +41,12 @@ const ProfileImage = styled.img`
   height: 80px;
   border-radius: 50%;
   margin-right: 20px;
+  @media (max-width: 576px) {
+    width: 60px;
+    height: 60px;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
 `;
 
 const ProfileInfo = styled.div`
@@ -63,10 +77,33 @@ const NavTabs = styled.ul`
   margin-bottom: 20px;
   list-style: none;
   padding: 0;
+  overflow-x: auto;
+  @media (max-width: 576px) {
+    flex-wrap: nowrap;
+  }
 `;
 
 const NavItem = styled.li`
   margin-right: 10px;
+`;
+const Select = styled.select`
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #a0aec0;
+  font-size: 0.9rem;
+  color: #2d3748;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg fill="%232d3748" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+
+  &:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+  }
 `;
 
 const NavLink = styled.button`
@@ -102,6 +139,7 @@ const SectionTitle = styled.h5`
   margin-bottom: 15px;
   text-transform: capitalize;
 `;
+
 
 const Grid = styled.div`
   display: grid;
@@ -177,6 +215,11 @@ const SocialLink = styled.a`
 const ProjectTable = styled.table`
   width: 100%;
   border-collapse: collapse;
+  @media (max-width: 768px) {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
 `;
 
 const TableHead = styled.thead`
@@ -306,7 +349,7 @@ const FooterLink = styled.a`
 `;
 
 function PersonDetails() {
-  const { username } = useParams();
+  const { username, id } = useParams();
   const [details, setDetails] = useState({});
   const [project, setProject] = useState([]);
   const [information, setInformation] = useState([]);
@@ -330,6 +373,24 @@ function PersonDetails() {
       setError('Kullanıcı detayları alınırken bir hata oluştu: ' + (error.response?.data?.message || error.message));
     }
   };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+  };
+  const [permission,setPermission] =useState([])
+ const getStatePermission = async () => {
+    try {
+      const response = await axios.get(UsersApi.ENDPOINTS.GET_PERMISSION_FIND+`/${username}`, {
+        headers: {
+          Authorization: 'Bearer ' + UsersApi.TOKEN
+        }
+      });
+      setPermission(response.data);
+    } catch (error) {
+      console.error("Hata:", error.response ? error.response.data : error.message);
+    }
+  };
+
 
   const getProfileImages = async () => {
     try {
@@ -392,20 +453,46 @@ function PersonDetails() {
     }
   };
 
-  // İlk olarak sadece getDetails çağrılır
   useEffect(() => {
+    { id == 1 ? setActiveTab("deposit") : setActiveTab("about") }
     getDetails();
+    getAllDeposit();
+    getStatePermission();
   }, [username]);
 
-  // details.username mevcut olduğunda diğer fonksiyonlar çağrılır
   useEffect(() => {
     if (details.username) {
       getProfileImages();
       getProjects();
       getInformation();
       getEducation();
+
     }
   }, [details.username]);
+
+  const stateOk = async (id) => {
+
+    const response = await axios.get(UsersApi.ENDPOINTS.PUT_DEPOSIT_STATE + "/" + id, {
+      headers: {
+        Authorization: 'Bearer ' + UsersApi.TOKEN
+      }
+    });
+    getAllDeposit();
+    console.log(response.data);
+  }
+  const [depositData, setDepositData] = useState([]);
+  const getAllDeposit = async () => {
+    try {
+      const data = await axios.get(UsersApi.ENDPOINTS.GET_DEPOSIT_ALL + `/${username}`, {
+        headers: { Authorization: 'Bearer ' + UsersApi.TOKEN }
+      });
+      console.log(data.data);
+      setDepositData(data.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
 
   return (
     <div>
@@ -436,6 +523,26 @@ function PersonDetails() {
                     <NavItem>
                       <NavLink active={activeTab === 'education'} onClick={() => setActiveTab('education')}>
                         Eğitim Bilgileri
+                      </NavLink>
+                    </NavItem>
+                    <NavItem>
+                      <NavLink active={activeTab === 'deposit'} onClick={() => setActiveTab('deposit')}>
+                        Atanan Zimmetler
+                      </NavLink>
+                    </NavItem>
+                    <NavItem>
+                      <NavLink active={activeTab === 'permission'} onClick={() => setActiveTab('permission')}>
+                        İzin Bilgileri
+                      </NavLink>
+                    </NavItem>
+                    <NavItem>
+                      <NavLink active={activeTab === 'info'} onClick={() => setActiveTab('info')}>
+                        Özlük Belgeleri
+                      </NavLink>
+                    </NavItem>
+                    <NavItem>
+                      <NavLink active={activeTab === 'settings'} onClick={() => setActiveTab('settings')}>
+                        Personel Ayarlar
                       </NavLink>
                     </NavItem>
                   </NavTabs>
@@ -542,6 +649,185 @@ function PersonDetails() {
                             <p>Eğitim bilgisi bulunamadı.</p>
                           )}
                         </EducationGrid>
+                      </div>
+                    )}
+                    {activeTab === 'deposit' && (
+                      <div>
+                        <SectionTitle>Atanan Zimmetler</SectionTitle>
+                        {depositData.map((data) => {
+
+                          const date = new Date(data.date);
+                          const day = String(date.getDate()).padStart(2, '0');
+                          const year = date.getFullYear();
+                          const turkishMonths = [
+                            "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+                            "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+                          ];
+                          const monthName = turkishMonths[date.getMonth()];
+
+                          return (
+                            <div className="w-100 d-flex justify-content-center" key={data.id}>
+                              <div className="m-2 card shadow rounded" style={{ width: "800px" }}>
+                                <div className="card-body d-flex p-3">
+                                  {/* Tarih */}
+                                  <div
+                                    className="d-flex flex-column align-items-center justify-content-center px-3 me-3"
+                                    style={{
+                                      borderRight: "2px solid #dee2e6",
+                                      backgroundColor: "#f8f9fa",
+                                      borderRadius: "10px",
+                                      minWidth: "80px",
+                                    }}
+                                  >
+                                    <div style={{ fontSize: 20, fontWeight: "bold" }}>{day}</div>
+                                    <div style={{ fontSize: 14 }}>{monthName}</div>
+                                    <div style={{ fontSize: 18, fontWeignht: "500" }}>{year}</div>
+                                  </div>
+
+                                  {/* Bilgi alanı */}
+                                  <div className="flex-grow-1">
+                                    <div style={{ fontSize: 14, marginBottom: 6 }}>
+                                      <b>Zimmet Adı:</b> {data.name}
+                                    </div>
+                                    <div style={{ fontSize: 14, marginBottom: 6 }}>
+                                      <b>Önem Derecesi:</b> {data.degreeName}
+                                    </div>
+                                    <div style={{ fontSize: 14 }}>
+                                      <b>Zimmet Açıklama:</b> {data.description}
+                                    </div>
+                                  </div>
+
+
+
+                                  <div
+                                    className="ms-2 d-flex flex-column align-items-center justify-content-center px-2 me-3"
+                                    style={{
+                                      borderRight: "2px solidrgb(255, 255, 255)",
+                                      backgroundColor: "#f8f9fa",
+                                      borderRadius: "10px",
+                                      minWidth: "90px",
+                                    }}
+                                  >
+                                    
+                                    {data.state == null ? <> <a href="#" onClick={() => stateOk(data.id)} >
+                                      <div
+                                        className="d-flex flex-column justify-content-center align-items-center"
+                                        style={{ height: '100%', textAlign: 'center' }}
+                                      >
+                                        <PiClockCountdown style={{ fontSize: 27, color: "green" }} />
+                                        <p style={{ fontSize: 12, margin: 0 }}>Devam Ediyor</p>
+                                      </div></a></> :
+                                      <>
+                                       <div
+                                        className="d-flex flex-column justify-content-center align-items-center"
+                                        style={{ height: '100%', textAlign: 'center' }}
+                                      > <FaRegCircleCheck style={{ fontSize: 27, color: "blue" }} />
+                                        <p style={{ fontSize: 12, margin: 0 }}>Teslim Edildi</p></div></>}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+
+
+
+
+                      </div>
+                    )}
+                    {activeTab === 'permission' && (
+                      <div>
+                        <SectionTitle>İzin Bilgileri</SectionTitle>
+                        <div>
+                          <PermissionList  userData={permission} />
+                        </div>
+                      </div>
+                    )}
+                    {activeTab === 'info' && (
+                      <div>
+                        <SectionTitle>Özlük Belgeleri</SectionTitle>
+
+                        <div className="m-3">
+                          {[
+                            "CV",
+                            "Askerlik Belgesi",
+                            "Adli Sicil Kaydı",
+                            "İkametgah Adresi",
+                            "Diploma Fotokopisi",
+                            "Nüfus Kayıt Fotokopisi",
+                            "Vesikalık Fotoğraf",
+                            "Sağlık Raporu",
+                            "Diğer",
+                          ].map((label, index) => (
+                            <div
+                              key={index}
+                              className="d-flex align-items-center justify-content-start mb-3"
+                            >
+                              <div className="d-flex align-items-center" style={{ minWidth: 200 }}>
+                                <FaRegFilePdf className="mb-3 me-2" />
+                                <p style={{ fontSize: 14 }}>{label}:</p>
+                              </div>
+                              <div className="input-group" style={{ maxWidth: 105 }}>
+                                <input type="file" className="form-control" />
+                              </div>
+                              <div className="input-group" style={{ maxWidth: 350 }}>
+                                {index == 2 ? <div>Belge Eksik</div> : <div style={{ backgroundColor: "rgba(167 167 255 / 30%)", borderRadius: 5 }} className='p-2'>Özlük belgesi.pdf</div>}
+                              </div>
+                            </div>
+                          ))}
+                          <div className='btn btn-primary '>Kaydet</div>
+                        </div>
+                      </div>
+
+                    )}
+                    {activeTab === 'settings' && (
+                      <div>
+                        <SectionTitle>Personel Ayarlar</SectionTitle>
+                        <div className="m-3">
+                          {[
+                            "Personel İşe Giriş Tarihi",
+                            "Personel Yetki",
+                            "Peronel Durumu",
+
+
+                          ].map((label, index) => (
+                            <div
+                              key={index}
+                              className="d-flex align-items-center justify-content-center mb-2"
+                            >
+                              <div className="d-flex align-items-center" style={{ minWidth: 200 }}>
+                                <p style={{ fontSize: 15 }}>{label}:</p>
+                              </div>
+                              <div className="input-group" >
+                                {index == 0 ? <div className='mb-3'>20.05.2025</div> : <></>}
+                                {index == 1 ? <div className='mb-3'>
+                                  <Select id="role" name="role" onChange={handleInputChange}>
+                                    <option value="">Rol Seçiniz</option>
+                                    <option value="Admin">Admin (Tüm Yetkilere Sahip)</option>
+                                    <option value="Yonetici">Yönetici (Yetki Sahibi)</option>
+                                    <option value="IK">IK (İnsan Kaynakları Personeli)</option>
+                                    <option value="Personel">Personel (Kısıtlı Erişim)</option>
+
+
+                                  </Select>
+                                </div> : <></>}
+                                {index == 2 ? <div className='mb-3'>
+                                  <Select id="role2" name="role" onChange={handleInputChange}>
+
+                                    <option value="Aktif">Devam Eden Aktif Personel</option>
+                                    <option value="Pasif">İş Çıkışı Yapılan Personel</option>
+
+
+
+                                  </Select>
+                                </div> : <></>}
+
+                              </div>
+                            </div>
+                          ))}
+                          <div className='btn btn-primary'> Kaydet</div>
+
+                        </div>
                       </div>
                     )}
                   </TabContent>

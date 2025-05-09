@@ -8,6 +8,7 @@ import { BsBox2 } from "react-icons/bs";
 import { CgCloseO } from "react-icons/cg";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 import { FaCheck } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 // Existing Styled Components (unchanged)
 const ZimmetPageContainer = styled(motion.div)`
   padding: 20px;
@@ -322,6 +323,7 @@ function Zimmet() {
   const [itemName, setItemName] = useState('');
   const [importance, setImportance] = useState('Az');
   const [selectedPersonel, setSelectedPersonel] = useState('');
+  const navigate = useNavigate();
   const[details, setDetails] = useState({
     id: "",
     name: "",
@@ -366,6 +368,7 @@ function Zimmet() {
         headers: { Authorization: 'Bearer ' + UsersApi.TOKEN }
       });
       getAllDeposit();
+      getAllPersonNames();
     } catch (err) {
       console.error(err);
     }
@@ -376,17 +379,7 @@ function Zimmet() {
     getAllPersonNames();
   }, []);
 
-  //Zimmet Teslim Edildi
-  const stateOk = async (id)=>{
-
-    const response = await axios.get(UsersApi.ENDPOINTS.PUT_DEPOSIT_STATE+"/"+id,{
-      headers:{
-        Authorization: 'Bearer ' + UsersApi.TOKEN
-      }
-    });
-    getAllDeposit();
-    console.log(response.data);
-  }
+ 
 
  const [profileImage, setProfileImage] = useState({});
   const getProfileImages = async (person) => {
@@ -414,22 +407,11 @@ function Zimmet() {
     }
   }, [details.personName]);
 
-  // Delete Notice Function
-  const handleDelete = async (noteId) => {
-    await axios.delete(UsersApi.ENDPOINTS.DELETE_DEPOSIT + `/${noteId}`, {
-      headers: { Authorization: 'Bearer ' + UsersApi.TOKEN }
-    });
-    setShowModal(false);
-   getAllDeposit();
-  };
-
-
   const handleSave = () => {
     if (!itemName || !selectedPersonel) {
       alert('Eşya adı ve personel seçimi zorunludur.');
       return;
     }
-
     const newZimmet = {
       name: itemName,
       degreeName: importance,
@@ -449,9 +431,6 @@ function Zimmet() {
     setDescription('');
   };
 
-  const handleDetailClick = zimmet => {
-    alert(`Detay: ${zimmet.name} - ${zimmet.personName}`);
-  };
 
   return (
     <ZimmetPageContainer
@@ -539,20 +518,7 @@ function Zimmet() {
                     <TableData>{z.state == null ? "Devam Ediyor" : z.state}</TableData>
                     <TableData>{new Date(z.date).toLocaleDateString('tr-TR')}</TableData>
                     <TableData>
-                      <DetailIcon onClick={ () => {
-                        
-                        setShowModal(true);
-                        setDetails({
-                          id: z.id,
-                          name: z.name,
-                          degreeName: z.degreeName,
-                          personName: z.personName,
-                          date: new Date(z.date).toLocaleDateString('tr-TR'),
-                          state: z.state,
-                          description: z.description
-                        });
-                        
-                      }} />
+                      <DetailIcon onClick={() => navigate(`/personDetails/${z.personName}/1`)} />
                     </TableData>
                   </TableRow>
                 ))}
@@ -562,77 +528,7 @@ function Zimmet() {
         </div>
       </div>
 
-      {showModal && (
-        <ModalOverlay
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={() => setShowModal(false)}
-        >
-          <ModalContent
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            exit={{ scale: 0.8 }}
-            onClick={e => e.stopPropagation()}
-          >
-            <ModalHeader>
-              <ModalTitle><BsBox2 /> Zimmet Takip Sistemi</ModalTitle>
-              <CloseButton onClick={() => setShowModal(false)}>
-                <CgCloseO size={25} color="red" />
-              </CloseButton>
-            </ModalHeader>
-            <ModalBody>
-              <ModalBodyWrapper>
-                <SectionCard>
-                  <h6 style={{ textAlign: 'center' }}>Zimmet Atanan Personel</h6>
-                  <hr />
-                  <SectionContent>
-                    <Info>
-                      <p className='d-flex justify-content-center p-2'> 
-                         <Image src={profileImage.image} alt="Personel" />
-                         </p>
-                      <p><strong>Ad Soyad:</strong> {details.personName}</p>
-                      <a href={`/personDetails/${details.personName}`} style={{width:"100%"}} className='btn btn-primary'>Personel Bilgisi</a>
-                    </Info>
-                  </SectionContent>
-                </SectionCard>
-                <ArrowIcon />
-                <SectionCard>
-                  <h6 style={{ textAlign: 'center' }}>Zimmet Atanan Ürün</h6>
-                  <hr />
-                  <SectionContent>
 
-                    <Info>
-                      <p><strong>Zimmet Adı:</strong> {details.name}</p>
-                      <p><strong>Önem Derecesi:</strong> {details.degreeName}</p>
-                      <p><strong>Zimmet Tarihi:</strong> {details.date}</p>
-                      <p><strong>Açıklama:</strong> {details.description}</p>
-                    </Info>
-                  </SectionContent>
-                </SectionCard>
-              </ModalBodyWrapper>
-              <ButtonGroup>
-              {details.state == null ?  <a className='btn btn-danger' onClick={()=>{handleDelete(details.id)}}>Kaldır</a> : <a></a> }
-               {details.state == null ?   <DeliveredButton onClick={() =>{
-                stateOk(details.id);
-                getAllDeposit();
-                getAllPersonNames();
-                setShowModal(false);
-               } } 
-               style={{ marginLeft: '10px' }}>Teslim Edildi</DeliveredButton> : 
-               <div className='d-flex justify-content-center'>
-                <p className='m-3'>Teslim Edildi</p>
-                <FaCheck className='  mt-2 p-1' color='#5d00ff' fontSize={36}/> </div>}
-              
-              </ButtonGroup>
-            </ModalBody>
-            <div className="d-flex justify-content-end mt-3">
-            
-              <img src="../src/images/smart.png" style={{ width: 70 }} alt="Branding" />
-            </div>
-          </ModalContent>
-        </ModalOverlay>
-      )}
     </ZimmetPageContainer>
   );
 }
