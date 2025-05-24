@@ -19,7 +19,7 @@ function home() {
                         <PersonPermission/>
                     
                        <br></br>
-                        <div className="row ps-5 pe-5" >
+                        <div className="row" >
                     
                             <div className="col-md-8"><Notes/></div>
                             <div className="col-md-4"><BirthdayPage/></div>

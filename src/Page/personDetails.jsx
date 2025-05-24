@@ -7,7 +7,24 @@ import { motion } from 'framer-motion';
 import { PiClockCountdown } from "react-icons/pi";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import PermissionList from '../item/permissonList';
-import { FaRegFilePdf } from "react-icons/fa";
+import { FaRegFilePdf, FaPhoneAlt } from "react-icons/fa";
+import smartImg from '../images/university.png'
+import { TbListDetails } from "react-icons/tb";
+import { LiaProjectDiagramSolid } from "react-icons/lia";
+import { LuContact } from "react-icons/lu";
+import { FaCode } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa";
+import PerformancePie from '../item/performancePie';
+import { IoLocationOutline, IoMailOutline, IoSaveOutline } from "react-icons/io5";
+import { MdOutlineChangeCircle } from "react-icons/md";
+import PermissionCalendar from '../item/permissionCalender';
+import { FaRegCalendarAlt, FaChartBar } from "react-icons/fa";
+import { FiLogIn } from "react-icons/fi";
+import { LuPlane } from "react-icons/lu";
+import { MdWorkOutline, MdCheck, MdOutlineIndeterminateCheckBox } from "react-icons/md";
+import { GiProgression } from "react-icons/gi";
+import { IoCheckboxOutline } from "react-icons/io5";
+import { CgCloseO } from "react-icons/cg";
 
 // Styled components with responsive adjustments
 const DetailsContainer = styled(motion.div)`
@@ -348,6 +365,24 @@ const FooterLink = styled.a`
   }
 `;
 
+function calculateWorkDays(startDate) {
+  const today = new Date();
+  let currentDate = new Date(startDate);
+  let daysCount = 0;
+
+  // İşe giriş tarihi ile bugünün tarihi arasındaki tüm günleri say
+  while (currentDate <= today) {
+    // Eğer gün Pazar değilse, sayıya ekle
+    if (currentDate.getDay() !== 0) { // getDay() 0'ı Pazar olarak döndürür
+      daysCount++;
+    }
+    // Bir gün ilerlet
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return daysCount;
+}
+
 function PersonDetails() {
   const { username, id } = useParams();
   const [details, setDetails] = useState({});
@@ -373,14 +408,41 @@ function PersonDetails() {
       setError('Kullanıcı detayları alınırken bir hata oluştu: ' + (error.response?.data?.message || error.message));
     }
   };
-  const handleInputChange = (e) => {
+  const handleInputChange = async (e) => {
     const { name, value } = e.target;
+    console.log("changing", name, "to", value);
+    setDetails(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    const userDetails = {
+      about: "",
+      socialMedia: '',
+      location: "",
+      speaks: "",
+      email: "",
+      role: value,
+      position: "",
+      username: details.username
+    };
+    try {
+      const response = await axios.put(`${UsersApi.ENDPOINTS.PUT_USERS}`, userDetails, {
+        headers: {
+          Authorization: `Bearer ${UsersApi.TOKEN}`,
+        },
+      });
+      alert("Yetki Değiştirildi");
+    } catch (error) {
+      console.error('Hata:', error);
+      setError('Eğitim bilgileri alınırken bir hata oluştu: ' + (error.response?.data?.message || error.message));
+    }
+
 
   };
-  const [permission,setPermission] =useState([])
- const getStatePermission = async () => {
+  const [permission, setPermission] = useState([])
+  const getStatePermission = async () => {
     try {
-      const response = await axios.get(UsersApi.ENDPOINTS.GET_PERMISSION_FIND+`/${username}`, {
+      const response = await axios.get(UsersApi.ENDPOINTS.GET_PERMISSION_FIND + `/${username}`, {
         headers: {
           Authorization: 'Bearer ' + UsersApi.TOKEN
         }
@@ -458,6 +520,7 @@ function PersonDetails() {
     getDetails();
     getAllDeposit();
     getStatePermission();
+    getShift();
   }, [username]);
 
   useEffect(() => {
@@ -493,6 +556,30 @@ function PersonDetails() {
     }
   };
 
+
+  const [selectPerson, setSelectedPersonel] = useState({
+    createDate: "",
+    permissionYear: "",
+    permissionMoney: "",
+    permissionNoneMoney: "",
+    shift: ""
+  })
+
+
+const getShift = async () => {
+    try {
+      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_SHIFT_ALL}`, {
+        headers: {
+          Authorization: 'Bearer ' + UsersApi.TOKEN,
+        },
+      });
+      setSelectedPersonel(response.data);
+      console.log(response.data);
+
+    } catch (error) {
+    
+    }
+  };
 
   return (
     <div>
@@ -536,6 +623,11 @@ function PersonDetails() {
                       </NavLink>
                     </NavItem>
                     <NavItem>
+                      <NavLink active={activeTab === 'shift'} onClick={() => setActiveTab('shift')}>
+                        Mesai Bilgileri
+                      </NavLink>
+                    </NavItem>
+                    <NavItem>
                       <NavLink active={activeTab === 'info'} onClick={() => setActiveTab('info')}>
                         Özlük Belgeleri
                       </NavLink>
@@ -551,29 +643,27 @@ function PersonDetails() {
                       <div>
                         <Grid>
                           <div>
-                            <SectionTitle>Hakkında</SectionTitle>
+                            <SectionTitle> <TbListDetails /> Hakkında</SectionTitle>
                             <AboutText>{details.about || 'Hakkında bilgi bulunamadı.'}</AboutText>
                           </div>
                           <div>
-                            <SectionTitle>İletişim Bilgileri</SectionTitle>
+                            <SectionTitle> <LuContact className='mb-1' />  İletişim Bilgileri</SectionTitle>
                             <ContactGrid>
                               <ContactItem>
-                                <ContactLabel>Email</ContactLabel>
+                                <ContactLabel><IoMailOutline className='me-1 mb-1' /> Email</ContactLabel>
                                 <ContactLink href={`mailto:${details.email}`}>{details.email || 'Bilinmiyor'}</ContactLink>
                               </ContactItem>
                               <ContactItem>
-                                <ContactLabel>Sosyal Medya</ContactLabel>
+                                <ContactLabel><FaPhoneAlt className='me-1 mb-1' />Telefon</ContactLabel>
                                 <SocialList>
                                   <SocialItem>
-                                    <SocialLink href={details.socialMedia || '#'}>
-                                      <i className="mdi mdi-linkedin fs-14"></i>
-                                    </SocialLink>
+
                                     <span>{details.socialMedia || 'Bilinmiyor'}</span>
                                   </SocialItem>
                                 </SocialList>
                               </ContactItem>
                               <ContactItem>
-                                <ContactLabel>Konum</ContactLabel>
+                                <ContactLabel><IoLocationOutline className='mb-1' style={{ color: "black" }} /> Konum</ContactLabel>
                                 <ContactLink href="#">{details.location || 'Bilinmiyor'}</ContactLink>
                               </ContactItem>
                             </ContactGrid>
@@ -581,7 +671,7 @@ function PersonDetails() {
                         </Grid>
                         <Grid>
                           <div>
-                            <SectionTitle>Projeler</SectionTitle>
+                            <SectionTitle><LiaProjectDiagramSolid /> Projeler</SectionTitle>
                             <ProjectTable>
                               <TableHead>
                                 <tr>
@@ -608,7 +698,7 @@ function PersonDetails() {
                             </ProjectTable>
                           </div>
                           <div>
-                            <SectionTitle>Bilgiler</SectionTitle>
+                            <SectionTitle><FaCode /> Bilgiler</SectionTitle>
                             {information.length > 0 ? (
                               information.map((data) => (
                                 <SkillRow key={data.softwareName}>
@@ -635,7 +725,7 @@ function PersonDetails() {
                           {education.length > 0 ? (
                             education.map((data) => (
                               <EducationCard key={data.universityName}>
-                                <EducationImage src="../src/images/university.png" alt="university" />
+                                <EducationImage src={smartImg} alt="university" />
                                 <EducationInfo>
                                   <UniversityName>{data.universityName}</UniversityName>
                                   <Section>{data.section}</Section>
@@ -708,7 +798,7 @@ function PersonDetails() {
                                       minWidth: "90px",
                                     }}
                                   >
-                                    
+
                                     {data.state == null ? <> <a href="#" onClick={() => stateOk(data.id)} >
                                       <div
                                         className="d-flex flex-column justify-content-center align-items-center"
@@ -718,11 +808,11 @@ function PersonDetails() {
                                         <p style={{ fontSize: 12, margin: 0 }}>Devam Ediyor</p>
                                       </div></a></> :
                                       <>
-                                       <div
-                                        className="d-flex flex-column justify-content-center align-items-center"
-                                        style={{ height: '100%', textAlign: 'center' }}
-                                      > <FaRegCircleCheck style={{ fontSize: 27, color: "blue" }} />
-                                        <p style={{ fontSize: 12, margin: 0 }}>Teslim Edildi</p></div></>}
+                                        <div
+                                          className="d-flex flex-column justify-content-center align-items-center"
+                                          style={{ height: '100%', textAlign: 'center' }}
+                                        > <FaRegCircleCheck style={{ fontSize: 27, color: "blue" }} />
+                                          <p style={{ fontSize: 12, margin: 0 }}>Teslim Edildi</p></div></>}
                                   </div>
                                 </div>
                               </div>
@@ -739,7 +829,7 @@ function PersonDetails() {
                       <div>
                         <SectionTitle>İzin Bilgileri</SectionTitle>
                         <div>
-                          <PermissionList  userData={permission} />
+                          <PermissionList userData={permission} />
                         </div>
                       </div>
                     )}
@@ -747,41 +837,54 @@ function PersonDetails() {
                       <div>
                         <SectionTitle>Özlük Belgeleri</SectionTitle>
 
-                        <div className="m-3">
-                          {[
-                            "CV",
-                            "Askerlik Belgesi",
-                            "Adli Sicil Kaydı",
-                            "İkametgah Adresi",
-                            "Diploma Fotokopisi",
-                            "Nüfus Kayıt Fotokopisi",
-                            "Vesikalık Fotoğraf",
-                            "Sağlık Raporu",
-                            "Diğer",
-                          ].map((label, index) => (
-                            <div
-                              key={index}
-                              className="d-flex align-items-center justify-content-start mb-3"
-                            >
-                              <div className="d-flex align-items-center" style={{ minWidth: 200 }}>
-                                <FaRegFilePdf className="mb-3 me-2" />
-                                <p style={{ fontSize: 14 }}>{label}:</p>
+                        <div className="m-3 d-flex justify-content-start">
+                          <div className=" list-group w-50">
+                            {[
+                              "CV",
+                              "Askerlik Belgesi",
+                              "Adli Sicil Kaydı",
+                              "İkametgah Adresi",
+                              "Diploma Fotokopisi",
+                              "Nüfus Kayıt Fotokopisi",
+                              "Vesikalık Fotoğraf",
+                              "Sağlık Raporu",
+                              "Diğer",
+                            ].map((label, index) => (
+                              <div className="list-group-item d-flex align-items-center" key={index}>
+                                <div className="me-3 d-flex align-items-center" style={{ minWidth: 200 }}>
+                                  <FaRegFilePdf className="me-2" style={{ fontSize: 18, color: "rgba(118, 117, 117, 0.7)" }} />
+                                  <span style={{ fontSize: 14 }}>{label}:</span>
+                                </div>
+                                <input
+                                  type="file"
+                                  id={`file-${index}`}
+                                  style={{ display: "none" }}
+                                  onChange={(e) => handleFileUpload(e, label)}
+                                />
+                                {index === 2 ? (
+                                  <label htmlFor={`file-${index}`} className="btn btn-outline-primary btn-sm">
+                                    <FaPlus className='mt-1 me-1' /> Yükle
+                                  </label>
+                                ) : (
+                                  <div className="d-flex align-items-center">
+                                    <span className="me-3 text-muted" style={{ fontSize: 14 }}>Özlük belgesi.pdf</span>
+                                    <label htmlFor={`file-${index}`} className="btn btn-outline-secondary btn-sm">
+                                      <MdOutlineChangeCircle className='mt-1 me-1' /> Değiştir
+                                    </label>
+                                  </div>
+                                )}
                               </div>
-                              <div className="input-group" style={{ maxWidth: 105 }}>
-                                <input type="file" className="form-control" />
-                              </div>
-                              <div className="input-group" style={{ maxWidth: 350 }}>
-                                {index == 2 ? <div>Belge Eksik</div> : <div style={{ backgroundColor: "rgba(167 167 255 / 30%)", borderRadius: 5 }} className='p-2'>Özlük belgesi.pdf</div>}
-                              </div>
+                            ))}<div className="d-flex justify-content-end mt-3">
+                              <button className="btn btn-primary"><IoSaveOutline className='mb-1' /> Kaydet</button>
                             </div>
-                          ))}
-                          <div className='btn btn-primary '>Kaydet</div>
+                          </div>
+
                         </div>
                       </div>
 
                     )}
                     {activeTab === 'settings' && (
-                      <div>
+                      <div className="container mx-auto p-4">
                         <SectionTitle>Personel Ayarlar</SectionTitle>
                         <div className="m-3">
                           {[
@@ -801,39 +904,96 @@ function PersonDetails() {
                               <div className="input-group" >
                                 {index == 0 ? <div className='mb-3'>20.05.2025</div> : <></>}
                                 {index == 1 ? <div className='mb-3'>
-                                  <Select id="role" name="role" onChange={handleInputChange}>
+
+                                  <Select id="role" value={details.role || ""} name="role" className="border rounded p-2 w-full max-w-xs" onChange={handleInputChange}>
                                     <option value="">Rol Seçiniz</option>
                                     <option value="Admin">Admin (Tüm Yetkilere Sahip)</option>
                                     <option value="Yonetici">Yönetici (Yetki Sahibi)</option>
                                     <option value="IK">IK (İnsan Kaynakları Personeli)</option>
                                     <option value="Personel">Personel (Kısıtlı Erişim)</option>
-
-
                                   </Select>
                                 </div> : <></>}
                                 {index == 2 ? <div className='mb-3'>
-                                  <Select id="role2" name="role" onChange={handleInputChange}>
-
+                                  <Select id="role2" name="role" className="border rounded p-2 w-full max-w-xs" >
                                     <option value="Aktif">Devam Eden Aktif Personel</option>
                                     <option value="Pasif">İş Çıkışı Yapılan Personel</option>
-
-
-
                                   </Select>
                                 </div> : <></>}
-
                               </div>
                             </div>
                           ))}
-                          <div className='btn btn-primary'> Kaydet</div>
 
                         </div>
                       </div>
                     )}
+                    {activeTab === 'shift' && (
+                      <>
+
+
+                        <div>
+                          {/*Bu alana takvim gelecek */}
+                          <div className='row'>
+                            <div className='col-md-4 p-2'>
+                              <h6 className="text-center"> <FaRegCalendarAlt /> İzin Takvimi</h6>
+                              <hr />
+                              <PermissionCalendar />
+                            </div>
+                            <div className='col-md-8 p-2'>
+                              <div className='row'>
+                                <div className='col-md-6 d-flex justify-content-center'>
+                                  <div className="container">
+                                    <h6 className="text-center mb-3"><LuPlane />  Yıllık İzin Hakediş</h6>
+                                    <hr className="mb-4" />
+                                    <br></br>
+                                    <table className="table ">
+                                      <tbody>
+                                        <tr>
+                                          <th scope="row" style={{ fontSize: 14, fontWeight: 500 }} className=" pe-3"><FiLogIn /> İşe Giriş Tarih</th>
+                                          <td>{new Date(selectPerson.createDate).toLocaleDateString("TR", "tr")}</td>
+                                        </tr>
+                                        <tr>
+                                          <th scope="row" style={{ fontSize: 14, fontWeight: 500 }} className=" pe-3"><IoCheckboxOutline /> Kullanılan Ücretli İzin Sayısı</th>
+                                          <td>{selectPerson.permissionNoneMoney == "" ? 0 : selectPerson.permissionNoneMoney}</td>
+                                        </tr>
+                                        <tr>
+                                          <th scope="row" style={{ fontSize: 14, fontWeight: 500 }} className="pe-3"><MdOutlineIndeterminateCheckBox /> Kullanılan Ücretsiz İzin Sayısı</th>
+                                          <td>{selectPerson.permissionMoney}</td>
+                                        </tr>
+                                        <tr>
+                                          <th scope="row" style={{ fontSize: 14, fontWeight: 500 }} className=" pe-3"><GiProgression /> Yıllık İzin Hakediş Kalan Gün</th>
+                                          <td></td>
+                                        </tr>
+                                        <tr>
+                                          <th scope="row" style={{ fontSize: 14, fontWeight: 500 }} className="pe-3"><LuPlane /> Mevcut Yıllık İzin</th>
+                                          <td>{selectPerson.permissionYear == "" ? 0 : selectPerson.permissionYear}</td>
+                                        </tr>
+
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                                <div className='col-md-6'>
+                                  <h6 className="text-center mb-3"><FaChartBar /> Personel İzin & Çalışma Dağılımı</h6>
+                                  <hr className="mb-4" />
+
+                                  <PerformancePie
+                                    calisma={calculateWorkDays(selectPerson.createDate)}
+                                    ucretli={selectPerson.permissionMoney}
+                                    ucretsiz={selectPerson.permissionNoneMoney}
+                                  />
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                      </>
+                    )}
                   </TabContent>
                 </Card>
                 <Footer>
-                  © {new Date().getFullYear()} - <FooterLink href="#!">SmartICT</FooterLink>
+                  © {new Date().getFullYear()} - <FooterLink href="#!">PETRABAYT AI</FooterLink>
                 </Footer>
               </ContentWrapper>
             </DetailsContainer>

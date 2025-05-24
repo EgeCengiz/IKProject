@@ -240,10 +240,10 @@ function PersonForPermission() {
     permissionName: formData.permissionName,
     permissionDescription: formData.permissionDescription,
     permissionStartDateTime: formData.permissionStartDateTime
-      ? new Date(formData.permissionStartDateTime).toISOString()
+      ? new Date(formData.permissionStartDateTime).toISOString().split('T')[0]
       : null,
     permissionEndDateTime: formData.permissionEndDateTime
-      ? new Date(formData.permissionEndDateTime).toISOString()
+      ? new Date(formData.permissionEndDateTime).toISOString().split('T')[0]
       : null,
     state: "Onay Bekliyor",
     Today: new Date().toISOString(),

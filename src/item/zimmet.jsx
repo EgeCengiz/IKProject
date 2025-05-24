@@ -5,23 +5,20 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import UsersApi from '../Api/UsersApi';
 import { BsBox2 } from "react-icons/bs";
-import { CgCloseO } from "react-icons/cg";
+import { FaRegCircleCheck } from "react-icons/fa6";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 import { FaCheck } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import { PiClockCountdown } from "react-icons/pi";
+
 // Existing Styled Components (unchanged)
 const ZimmetPageContainer = styled(motion.div)`
-  padding: 20px;
+
   display: flex;
   flex-direction: column;
 `;
 
-const ContentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 100%;
-`;
+
 
 const Card = styled(motion.div)`
   background-color: #fff;
@@ -319,12 +316,13 @@ const cardVariants = {
   exit: { opacity: 0, y: -10 },
 };
 
+
 function Zimmet() {
   const [itemName, setItemName] = useState('');
   const [importance, setImportance] = useState('Az');
   const [selectedPersonel, setSelectedPersonel] = useState('');
   const navigate = useNavigate();
-  const[details, setDetails] = useState({
+  const [details, setDetails] = useState({
     id: "",
     name: "",
     degreeName: "",
@@ -342,10 +340,48 @@ function Zimmet() {
 
   const getAllDeposit = async () => {
     try {
-      const { data } = await axios.get(UsersApi.ENDPOINTS.GET_DEPOSIT_ALL, {
+      const response = await axios.get(UsersApi.ENDPOINTS.GET_DEPOSIT_ALL, {
         headers: { Authorization: 'Bearer ' + UsersApi.TOKEN }
       });
-      setData(data);
+
+      const usersWithImages = await Promise.all(
+        response.data.map(async (user) => {
+          try {
+            const imgRes = await axios.get(
+              `${UsersApi.ENDPOINTS.GET_USERS_IMAGE}?username=${encodeURIComponent(user.personName)}`,
+              {
+                headers: { Authorization: `Bearer ${UsersApi.TOKEN}` },
+                responseType: 'blob',
+              }
+            );
+            const imageUrl = URL.createObjectURL(imgRes.data);
+            return {
+              id:user.id,
+              date: user.date,
+              degreeName: user.degreeName,
+              personName: user.personName,
+              name: user.name,
+              state: user.state,
+              description: user.description,
+              image: imageUrl,
+            };
+          } catch (imgError) {
+            console.error(`Error fetching image for ${user.personName}:`, imgError);
+            return {
+              id:user.id,
+              date: user.date,
+              degreeName: user.degreeName,
+              personName: user.personName,
+              name: user.name,
+              state: user.state,
+              description: user.description,
+              image: imageUrl,
+            };
+          }
+        })
+      );
+      setData(usersWithImages);
+
     } catch (err) {
       console.error(err);
     }
@@ -379,13 +415,13 @@ function Zimmet() {
     getAllPersonNames();
   }, []);
 
- 
 
- const [profileImage, setProfileImage] = useState({});
+
+  const [profileImage, setProfileImage] = useState({});
   const getProfileImages = async (person) => {
     try {
       if (!details.personName) {
-        
+
         return;
       }
       const response = await axios.get(`${UsersApi.ENDPOINTS.GET_USERS_IMAGE}?username=${person}`, {
@@ -398,7 +434,7 @@ function Zimmet() {
       console.log(imageUrl);
       setProfileImage({ image: imageUrl });
     } catch (error) {
-    
+
     }
   };
   useEffect(() => {
@@ -432,6 +468,25 @@ function Zimmet() {
   };
 
 
+
+  const stateOk = async (id) => {
+
+
+
+    
+       const response = await axios.get(UsersApi.ENDPOINTS.PUT_DEPOSIT_STATE + "/" + id, {
+      headers: {
+        Authorization: 'Bearer ' + UsersApi.TOKEN
+      }
+    });
+    getAllDeposit();
+   
+    
+  }
+
+
+
+  const isLong = 100;
   return (
     <ZimmetPageContainer
       initial="initial"
@@ -497,34 +552,80 @@ function Zimmet() {
           </AddZimmetCard>
         </div>
         <div className='col-md-8'>
-          <ZimmetTableCard>
-            <ZimmetTable>
-              <TableHead>
-                <tr>
-                  <TableHeader>Personel</TableHeader>
-                  <TableHeader>Zimmet</TableHeader>
-                  <TableHeader>Derece</TableHeader>
-                  <TableHeader>Tarih</TableHeader>
-                  <TableHeader>Durum</TableHeader>
-                  <TableHeader>Detay</TableHeader>
-                </tr>
-              </TableHead>
-              <TableBody>
-                {data.map(z => (
-                  <TableRow key={z.id}>
-                    <TableData>{z.personName}</TableData>
-                    <TableData>{z.name}</TableData>
-                    <TableData>{z.degreeName}</TableData>
-                    <TableData>{z.state == null ? "Devam Ediyor" : z.state}</TableData>
-                    <TableData>{new Date(z.date).toLocaleDateString('tr-TR')}</TableData>
-                    <TableData>
-                      <DetailIcon onClick={() => navigate(`/personDetails/${z.personName}/1`)} />
-                    </TableData>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </ZimmetTable>
-          </ZimmetTableCard>
+
+          <div className='row '>
+            {data.map((z, index) => (
+              <div key={index} className='  col-md-4'  >
+                <div
+                  className="card shadow-sm p-2 d-flex flex-column justify-between"
+                  style={{ minHeight: 200 }}
+                >
+                  {/* Üst bilgi */}
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <span className="text-muted" style={{ fontSize: 12 }}>
+                      {new Date(z.date).toLocaleDateString('tr-TR')}
+                    </span>
+                    <span
+                      className="py-1 px-3 rounded-pill text-white"
+                      style={{ backgroundColor: '#6300ff', fontSize: 12 }}
+                    >
+                      {z.degreeName}
+                    </span>
+                  </div>
+
+                  {/* Profil bölümü */}
+                  <div onClick={() => navigate(`/personDetails/${z.personName}/1`)} style={{
+                    cursor: "pointer"
+                  }} className="d-flex flex-column align-items-center text-center my-3">
+                    <img
+                      src={z.image}
+                      alt={z.personName}
+                      className="rounded-circle mb-2"
+                      style={{ width: 50, height: 50 }}
+                    />
+                    <h5 className="card-title mb-1">{z.personName}</h5>
+                    <h6 className="card-subtitle mb-0 text-muted">{z.name}</h6>
+                  </div>
+
+                  {/* Açıklama */}
+                  <div className="flex-grow-1">
+                    <small className="card-text">
+                      {z.description.length <= isLong
+                        ? z.description
+                        : <> z.description </>}
+                    </small>
+                  </div>
+
+                  {/* Alt bilgi */}
+                  <div className="mt-3">
+                    <div
+                      className="d-flex align-items-center justify-content-center py-2"
+                      style={{
+                        backgroundColor: '#f8f9fa',
+                        borderRadius: 10,
+                      }}
+                    >
+                      {z.state == null ? <> <a href="#" onClick={() => stateOk(z.id)} >
+                        <div
+                          className="d-flex flex-column justify-content-center align-items-center"
+                          style={{ height: '100%', textAlign: 'center' }}
+                        >
+                          <PiClockCountdown style={{ fontSize: 27, color: "green" }} />
+                          <p style={{ fontSize: 12, margin: 0 }}>Devam Ediyor</p>
+                        </div></a></> :
+                        <>
+                          <div
+                            className="d-flex flex-column justify-content-center align-items-center"
+                            style={{ height: '100%', textAlign: 'center' }}
+                          > <FaRegCircleCheck style={{ fontSize: 27, color: "blue" }} />
+                            <p style={{ fontSize: 12, margin: 0 }}>Teslim Edildi</p></div></>}
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

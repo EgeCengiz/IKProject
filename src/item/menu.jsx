@@ -11,11 +11,15 @@ import { AiOutlineFontSize, AiOutlineNotification } from "react-icons/ai";
 import { SlCalender } from "react-icons/sl";
 import UsersApi from '../Api/UsersApi';
 import axios from 'axios';
+import { RiAdminLine } from "react-icons/ri";
+import { IoSettingsOutline } from "react-icons/io5";
 import Notification from '../item/notification';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MdClose } from 'react-icons/md';
 import styled, { keyframes } from 'styled-components';
-import smartImg from '../images/smart.png'
+import { GrUserPolice } from "react-icons/gr";
+import smartImg from '../images/H.svg'
+import { PiMicrosoftTeamsLogo } from "react-icons/pi";
 const blink = keyframes`
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
@@ -313,10 +317,6 @@ function menu() {
                                         <div className="noti-scroll" data-simplebar>
                                             <Notification data={state} />
                                         </div>
-
-
-
-
                                     </div>
                                 </li>
 
@@ -329,7 +329,7 @@ function menu() {
                                         </span>
                                     </a>
                                     <div className="dropdown-menu dropdown-menu-end profile-dropdown ">
-                                        <a href={`/personDetails/${localStorage.getItem("username")}`} className="dropdown-item notify-item">
+                                        <a href={`/person/home`} className="dropdown-item notify-item">
                                             <i className="mdi mdi-account-circle-outline fs-16 align-middle"></i>
                                             <span>Profil</span>
                                         </a>
@@ -353,8 +353,8 @@ function menu() {
                     <div className="h-100" data-simplebar>
                         <div id="sidebar-menu" >
 
-                            <div className="d-flex justify-content-center p-3 " style={{ width: '100%', backgroundColor: 'white' }}>
-                              <img src={smartImg} style={{ width: '60%' }} />
+                            <div className="d-flex justify-content-center   " style={{ width: '100%', backgroundColor: 'white' }}>
+                              <img src={smartImg} className='p-2 ' style={{ width: 226 }} />
 
                             </div>
                             <br></br>
@@ -395,7 +395,7 @@ function menu() {
                                         <ul className="nav-second-level">
                                             <li>
                                                 <NavLink to="/person" className="tp-link" >
-                                                    <IoPersonOutline className='me-1 mb-1' />  Özlük Belgeleri
+                                                    <IoPersonOutline className='me-1 mb-1' />  Personel Listesi
                                                 </NavLink>
                                             </li>
                                             <li>
@@ -403,11 +403,7 @@ function menu() {
                                                     <LuPlane className='me-1 mb-1' />  İzin Talepleri
                                                 </NavLink>
                                             </li>
-                                            <li>
-                                                <NavLink to="/shift" className="tp-link" >
-                                                    <MdWorkOutline className='me-1 mb-1' />  Mesai Takip
-                                                </NavLink>
-                                            </li>
+                                           
                                             <li>
                                                 <NavLink to="/zimmet" className="tp-link" >
                                                     <BsBox2 className='me-1 mb-1 ' />  Zimmet Takip
@@ -457,19 +453,29 @@ function menu() {
 
                                     </div>
                                 </li>
-                                <li className="menu-title">Ekler</li>
+                                <li className="menu-title">Diğer</li>
                                 <li>
                                     <a href="#sidebarError" data-bs-toggle="collapse" aria-expanded="true">
-                                        <FaRegFilePdf />
-                                        <span> Mülakat </span>
+                                        <RiAdminLine />
+                                        <span>Admin Kontrol </span>
                                         <span className="menu-arrow"></span>
                                     </a>
                                     <div className="collapse show" id="sidebarError">
                                         <ul className="nav-second-level">
 
                                             <li>
-                                                <NavLink to="/commonshare" className="tp-link">
-                                                    Aday Başvuru
+                                                <NavLink to="/authority" className="tp-link">
+                                                   <GrUserPolice className='mb-1'/> Yetkilendirme
+                                                </NavLink>
+                                            </li>
+                                              <li>
+                                                <NavLink to="/team" className="tp-link">
+                                                   <PiMicrosoftTeamsLogo/> Ekipler
+                                                </NavLink>
+                                            </li>
+                                              <li>
+                                                <NavLink to="/settings" className="tp-link">
+                                                 <IoSettingsOutline/>   Ayarlar
                                                 </NavLink>
                                             </li>
 

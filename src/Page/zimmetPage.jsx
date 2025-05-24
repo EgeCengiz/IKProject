@@ -12,11 +12,11 @@ function ZimmetPage() {
     ];
 
     return (
-        <div className="zimmet-page">
+        <div>
 
             <div className="content-page">
                 <div className="content">
-                    <div className="container-xxl">
+                    <div className="p-4">
                         <br></br>
                         <Zimmet />
                     </div>

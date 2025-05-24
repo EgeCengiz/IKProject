@@ -9,10 +9,10 @@ import PersonPermissionPage from './Page/personPermissionPage';
 import ZimmetPage from './Page/zimmetPage';
 import PersonRegisterPage from './Page/personRegisterPage';
 import NotesPage from './Page/notesPage';
-import ShiftPage from './Page/shiftPage';
+
 import NoticePage from './Page/noticePage';
 import Calender from './Page/calenderPage';
-import CommonSharePage from './Page/commonSharePage';
+import Authority from './item/authority';
 import CompanyDayPage from './Page/companyDayPage';
 import Login from './Page/login';
 import PersonHome from './Person/Pages/personHome';
@@ -22,6 +22,8 @@ import PersonZimmetPage from './Person/Pages/PersonZimmetPage';
 import PersonCompanyDay from './Person/Pages/personCompanyDay';
 import PersonCommonSharePage from './Person/Pages/personCommonSharePage';
 import PrivateRoute from './item/PrivateRoute';
+import TeamPage from './Page/teamPage';
+import SettingPage from './Page/settingPage';
 
 
 function Layout({ children }) {
@@ -56,11 +58,12 @@ function App() {
               <Route path="/zimmet" element={<ZimmetPage />} />
               <Route path="/personregister" element={<PersonRegisterPage />} />
               <Route path="/notes" element={<NotesPage />} />
-              <Route path="/shift" element={<ShiftPage />} />
               <Route path="/notice" element={<NoticePage />} />
               <Route path="/companyDay" element={<CompanyDayPage />} />
               <Route path="/calender" element={<Calender />} />
-              <Route path="/commonshare" element={<CommonSharePage />} />
+              <Route path="/authority" element={<Authority />} />
+              <Route path="/team" element={<TeamPage />} />
+              <Route path="/settings" element={<SettingPage />} />
 
               {/* Personnel Pages */}
               <Route path="/person/home" element={<PersonHome />} />

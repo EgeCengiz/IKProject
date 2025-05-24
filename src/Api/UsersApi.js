@@ -17,6 +17,7 @@ const UsersApi = {
     GET_USERS_IMAGE: `${API_BASE_URL}/users/images`,
     GET_USERS_BIRTHDAY: `${API_BASE_URL}/users/birthDay`,
     POST_LOGIN: `${API_BASE_URL}/users/login`,
+    PUT_USERS: `${API_BASE_URL}/users/details/put/role`,
     //Permission
     GET_PERMISSION_ALL :`${API_BASE_URL}/permission/all`,
     GET_PERMISSION_STATE:`${API_BASE_URL}/permission/statePermission`,
@@ -31,6 +32,16 @@ const UsersApi = {
     GET_PERSON_DETAILS_INFORMATION:`${API_BASE_URL}/users/details/information/`,
     GET_PERSON_DETAILS_EDUCATION:`${API_BASE_URL}/users/details/education/`,
     POST_PERSON_DETAILS:`${API_BASE_URL}/users/details/add`,
+    POST_PROJECT:`${API_BASE_URL}/users/details/project/add`,
+    PUT_PROJECT:`${API_BASE_URL}/users/details/project/put`,
+    DELETE_PROJECT:`${API_BASE_URL}/users/details/project/delete`,
+    PUT_USERS_INFO:`${API_BASE_URL}/users/details/put`,
+    POST_USERS_PASSWORD_CHANGE:`${API_BASE_URL}/users/password/change`,
+    
+
+    POST_INFORMATION:`${API_BASE_URL}/users/details/information/post`,
+    PUT_INFORMATION:`${API_BASE_URL}/users/details/information/put`,
+    DELETE_INFORMATION:`${API_BASE_URL}/users/details/information/delete`,
     //Notes
     GET_NOTES: `${API_BASE_URL}/notes/all/${username}`,
     POST_NOTES:`${API_BASE_URL}/notes/add`,

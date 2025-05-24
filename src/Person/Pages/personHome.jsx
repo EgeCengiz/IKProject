@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PersonMenu from '../items/personMenu';
 import { FaPen } from 'react-icons/fa';
 import styled from 'styled-components';
@@ -6,7 +6,16 @@ import { motion } from 'framer-motion';
 import PersonForPermisson from '../Pages/personForPermisson';
 import PersonZimmetPage from '../Pages/PersonZimmetPage';
 import PersonNoticePage from '../Pages/personNoticePage';
-
+import axios from 'axios';
+import UsersApi from '../../Api/UsersApi';
+import { TbListDetails } from "react-icons/tb";
+import { LiaProjectDiagramSolid } from "react-icons/lia";
+import { LuContact } from "react-icons/lu";
+import { FaCode } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa";
+import { MdDeleteOutline } from "react-icons/md";
+import { IoSaveOutline } from "react-icons/io5";
+import { FaUniversity } from "react-icons/fa";
 // Styled components with media queries for mobile-friendliness
 const PersonHomeContainer = styled(motion.div)`
   padding: 20px;
@@ -14,50 +23,6 @@ const PersonHomeContainer = styled(motion.div)`
   flex-direction: column;
   @media (max-width: 576px) {
     padding: 10px;
-  }
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const Title = styled.h4`
-  color: #1e40af;
-  font-weight: 600;
-  font-size: 1.5rem;
-  margin: 0;
-  @media (max-width: 576px) {
-    font-size: 1.25rem;
-  }
-`;
-
-const Breadcrumb = styled.ol`
-  list-style: none;
-  display: flex;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  font-size: 0.85rem;
-  color: #718096;
-  @media (max-width: 576px) {
-    font-size: 0.75rem;
-  }
-`;
-
-const BreadcrumbItem = styled.li`
-  a {
-    color: #2d3748;
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-  &.active {
-    color: #1e40af;
-    font-weight: 500;
   }
 `;
 
@@ -166,6 +131,7 @@ const NavItem = styled.li`
     font-size: 0.9rem;
     text-decoration: none;
     border-bottom: 2px solid transparent;
+    cursor: pointer;
     &.active {
       color: #1e40af;
       font-weight: 500;
@@ -234,84 +200,6 @@ const ContactItem = styled.div`
   }
 `;
 
-const SocialList = styled.ul`
-  list-style: none;
-  display: flex;
-  gap: 10px;
-  padding: 0;
-  margin: 0;
-  @media (max-width: 576px) {
-    gap: 8px;
-  }
-`;
-
-const SocialItem = styled.li`
-  a {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 1px solid;
-    &.border-primary {
-      border-color: #1e40af;
-      color: #1e40af;
-    }
-    &.border-danger {
-      border-color: #e53e3e;
-      color: #e53e3e;
-    }
-    &.border-info {
-      border-color: #38b2ac;
-      color: #38b2ac;
-    }
-    &.border-secondary {
-      border-color: #718096;
-      color: #718096;
-    }
-    &:hover {
-      background-color: #f7fafc;
-    }
-    @media (max-width: 576px) {
-      width: 28px;
-      height: 28px;
-    }
-  }
-`;
-
-const ProjectCard = styled.div`
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  padding: 10px;
-  h4, h6 {
-    color: #2d3748;
-    font-size: 1rem;
-    margin: 0;
-    @media (max-width: 576px) {
-      font-size: 0.9rem;
-    }
-  }
-`;
-
-const SkillRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
-  p {
-    color: #2d3748;
-    font-size: 0.85rem;
-    margin: 0;
-    i {
-      color: #1e40af;
-    }
-    @media (max-width: 576px) {
-      font-size: 0.75rem;
-    }
-  }
-`;
-
 const ProjectTable = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -372,56 +260,6 @@ const ProgressBar = styled.div`
     height: 100%;
     background-color: #1e40af;
     transition: width 0.3s ease-in-out;
-  }
-`;
-
-const ExperienceItem = styled.li`
-  display: flex;
-  gap: 15px;
-  margin-bottom: 15px;
-  @media (max-width: 576px) {
-    gap: 10px;
-  }
-`;
-
-const ExperienceIcon = styled.div`
-  width: 40px;
-  height: 40px;
-  background-color: #edf2f7;
-  border-radius: 6px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  @media (max-width: 576px) {
-    width: 35px;
-    height: 35px;
-  }
-`;
-
-const ExperienceDetails = styled.div`
-  h5 {
-    color: #2d3748;
-    font-size: 1rem;
-    margin-bottom: 5px;
-    @media (max-width: 576px) {
-      font-size: 0.9rem;
-    }
-  }
-  div {
-    color: #718096;
-    font-size: 0.85rem;
-    margin-bottom: 5px;
-    @media (max-width: 576px) {
-      font-size: 0.75rem;
-    }
-  }
-  p {
-    color: #2d3748;
-    font-size: 0.85rem;
-    margin: 0;
-    @media (max-width: 576px) {
-      font-size: 0.75rem;
-    }
   }
 `;
 
@@ -495,6 +333,24 @@ const FormBody = styled.div`
   padding: 15px;
   @media (max-width: 576px) {
     padding: 10px;
+  }
+`;
+
+const SkillRow = styled.tr`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+  td {
+    color: #2d3748;
+    font-size: 0.85rem;
+    margin: 0;
+    i {
+      color: #1e40af;
+    }
+    @media (max-width: 576px) {
+      font-size: 0.75rem;
+    }
   }
 `;
 
@@ -582,63 +438,286 @@ const Footer = styled.footer`
   }
 `;
 
-// Sample data (unchanged)
+// Sample static data (used as fallback)
 const profileData = {
-  name: 'Ege Cengiz Ortakcı',
+  name: localStorage.getItem("username") || "Unknown User",
   role: 'Backend Dev',
   languages: ['English', 'Turkish'],
   email: 'ege@gmail.com',
-  social: [
-    { platform: 'facebook', color: 'primary', icon: 'mdi-facebook' },
-    { platform: 'google', color: 'danger', icon: 'mdi-google' },
-  ],
+  phone: '05303816550',
   location: 'Ankara/Keçiören',
   about: 'Burayı personel kendi öz geçmişi ile dolduracak cv deki gibi olabilir',
-  projects: [
-    { personnel: 'Ege Cengiz Ortakcı', position: 'Backend Developer', project: 'AZ Projesi' },
-    { personnel: 'Okan Karaçor', position: 'Frontend Developer', project: 'Sahil Net Projesi' },
-    { personnel: 'Kevser Yılmaz', position: 'Project Manager', project: 'AZ Projesi' },
-  ],
-  skills: [
-    { name: 'Spring Boot', level: 92 },
-    { name: 'React', level: 85 },
-    { name: 'HTML', level: 100 },
-    { name: 'CSS', level: 100 },
-    { name: 'Docker', level: 55 },
-    { name: 'Git', level: 75 },
-  ],
-  experience: [
-    {
-      title: 'Chief Product Officer',
-      company: 'Notion',
-      type: 'Full-time',
-      period: 'Jan 2020 - Present',
-      duration: '2 years',
-      description: 'Responsible for the product management, product design, research and product partnerships teams at Notion.',
-      icon: '<svg>...</svg>',
-    },
-  ],
   education: [
     {
       institution: 'Middles Earth Technic University',
       degree: 'Master Degree In Computer Science and Mathematics',
       date: 'January 2018',
       location: 'Istanbul, Turkey',
-      icon: '<svg>...</svg>',
+      icon: '<svg width="24" height="24"><path d="M12 2L2 7l10 5 10-5-10-5zm0 18l-8-4V9l8 4 8-4v7l-8 4z" fill="#718096"/></svg>',
     },
   ],
 };
 
 function PersonHome() {
   const [activeTab, setActiveTab] = useState('profile_about');
+  const [profileImage, setProfileImage] = useState({});
+  const [projects, setProjects] = useState([]);
+  const [contacts, setContacts] = useState({ about: '', socialMedia: '', email: '', location: '', speaks: '', position: '', username: localStorage.getItem("username") });
+  const [skills, setSkills] = useState([]);
+  const [educationData, setEducationData] = useState([]);
+  const [personalInfo, setPersonalInfo] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    address: '',
+  });
+  const [passwords, setPasswords] = useState({
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
   };
 
+  const getProfileImages = async (person) => {
+    try {
+      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_USERS_IMAGE}?username=${person}`, {
+        headers: {
+          Authorization: `Bearer ${UsersApi.TOKEN}`,
+        },
+        responseType: 'blob',
+      });
+      const imageUrl = URL.createObjectURL(response.data);
+      setProfileImage({ image: imageUrl });
+    } catch (error) {
+      console.error('Error fetching profile image:', error);
+    }
+  };
+
+  const getProjects = async () => {
+    try {
+      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_PERSON_DETAILS_PROJECT}${localStorage.getItem("username")}`, {
+        headers: {
+          Authorization: `Bearer ${UsersApi.TOKEN}`,
+        },
+      });
+      setProjects(response.data);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    }
+  };
+
+  const getInformation = async () => {
+    try {
+      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_PERSON_DETAILS_INFORMATION}${localStorage.getItem("username")}`, {
+        headers: {
+          Authorization: `Bearer ${UsersApi.TOKEN}`,
+        },
+      });
+      setSkills(response.data);
+    } catch (error) {
+      console.error('Error fetching skills:', error);
+    }
+  };
+
+  const getEducation = async () => {
+    try {
+      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_PERSON_DETAILS_EDUCATION}${localStorage.getItem("username")}`, {
+        headers: {
+          Authorization: `Bearer ${UsersApi.TOKEN}`,
+        },
+      });
+      setEducationData(response.data);
+    } catch (error) {
+      console.error('Error fetching education data:', error);
+    }
+  };
+
+  const getDetails = async () => {
+    try {
+      const response = await axios.get(`${UsersApi.ENDPOINTS.GET_PERSON_DETAILS}${localStorage.getItem("username")}`, {
+        headers: {
+          Authorization: `Bearer ${UsersApi.TOKEN}`,
+        },
+      });
+      setContacts({
+        about: response.data.about || '',
+        socialMedia: response.data.socialMedia || '',
+        email: response.data.email || '',
+        location: response.data.location || '',
+        position: '',
+        speaks: '',
+        username: localStorage.getItem("username"),
+
+      });
+      setPersonalInfo({
+        firstName: response.data.firstName || '',
+        lastName: response.data.lastName || '',
+        phone: response.data.socialMedia || '',
+        email: response.data.email || '',
+        address: response.data.location || '',
+      });
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  };
+
+  useEffect(() => {
+    const username = localStorage.getItem('username');
+    if (username) {
+      getProfileImages(username);
+      getProjects();
+      getInformation();
+      getEducation();
+      getDetails();
+    } else {
+      console.error('Username not found in localStorage');
+    }
+  }, []);
+
+  const handleAboutChange = (e) => setContacts({ ...contacts, about: e.target.value });
+
+  const handleProjectChange = (index, field, value) => {
+    const updated = [...projects];
+    updated[index][field] = value;
+    setProjects(updated);
+  };
+
+  const addProject = () => setProjects([...projects, { id: '', projectName: '', position: '' }]);
+  const removeProject = async (index, projId) => {
+    setProjects(projects.filter((_, i) => i !== index));
+    if (projId) {
+      try {
+        await axios.delete(`${UsersApi.ENDPOINTS.DELETE_PROJECT}/${projId}`, {
+          headers: { Authorization: `Bearer ${UsersApi.TOKEN}` },
+        });
+        alert('Delete Successful');
+      } catch (error) {
+        console.error('Error deleting project:', error);
+        alert('Failed to delete project');
+      }
+    }
+  };
+
+  const handleContactChange = (field, value) => {
+    setContacts({ ...contacts, [field]: value });
+  };
+
+  const handleSkillChange = (index, field, value) => {
+    setSkills(prev => {
+      const updated = [...prev];
+      updated[index][field] = field === 'degree' ? Number(value) : value;
+      return updated;
+    });
+  };
+  const addSkill = () =>
+    setSkills(prev => [
+      ...prev,
+      { softwareName: '', degree: 50 }  // yeni nesne de aynı property isimleriyle
+    ]);
+
+  const removeSkill = async (index, postId) => {
+    setSkills(skills.filter((_, i) => i !== index));
+    try {
+      await axios.delete(`${UsersApi.ENDPOINTS.DELETE_INFORMATION}/${postId}`, {
+        headers: { Authorization: `Bearer ${UsersApi.TOKEN}` },
+      });
+      alert('Delete Successful');
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      alert('Failed to delete project');
+    }
+  }
+  const handleUpdateProfile = async () => {
+    try {
+      const toSave = projects.filter(proj => !proj.id);
+      const toEdit = projects.filter(proj => proj.id);
+
+      if (toSave.length > 0) {
+        await axios.post(`${UsersApi.ENDPOINTS.POST_PROJECT}`, toSave, {
+          headers: { Authorization: `Bearer ${UsersApi.TOKEN}` },
+        });
+      }
+
+      if (toEdit.length > 0) {
+        await axios.put(`${UsersApi.ENDPOINTS.PUT_PROJECT}`, toEdit, {
+          headers: { Authorization: `Bearer ${UsersApi.TOKEN}` },
+        });
+      }
+      await axios.put(`${UsersApi.ENDPOINTS.PUT_USERS_INFO}`, contacts, {
+        headers: { Authorization: `Bearer ${UsersApi.TOKEN}` },
+      });
+
+      const toSaveInformation = skills.filter(proj => !proj.id);
+      const toEditInformation = skills.filter(proj => proj.id);
+      if (toSaveInformation.length > 0) {
+        await axios.post(`${UsersApi.ENDPOINTS.POST_INFORMATION}`, toSaveInformation, {
+          headers: { Authorization: `Bearer ${UsersApi.TOKEN}` },
+        });
+      }
+      if (toEditInformation.length > 0) {
+        await axios.put(`${UsersApi.ENDPOINTS.PUT_INFORMATION}`, toEditInformation, {
+          headers: { Authorization: `Bearer ${UsersApi.TOKEN}` },
+        });
+      }
+
+
+
+      alert('Profile updated successfully');
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('Failed to update profile');
+    }
+  };
+
+  const handleSavePersonalInfo = async () => {
+    try {
+      await axios.put(`${UsersApi.ENDPOINTS.UPDATE_PERSONAL_INFO}${localStorage.getItem("username")}`, personalInfo, {
+        headers: { Authorization: `Bearer ${UsersApi.TOKEN}` },
+      });
+      alert('Personal info updated successfully');
+    } catch (error) {
+      console.error('Error updating personal info:', error);
+      alert('Failed to update personal info');
+    }
+  };
+
+  const handlePasswordChange = async () => {
+    if (passwords.newPassword !== passwords.confirmPassword) {
+      alert('Yeni Şifre Uyuşmuyor.. Lütfen Kontrol Edin');
+      return;
+    }
+    try {
+      await axios.post(
+        UsersApi.ENDPOINTS.POST_USERS_PASSWORD_CHANGE,
+        {}, // boş body
+        {
+          params: {
+            oldPassword: passwords.oldPassword,
+            newPassword: passwords.newPassword,
+          },
+          headers: {
+            Authorization: `Bearer ${UsersApi.TOKEN}`,
+          },
+        }
+      );
+      alert('Password changed successfully');
+      setPasswords({ oldPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (error) {
+      console.error('Error changing password:', error);
+      alert('Failed to change password');
+    }
+
+
+  };
+
   return (
     <div>
       <PersonMenu />
+      <br />
       <div className="content">
         <div className="container-xxl">
           <PersonHomeContainer
@@ -649,7 +728,7 @@ function PersonHome() {
             <Card>
               <ProfileHeader>
                 <ProfileInfo>
-                  <ProfileImage src="../src/images/profile.png" alt="profile" />
+                  <ProfileImage src={profileImage.image} alt="profile" />
                   <ProfileDetails>
                     <h4>{profileData.name}</h4>
                     <p>{profileData.role}</p>
@@ -659,54 +738,37 @@ function PersonHome() {
                     </span>
                   </ProfileDetails>
                 </ProfileInfo>
-                <EditIcon />
               </ProfileHeader>
-              <NavTabs>
-                <NavItem>
-                  <a
-                    className={activeTab === 'profile_about' ? 'active' : ''}
-                    onClick={() => handleTabChange('profile_about')}
-                  >
+
+              <NavTabs role="tablist" className='nav nav-pills nav-justified bg-light'>
+                
+                <NavItem role="presentation">
+                  <a className={activeTab === 'profile_about' ? 'active nav-link' : ''} onClick={() => handleTabChange('profile_about')}>
                     Hakkında
                   </a>
                 </NavItem>
                 <NavItem>
-                  <a
-                    className={activeTab === 'profile_education' ? 'active' : ''}
-                    onClick={() => handleTabChange('profile_education')}
-                  >
+                  <a className={activeTab === 'profile_education' ? 'active nav-link' : ''} onClick={() => handleTabChange('profile_education')}>
                     Eğitim Bilgileri
                   </a>
                 </NavItem>
                 <NavItem>
-                  <a
-                    className={activeTab === 'permission' ? 'active' : ''}
-                    onClick={() => handleTabChange('permission')}
-                  >
+                  <a className={activeTab === 'permission' ? 'active nav-link' : ''} onClick={() => handleTabChange('permission')}>
                     İzin Talep
                   </a>
                 </NavItem>
                 <NavItem>
-                  <a
-                    className={activeTab === 'deposit' ? 'active' : ''}
-                    onClick={() => handleTabChange('deposit')}
-                  >
+                  <a className={activeTab === 'deposit' ? 'active nav-link' : ''} onClick={() => handleTabChange('deposit')}>
                     Zimmet Bilgileri
                   </a>
                 </NavItem>
                 <NavItem>
-                  <a
-                    className={activeTab === 'notice' ? 'active' : ''}
-                    onClick={() => handleTabChange('notice')}
-                  >
+                  <a className={activeTab === 'notice' ? 'active nav-link' : ''} onClick={() => handleTabChange('notice')}>
                     Duyurular
                   </a>
                 </NavItem>
                 <NavItem>
-                  <a
-                    className={activeTab === 'profile_setting' ? 'active' : ''}
-                    onClick={() => handleTabChange('profile_setting')}
-                  >
+                  <a className={activeTab === 'profile_setting' ? 'active nav-link' : ''} onClick={() => handleTabChange('profile_setting')}>
                     Ayarlar
                   </a>
                 </NavItem>
@@ -716,45 +778,34 @@ function PersonHome() {
                   <>
                     <Grid>
                       <Section>
-                        <div className="d-flex justify-content-between align-items-center">
+                        <div className="d-flex justify-content-between align-items-center mb-2">
                           <SectionTitle>Hakkında</SectionTitle>
-                          <EditIcon />
                         </div>
-                        <p>{profileData.about}</p>
+                        <p>{contacts.about}</p>
                       </Section>
                       <Section>
-                        <div className="d-flex justify-content-between align-items-center">
+                        <div className="d-flex justify-content-between align-items-center mb-2">
                           <SectionTitle>İletişim Bilgileri</SectionTitle>
-                          <EditIcon />
+                          <EditIcon data-bs-toggle="modal" data-bs-target="#aboutModal" />
                         </div>
-                        <div className="d-flex">
-                          <div className="row" style={{ width: '100%' }}>
-                            <div className="col-12 col-md-4">
-                              <ContactItem>
-                                <h6>Email Address</h6>
-                                <a href="#">{profileData.email}</a>
-                              </ContactItem>
-                            </div>
-                            <div className="col-12 col-md-4">
-                              <ContactItem>
-                                <h6>Social Media</h6>
-                                <SocialList>
-                                  {profileData.social.map((item, index) => (
-                                    <SocialItem key={index}>
-                                      <a href="javascript:void(0);" className={`social-item border-${item.color}`}>
-                                        <i className={`mdi ${item.icon} fs-14`}></i>
-                                      </a>
-                                    </SocialItem>
-                                  ))}
-                                </SocialList>
-                              </ContactItem>
-                            </div>
-                            <div className="col-12 col-md-4">
-                              <ContactItem>
-                                <h6>Location</h6>
-                                <a href="#">{profileData.location}</a>
-                              </ContactItem>
-                            </div>
+                        <div className="row">
+                          <div className="col-12 col-md-4">
+                            <ContactItem>
+                              <h6>Telefon Numarası</h6>
+                              <a href="#">{contacts.socialMedia}</a>
+                            </ContactItem>
+                          </div>
+                          <div className="col-12 col-md-4">
+                            <ContactItem>
+                              <h6>Email Address</h6>
+                              <a href="#">{contacts.email}</a>
+                            </ContactItem>
+                          </div>
+                          <div className="col-12 col-md-4">
+                            <ContactItem>
+                              <h6>Location</h6>
+                              <a href="#">{contacts.location}</a>
+                            </ContactItem>
                           </div>
                         </div>
                       </Section>
@@ -764,33 +815,52 @@ function PersonHome() {
                         <SectionTitle>Projeler</SectionTitle>
                         <ProjectTable>
                           <ProjectTableHead>
-                            <tr>
+                            <ProjectTableRow>
                               <ProjectTableHeader>Personel</ProjectTableHeader>
                               <ProjectTableHeader>Pozisyon</ProjectTableHeader>
                               <ProjectTableHeader>Görev Aldığı Proje</ProjectTableHeader>
-                            </tr>
+                            </ProjectTableRow>
                           </ProjectTableHead>
                           <ProjectTableBody>
-                            {profileData.projects.map((project, index) => (
-                              <ProjectTableRow key={index}>
-                                <ProjectTableData>{project.personnel}</ProjectTableData>
-                                <ProjectTableData>{project.position}</ProjectTableData>
-                                <ProjectTableData>{project.project}</ProjectTableData>
+                            {projects.length === 0 ? (
+                              <ProjectTableRow>
+                                <ProjectTableData colSpan={3} className="d-flex p-2">Henüz Bir Proje Eklenmemiş</ProjectTableData>
                               </ProjectTableRow>
-                            ))}
+                            ) : (
+                              projects.map((proj, idx) => (
+                                <ProjectTableRow key={idx}>
+                                  <ProjectTableData>{localStorage.getItem("username")}</ProjectTableData>
+                                  <ProjectTableData>{proj.position}</ProjectTableData>
+                                  <ProjectTableData>{proj.projectName}</ProjectTableData>
+                                </ProjectTableRow>
+                              ))
+                            )}
                           </ProjectTableBody>
                         </ProjectTable>
                       </Section>
                       <Section>
-                        <SectionTitle>Bilgiler</SectionTitle>
-                        {profileData.skills.map((skill, index) => (
-                          <SkillRow key={index}>
-                            <p><i className="mdi mdi-circle-medium me-2"></i>{skill.name}</p>
-                            <ProgressBar>
-                              <div style={{ width: `${skill.level}%` }}></div>
-                            </ProgressBar>
-                          </SkillRow>
-                        ))}
+                        <SectionTitle>Yetenekler</SectionTitle>
+                        {skills.length === 0 ? (
+                          <div className="d-flex p-2">Henüz Bir Yetenek Eklenmemiş</div>
+                        ) : (
+                          <table style={{ width: "100%" }}>
+                            <tbody>
+                              {skills.map((skill, idx) => (
+                                <SkillRow key={idx}>
+                                  <td>
+                                    <i className="mdi mdi-circle-medium me-2"></i>
+                                    {skill.softwareName}
+                                  </td>
+                                  <td>
+                                    <ProgressBar>
+                                      <div style={{ width: `${skill.degree}%` }} />
+                                    </ProgressBar>
+                                  </td>
+                                </SkillRow>
+                              ))}
+                            </tbody>
+                          </table>
+                        )}
                       </Section>
                     </Grid>
                   </>
@@ -798,107 +868,216 @@ function PersonHome() {
                 {activeTab === 'profile_education' && (
                   <Section>
                     <div className="d-flex justify-content-between align-items-center">
-                      <SectionTitle>My Education</SectionTitle>
-                      <EditIcon />
+                      <SectionTitle>Eğitim Bilgileri</SectionTitle>
+
                     </div>
                     <Grid>
-                      {profileData.education.map((edu, index) => (
-                        <EducationItem key={index}>
-                          <EducationIcon dangerouslySetInnerHTML={{ __html: edu.icon }} />
-                          <EducationDetails>
-                            <h5>{edu.institution}</h5>
-                            <p>{edu.degree}</p>
-                            <div>
-                              {edu.date} • {edu.location}
-                            </div>
-                          </EducationDetails>
-                        </EducationItem>
-                      ))}
+                      {educationData.length === 0 ? (
+                        <p>Henüz eğitim bilgisi eklenmemiş</p>
+                      ) : (
+                        educationData.map((edu, index) => (
+                          <EducationItem key={index}>
+                            <FaUniversity className='mt-1 me-1' style={{ fontSize: 40 }} />
+                            <EducationDetails>
+                              <h5>{edu.universityName}</h5>
+                              <p>{edu.section}</p>
+                              <div>{new Date(edu.startDate).toLocaleDateString("tr", "TR")} • {new Date(edu.endDate).toLocaleDateString("tr", "TR")}</div>
+                            </EducationDetails>
+                          </EducationItem>
+                        ))
+                      )}
                     </Grid>
                   </Section>
                 )}
-                {activeTab === 'permission' && (
-                
-                    <PersonForPermisson />
-                  
-                )}
-                {activeTab === 'deposit' && (
-                
-                    <PersonZimmetPage />
-               
-                )}
-                {activeTab === 'notice' && (
-                 
-                    <PersonNoticePage />
-                  
-                )}
+                {activeTab === 'permission' && <PersonForPermisson />}
+                {activeTab === 'deposit' && <PersonZimmetPage />}
+                {activeTab === 'notice' && <PersonNoticePage />}
                 {activeTab === 'profile_setting' && (
-                  <Grid>
-                    <FormCard>
-                      <FormHeader>
-                        <h4>Personel Bilgileri</h4>
-                      </FormHeader>
-                      <FormBody>
-                        <FormGroup>
-                          <label>Ad</label>
-                          <input type="text" value="Ege" />
-                        </FormGroup>
-                        <FormGroup>
-                          <label>Soyad</label>
-                          <input type="text" value="Ortakcı" />
-                        </FormGroup>
-                        <FormGroup>
-                          <label>Telefon</label>
-                          <InputGroup>
-                            <span><i className="mdi mdi-phone-outline"></i></span>
-                            <input type="text" value="+61 399615" placeholder="Phone" />
-                          </InputGroup>
-                        </FormGroup>
-                        <FormGroup>
-                          <label>Email</label>
-                          <InputGroup>
-                            <span><i className="mdi mdi-email"></i></span>
-                            <input type="text" value="egecengiz@smartict.com" placeholder="Email" />
-                          </InputGroup>
-                        </FormGroup>
-                        <FormGroup>
-                          <label>Address</label>
-                          <input type="text" value="Turkey" />
-                        </FormGroup>
-                        <div className="d-flex justify-content-end">
-                          <Button type="submit">Kaydet</Button>
-                        </div>
-                      </FormBody>
-                    </FormCard>
-                    <FormCard>
-                      <FormHeader>
-                        <h4>Change Password</h4>
-                      </FormHeader>
-                      <FormBody>
-                        <FormGroup>
-                          <label>Eski Şifre</label>
-                          <input type="password" placeholder="Old Password" />
-                        </FormGroup>
-                        <FormGroup>
-                          <label>Yeni Şifre</label>
-                          <input type="password" placeholder="New Password" />
-                        </FormGroup>
-                        <FormGroup>
-                          <label>Tekrar Yeni Şifre</label>
-                          <input type="password" placeholder="Confirm Password" />
-                        </FormGroup>
-                        <div className="d-flex justify-content-end">
-                          <Button type="submit">Şifreyi Değiştir</Button>
-                        </div>
-                      </FormBody>
-                    </FormCard>
-                  </Grid>
+                  <div className='row'>
+                    <div className='col-md-6'>
+
+                      <FormCard>
+                        <FormHeader>
+                          <h4>Change Password</h4>
+                        </FormHeader>
+                        <FormBody>
+                          <FormGroup>
+                            <label>Eski Şifre</label>
+                            <input
+                              type="password"
+                              value={passwords.oldPassword}
+                              onChange={(e) => setPasswords({ ...passwords, oldPassword: e.target.value })}
+                              placeholder="Old Password"
+                            />
+                          </FormGroup>
+                          <FormGroup>
+                            <label>Yeni Şifre</label>
+                            <input
+                              type="password"
+                              value={passwords.newPassword}
+                              onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
+                              placeholder="New Password"
+                            />
+                          </FormGroup>
+                          <FormGroup>
+                            <label>Tekrar Yeni Şifre</label>
+                            <input
+                              type="password"
+                              value={passwords.confirmPassword}
+                              onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })}
+                              placeholder="Confirm Password"
+                            />
+                          </FormGroup>
+                          <div className="d-flex justify-content-end">
+                            <Button type="button" onClick={handlePasswordChange}>Şifreyi Değiştir</Button>
+                          </div>
+                        </FormBody>
+                      </FormCard>
+
+
+                    </div>
+                  </div>
+
+
+
                 )}
               </TabContent>
             </Card>
             <Footer>
               © {new Date().getFullYear()} - <a href="#!">SmartICT</a>
             </Footer>
+
+            {/* Modal for Editing Profile */}
+            <div className="modal fade" id="aboutModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
+
+              <div className="modal-dialog modal-lg modal-dialog-scrollable ">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title" id="aboutModalLabel">Hakkımda Düzenle</h5>
+                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div className="modal-body">
+                    <div className="mb-3">
+                      <label htmlFor="aboutTextarea" className="form-label"><TbListDetails className='mt-1 me-1' /> Hakkımda</label>
+                      <textarea
+                        id="aboutTextarea"
+                        className="form-control"
+                        rows={4}
+                        value={contacts.about}
+                        onChange={handleAboutChange}
+                      />
+                    </div>
+                    <hr />
+                    <div className="d-flex justify-content-between align-items-center mb-2">
+                      <h6><LiaProjectDiagramSolid className='mt-1 me-1' /> Projeler</h6>
+                      <button type="button" className="btn btn-sm btn-outline-primary" onClick={addProject}><FaPlus /> Ekle</button>
+                    </div>
+                    {projects.map((proj, idx) => (
+                      <div key={idx} className="row g-2 align-items-end mb-3">
+                        <div className="col-md-5">
+                          <label htmlFor={`projName-${idx}`} className="form-label">Görev Aldığı Proje</label>
+                          <input
+                            type="text"
+                            id={`projName-${idx}`}
+                            className="form-control"
+                            value={proj.projectName}
+                            onChange={(e) => handleProjectChange(idx, 'projectName', e.target.value)}
+                          />
+                        </div>
+                        <div className="col-md-5">
+                          <label htmlFor={`projPos-${idx}`} className="form-label">Pozisyon</label>
+                          <input
+                            type="text"
+                            id={`projPos-${idx}`}
+                            className="form-control"
+                            value={proj.position}
+                            onChange={(e) => handleProjectChange(idx, 'position', e.target.value)}
+                          />
+                        </div>
+                        <div className="col-md-2 mb-1">
+                          <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => removeProject(idx, proj.id)}><MdDeleteOutline /> </button>
+                        </div>
+                      </div>
+                    ))}
+                    <hr />
+                    <div className="mb-4">
+                      <h6><LuContact className='mb-1 me-1' /> İletişim Bilgileri</h6>
+                      <div className="row g-2">
+                        <div className="col-md-4">
+                          <label className="form-label">Telefon No</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={contacts.socialMedia}
+                            onChange={(e) => handleContactChange('socialMedia', e.target.value)}
+                          />
+                        </div>
+                        <div className="col-md-4">
+                          <label className="form-label">Email</label>
+                          <input
+                            type="email"
+                            className="form-control"
+                            value={contacts.email}
+                            onChange={(e) => handleContactChange('email', e.target.value)}
+                          />
+                        </div>
+                        <div className="col-md-4">
+                          <label className="form-label">Adres</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={contacts.location}
+                            onChange={(e) => handleContactChange('location', e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="d-flex justify-content-between align-items-center mb-2">
+                      <h6><FaCode className='me-1' /> Bildiği Yazılım Dilleri</h6>
+                      <button type="button" className="btn btn-sm btn-outline-primary" onClick={addSkill}><FaPlus /> Ekle</button>
+                    </div>
+                    {skills.map((skill, idx) => (
+                      <div key={idx} className="row g-2 mb-3">
+                        <div className="col-md-5">
+                          <label>Teknoloji Adı</label>
+                          <input
+                            className="form-control"
+                            value={skill.softwareName}
+                            onChange={e => handleSkillChange(idx, 'softwareName', e.target.value)}
+                          />
+                        </div>
+                        <div className="col-md-5">
+                          <label>Düzey ({skill.degree}%)</label>
+                          <input
+                            type="range"
+                            className="form-range"
+                            min={0}
+                            max={100}
+                            value={skill.degree}
+                            onChange={e => handleSkillChange(idx, 'degree', e.target.value)}
+                          />
+                        </div>
+                        <div className="col-md-2 mt-4">
+                          <button onClick={() => removeSkill(idx, skill.id)} className="btn btn-sm btn-outline-danger">
+                            <MdDeleteOutline />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <button type="button" className="btn btn-primary" onClick={handleUpdateProfile}><IoSaveOutline className='mb-1 me-1' /> Kaydet</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+
           </PersonHomeContainer>
         </div>
       </div>

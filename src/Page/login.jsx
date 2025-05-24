@@ -62,7 +62,7 @@ function login() {
                                     <div className="mb-0 m-3 border-0 p-md-5 p-lg-0 p-4">
                                         <div className="mb-4  p-0">
                                             <a href="index.html" className="auth-logo d-flex justify-content-center p-3">
-                                                <img src='../src/images/smart.png'></img>
+                                                <img src='../src/images/H.svg' style={{width:"100%"}} className='p-3'></img>
                                             </a>
                                         </div>
                                         <div className="pt-0 ">
@@ -130,12 +130,8 @@ function login() {
                             <div className="account-page-bg p-md-5 p-4" style={{ backgroundColor: "rgba(190 211 247 / 20%)" }}>
                                 <div className="text-center" >
                                     <div className="auth-image">
-                                        <img src="../src/images/login-background.png" className="mx-auto img-fluid" alt="images" />
-                                        <div className='card p-5' style={{ position: 'absolute', width: "50%", bottom: "0", right: 50, backgroundColor: "rgba(255 255 255 / 75%)" }}>
-                                            <h2 className='p-3' color='#201422' ><PiPersonSimpleRunBold className='mb-1' /> SmartICT İnsan Kaynakları Giriş Ekranı</h2>
-                                            <p className='p-2' color='#201422'>Kolay ve kullanımı rahat yenilikçi çözümleri ile insan kaynakları projesi kullanım için sizi bekliyor..</p>
-                                            <a className='btn btn-success m-2 p-2 ' ><HiPlus /> Hemen Kayıt OL</a>
-                                        </div>
+                                        <img src="../src/images/HR_COMPANY.png" className="mx-auto img-fluid" alt="images" />
+                                     
                                     </div>
                                 </div>
                             </div>

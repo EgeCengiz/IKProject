@@ -54,7 +54,7 @@ function PieAnalist() {
   const total = pie.reduce((sum, entry) => sum + entry.value, 0);
 
   return (
-    <div className='row' style={{ marginLeft:"6%" }}>
+    <div className='row ps-4'>
       <div className='col-md-4'>
         <br></br>
         <h5 className="card-title mb-2 mt-2" style={{ color: "#4a5a6b" }}>

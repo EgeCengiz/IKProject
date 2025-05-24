@@ -7,7 +7,7 @@ import UsersApi from '../Api/UsersApi';
 import { StyleSheetManager } from 'styled-components';
 import isPropValid from '@emotion/is-prop-valid';
 const PublicHolidayContainer = styled(motion.div)`
-  padding:  0 15% 0 0;
+
   display: flex;
   flex-direction: column;
 `;
@@ -69,16 +69,6 @@ const TableData = styled.td`
   color: #2d3748;
 `;
 
-const holidayData = [
-  { id: '#3413', name: 'New Year', daysUntil: 82 },
-  { id: '#4125', name: 'Christmas', daysUntil: 93 },
-  { id: '#6532', name: 'Easter', daysUntil: 56 },
-  { id: '#7405', name: 'Thanksgiving', daysUntil: 68 },
-  { id: '#4526', name: 'Independence Day', daysUntil: 52 },
-  { id: '#1054', name: 'Labor Day', daysUntil: 45 },
-  { id: '#1055', name: 'Halloween', daysUntil: 45 },
-  
-];
 
 function PublicHoliday() {
 
@@ -102,7 +92,7 @@ getAllHoliday();
 },[])
 
   return (
-    <PublicHolidayContainer>
+    <PublicHolidayContainer className='pe-4'>
         
       <Card>
     
@@ -116,10 +106,10 @@ getAllHoliday();
             </tr>
           </TableHead>
           <TableBody>
-            {holiday.map((day) => (
-              <TableRow key={day.id}>
+            {holiday.map((day,index) => (
+              <TableRow key={index}>
                 <TableData>
-                  <a href="javascript:void(0);" className="text-reset">#{day.id}</a>
+                  <a href="javascript:void(0);" className="text-reset">#35{index}</a>
                 </TableData>
                 <TableData>
                   <span>{day.holidayName}</span>

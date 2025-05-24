@@ -102,7 +102,8 @@ const TableRow = styled.tr`
 `;
 
 const TableData = styled.td`
-  padding: 10px;
+  padding: 15px;
+
   font-size: 0.85rem;
   color: #2d3748;
 `;
@@ -158,7 +159,7 @@ function PermissionList({ refreshSignal, userData }) {
       variants={cardVariants}
       transition={{ duration: 0.3 }}
     >
-      <h5 style={{ color: '#4a5a6b' }}><LuPlane /> İzin Tablosu</h5>
+      <h6 style={{ color: '#4a5a6b' }}><LuPlane /> İzin Tablosu</h6>
 
       {refreshSignal != null && (
         <SearchForm onSubmit={handleSearch}>

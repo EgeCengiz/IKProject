@@ -369,7 +369,7 @@ function Notice() {
   const personnelList = [
     { id: 'p1', name: 'Yöneticilere Yayınla' },
     { id: 'p2', name: 'Personele Yayınla' },
-    { id: 'p3', name: 'Tüm Kullanıcılar' },
+    { id: 'p3', name: 'Tüm Personel' },
   ];
  
   // Quill Editor for Main Form
